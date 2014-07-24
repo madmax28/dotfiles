@@ -5,7 +5,7 @@
 syntax on
 set hlsearch incsearch
 set shiftwidth=4 tabstop=4 expandtab smartindent
-silent! set ruler relativenumber number scrolloff=10
+silent! set ruler relativenumber number scrolloff=10 backspace=2
 set history=1000 wildmenu autowrite
 let mapleader = ","
 let g:os_uname = substitute(system('uname'), "\n", "", "")
@@ -56,11 +56,17 @@ no <C-h> <C-w>h
 no <C-l> <C-w>l
 no <C-P> :tabp<CR>
 no <C-N> :tabn<CR>
-no <leader><tab> >>
-no <leader><s-tab> <<
+no q <nop>
+no <leader>q, q/
+no <leader>q: q:
 ino <s-tab> <esc><<A
 com! W w
 com! Q q
+com! Wq wq
+com! WQ wq
+cno sp vsp
+cno <c-p> <c-r>"
+ino jk <esc>
 no <silent> <leader>c :call ToggleComment()<cr>
 fun! ToggleComment()
     if !exists("w:cChar")
@@ -99,11 +105,12 @@ hi link BadStyle Error
 augroup HlBadStyleGrp
     au!
     au ColorScheme * hi link BadStyle Error
-    au WinEnter * call HlBadStyle()
+    au WinEnter,VimEnter,GUIEnter * call HlBadStyle()
 augroup END
 fun! HlBadStyle()
     call matchadd('BadStyle', '\%80v.\+')
     call matchadd('BadStyle', '\s\+\n')
+    call matchadd('BadStyle', '^\n\n')
     if g:os_uname == "Darwin"
         call matchadd('BadStyle', ' ')
     endif
@@ -129,11 +136,11 @@ no n n:call HighlightCursor()<CR>
 no N N:call HighlightCursor()<CR>
 
 " Highlight bigger comment sections
-hi HlComments ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
-au ColorScheme * hi HlComments ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
+hi HlComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
+au ColorScheme * hi HlComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
 augroup HlCommentsGroup
     au!
-    au FileType * call HlComments()
+    au FileType,VimEnter,GUIEnter * call HlComments()
 augroup END
 fun! HlComments()
     let w:doComment=1
@@ -142,15 +149,15 @@ fun! HlComments()
         let w:cChar = '\"'
     elseif &filetype == "c" || &filetype == "cpp"
         let w:cChar = '\/\/'
-    elseif &filetype == "bash"
+    elseif &filetype == "bash" || &filetype == "sh"
         let w:cChar = '#'
     else
         let w:doComment=0
     endif
 
     if w:doComment == 1
-        let w:hlString = '\(^\s*' . w:cChar . '\)\n\1.*\n\1\n'
-        let w:match = matchadd('HlComments', w:hlString)
+        let w:hlString = '\(^\s*' . w:cChar . '\).*\n\1.*\n\1.*\n'
+        let w:match = matchadd('HlComment', w:hlString)
     elseif exists("w:match")
         echom "Trying to clear HLComments"
         echom w:match

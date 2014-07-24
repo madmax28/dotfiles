@@ -2,6 +2,9 @@
 # /etc/bash.bashrc
 #
 
+# Get os uname
+os_uname=`uname`
+
 #####################
 # Color definitions #
 #####################
@@ -44,12 +47,21 @@ NC="\[\e[m\]"               # Color Reset
 
 # colors, laziness, ..
 alias grep="grep --color=auto -n"
-alias ls="ls -G -h"
+if [ $os_uname == "Darwin" ]; then
+    alias ls="ls -G -h"
+elif [ $os_uname == "Linux" ]; then
+    alias ls="ls --color=auto -h"
+fi
 alias l="ls -h"
 alias la="ls -ah"
 alias lla="ls -lah"
 alias ll="ls -lh"
 alias ..="cd .."
+
+# make meld work on OS X
+if [ $os_uname == "Darwin" ]; then
+    alias meld="LANG=C LC_ALL=C meld"
+fi
 
 # ls colors
 export CLICOLOR=1
