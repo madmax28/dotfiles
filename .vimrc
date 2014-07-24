@@ -5,7 +5,7 @@
 syntax on
 set hlsearch incsearch
 set shiftwidth=4 tabstop=4 expandtab smartindent
-set ruler relativenumber number
+silent! set ruler relativenumber number scrolloff=10
 set history=1000 wildmenu autowrite
 let mapleader = ","
 let g:os_uname = substitute(system('uname'), "\n", "", "")
@@ -41,15 +41,7 @@ nno <leader>, /
 " ~/.vimrc editing
 noremap <leader>ev :vsp $MYVIMRC<cr>
 noremap <leader>sv :source $MYVIMRC<cr>
-augroup edit_vimrc
-    au!
-    au BufWritePost $MYVIMRC source $MYVIMRC
-augroup END
 if has("gui")
-    augroup edit_gvimrc
-            au!
-        au BufWritePost $MYGVIMRC source $MYGVIMRC
-    augroup END
     noremap <leader>eg :vsp $MYGVIMRC<cr>
     noremap <leader>sg :source $MYVIMRC<cr>
 endif
@@ -97,6 +89,10 @@ endif
 
 " Adjust highlighting groups
 hi Error ctermbg=88 guibg=#880708
+augroup HlErrorGrp
+    au!
+    au ColorScheme * hi Error ctermbg=88 guibg=#880708
+augroup END
 
 " Bad coding style
 hi link BadStyle Error
@@ -133,8 +129,8 @@ no n n:call HighlightCursor()<CR>
 no N N:call HighlightCursor()<CR>
 
 " Highlight bigger comment sections
-hi HlComments guibg=#4f76b6 guifg=#f0f0f0
-au ColorScheme * hi link HlComments CursorLine
+hi HlComments ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
+au ColorScheme * hi HlComments ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
 augroup HlCommentsGroup
     au!
     au FileType * call HlComments()
@@ -209,3 +205,9 @@ endif
 "
 
 call pathogen#infect()
+
+"
+" Color Theme
+"
+
+color codeschool
