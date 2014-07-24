@@ -2,12 +2,16 @@
 # /etc/bash.bashrc
 #
 
+#
+# Misc
+#
+
 # Get os uname
 os_uname=`uname`
 
-#####################
-# Color definitions #
-#####################
+#
+# Color definitions
+#
 
 # Normal Colors
 Black="\[\e[0;30m\]"        # Black
@@ -41,9 +45,9 @@ On_White="\[\e[47m\]"       # White
 
 NC="\[\e[m\]"               # Color Reset
 
-###########
-# Aliases #
-###########
+#
+# Aliases
+#
 
 # colors, laziness, ..
 alias grep="grep --color=auto -n"
@@ -58,24 +62,9 @@ alias lla="ls -lah"
 alias ll="ls -lh"
 alias ..="cd .."
 
-# make meld work on OS X
-if [ $os_uname == "Darwin" ]; then
-    alias meld="LANG=C LC_ALL=C meld"
-fi
-
 # ls colors
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
 # PS1
 export PS1="${NC}\u${Green}@${NC}\h${Green}:${NC}\W${Green} $ ${NC}"
-
-# My scripts
-export PATH="${PATH}:/Users/max/Scripts"
-
-# Macports stuff
-export PATH="/opt/local/bin:/opt/local/sbin:${PATH}"
-
-# Add wine-git to path
-export PATH="${PATH}:/Users/max/Workspace/wine-git/install-dir/bin"
-export DYLD_FALLBACK_LIBRARY_PATH="/usr/X11/lib:/usr/lib:/opt/local/lib"
