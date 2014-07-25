@@ -18,14 +18,23 @@ for FILE in vimrc gvimrc; do
     fi
 done
 
+# Install plugins
 if [ ! -d $HOME/.vim ]; then
     echo "Copying $PWD/vim to $HOME/.vim"
     cp -R $PWD/vim $HOME/.vim
 else
-    read -p "Directory $HOME/.vim exists. Copy anyway? [y/N] " -n 1 -r
+    read -p "Directory $HOME/.vim exists. Replace? [y/N] " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        cp -R $PWD/vim/* $HOME/.vim/
+        read -p "Backup $HOME/.vim? [Y/n] " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[nN]$ ]]; then
+            echo "Backing up $HOME/.vim to $HOME/.vim.bak"
+            [ -d $HOME/.vim.bak ] && rm -rf $HOME/.vim.bak
+            cp $HOME/.vim $HOME/.vim.bak
+        fi
+        rm -rf $HOME/.vim
+        cp -R $PWD/vim $HOME/.vim
     fi
 fi
 
