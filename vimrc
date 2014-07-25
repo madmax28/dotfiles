@@ -1,4 +1,49 @@
 "
+" Detect os
+"
+
+let g:os_uname = substitute(system('uname'), "\n", "", "")
+
+"
+" Taglist
+"
+
+no <C-g> :TlistToggle<CR>
+let Tlist_Use_Right_Window = 1
+let Tlist_Use_SingleClick = 1
+let Tlist_Inc_Winwidth = 1
+
+"
+" Clang_complete
+"
+
+if !has("python")
+    echo "Python not available. Disabling clang_complete"
+    let g:clang_complete_loaded
+else
+    " Point to libclang on OS X
+    if g:os_uname == "Darwin"
+        let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"
+    endif
+    let g:clang_complete_copen=1 " Quickfixing
+    let g:clang_snippets=1
+    let g:clang_complete_patterns=1
+    let g:clang_jumpto_declaration_key='<C-f>'
+endif
+
+"
+" Pathogen
+"
+
+call pathogen#infect()
+
+"
+" Color Theme
+"
+
+color codeschool
+
+"
 " Settings
 "
 
@@ -8,7 +53,6 @@ set shiftwidth=4 tabstop=4 expandtab smartindent
 silent! set ruler relativenumber number scrolloff=10 backspace=2
 set history=1000 wildmenu autowrite
 let mapleader = ","
-let g:os_uname = substitute(system('uname'), "\n", "", "")
 
 "
 " Handy mappings
@@ -156,11 +200,9 @@ fun! HlComments()
     endif
 
     if w:doComment == 1
-        let w:hlString = '\(^\s*' . w:cChar . '\).*\n\1.*\n\1.*\n'
+        let w:hlString = '\(^\s*' . w:cChar . '.*\n\)\{3,}'
         let w:match = matchadd('HlComment', w:hlString)
     elseif exists("w:match")
-        echom "Trying to clear HLComments"
-        echom w:match
         call matchdelete(w:match)
         unlet w:match
     endif
@@ -175,46 +217,3 @@ fun! CAbbrvs()
 endf
 au FileType c call CAbbrvs()
 au FileType cpp call CAbbrvs()
-
-"
-" Taglist
-"
-
-no <C-g> :TlistToggle<CR>
-let Tlist_Use_Right_Window = 1
-let Tlist_Use_SingleClick = 1
-let Tlist_Inc_Winwidth = 1
-
-"
-" Clang_complete
-"
-
-if !has("python")
-    echo "Python not available. Disabling clang_complete"
-    let g:clang_complete_loaded
-else
-
-"
-" Point to libclang on OS X
-"
-
-    if g:os_uname == "Darwin"
-        let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"
-    endif
-    let g:clang_complete_copen=1 " Quickfixing
-    let g:clang_snippets=1
-    let g:clang_complete_patterns=1
-    let g:clang_jumpto_declaration_key='<C-f>'
-endif
-
-"
-" Pathogen
-"
-
-call pathogen#infect()
-
-"
-" Color Theme
-"
-
-color codeschool
