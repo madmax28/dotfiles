@@ -5,45 +5,6 @@
 let g:os_uname = substitute(system('uname'), "\n", "", "")
 
 "
-" Taglist
-"
-
-no <C-g> :TlistToggle<CR>
-let Tlist_Use_Right_Window = 1
-let Tlist_Use_SingleClick = 1
-let Tlist_Inc_Winwidth = 1
-
-"
-" Clang_complete
-"
-
-if !has("python")
-    echo "Python not available. Disabling clang_complete"
-    let g:clang_complete_loaded
-else
-    " Point to libclang on OS X
-    if g:os_uname == "Darwin"
-        let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"
-    endif
-    let g:clang_complete_copen=1 " Quickfixing
-    let g:clang_snippets=1
-    let g:clang_complete_patterns=1
-    let g:clang_jumpto_declaration_key='<C-f>'
-endif
-
-"
-" Pathogen
-"
-
-call pathogen#infect()
-
-"
-" Color Theme
-"
-
-color codeschool
-
-"
 " Settings
 "
 
@@ -55,11 +16,37 @@ set history=1000 wildmenu autowrite
 let mapleader = ","
 
 "
+" My highlighting groups
+"
+
+function! SetHlGroups()
+    " Errors
+    highlight Error ctermbg=88 guibg=#880708
+    " Bad Style
+    highlight link BadStyle Error
+    " Highlight for current search result
+    highlight RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
+    " Big comment sections
+    highlight HlComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
+    " Taglist
+    highlight link MyTagListTagScope Keyword
+    highlight link MyTagListTitle StatusLineNC
+    highlight link MyTagListFileName HlComment
+    highlight link MyTagListTagName Error
+endf
+" Update HlGroups
+call SetHlGroups()
+augroup HlGroupsAuGrp
+    autocmd!
+    autocmd ColorScheme * call SetHlGroups()
+augroup END
+
+"
 " Handy mappings
 "
 
 " Dont use arrow keys nor escape
-ino <esc> <nop>
+inoremap <esc> <nop>
 noremap <Up> <Nop>
 noremap <Down> <Nop>
 noremap <Left> <Nop>
@@ -71,16 +58,16 @@ inoremap <Right> <Nop>
 noremap / <Nop>
 
 " Moving lines
-nno + ddp
-nno - ddkP
+nnoremap + ddp
+nnoremap - ddkP
 vno <leader>- <esc>'<V'>xp
 
 " Movement
-nno H ^
-nno J G$
-nno K gg
-nno L $
-nno <leader>, /
+nnoremap H ^
+nnoremap J G$
+nnoremap K gg
+nnoremap L $
+nnoremap <leader>, /
 
 " ~/.vimrc editing
 noremap <leader>ev :vsp $MYVIMRC<cr>
@@ -91,27 +78,27 @@ if has("gui")
 endif
 
 " Misc
-ino jk <esc>
-nno <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
-nno <C-f> <C-]>
-no <C-j> <C-w>j
-no <C-k> <C-w>k
-no <C-h> <C-w>h
-no <C-l> <C-w>l
-no <C-P> :tabp<CR>
-no <C-N> :tabn<CR>
-no q <nop>
-no <leader>q, q/
-no <leader>q: q:
-ino <s-tab> <esc><<A
-com! W w
-com! Q q
-com! Wq wq
-com! WQ wq
-cno sp vsp
-cno <c-p> <c-r>"
-ino jk <esc>
-no <silent> <leader>c :call ToggleComment()<cr>
+inoremap jk <esc>
+nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
+nnoremap <C-f> <C-]>
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-h> <C-w>h
+noremap <C-l> <C-w>l
+noremap <C-P> :tabp<CR>
+noremap <C-N> :tabn<CR>
+noremap q <nop>
+noremap <leader>q, q/
+noremap <leader>q: q:
+inoremap <s-tab> <esc><<A
+command! W w
+command! Q q
+command! Wq wq
+command! WQ wq
+cnoremap sp vsp
+cnoremap <c-p> <c-r>"
+inoremap jk <esc>
+noremap <silent> <leader>c :call ToggleComment()<cr>
 fun! ToggleComment()
     if !exists("w:cChar")
         return
@@ -134,23 +121,10 @@ if g:os_uname == "Darwin"
 endif
 
 "
-" Highlighting and matching
+" Matching
 "
 
-" Adjust highlighting groups
-hi Error ctermbg=88 guibg=#880708
-augroup HlErrorGrp
-    au!
-    au ColorScheme * hi Error ctermbg=88 guibg=#880708
-augroup END
-
 " Bad coding style
-hi link BadStyle Error
-augroup HlBadStyleGrp
-    au!
-    au ColorScheme * hi link BadStyle Error
-    au WinEnter,VimEnter,GUIEnter * call HlBadStyle()
-augroup END
 fun! HlBadStyle()
     call matchadd('BadStyle', '\%80v.\+')
     call matchadd('BadStyle', '\s\+\n')
@@ -160,10 +134,8 @@ fun! HlBadStyle()
     endif
 endf
 
-" Highlight cursor after searching
-hi RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
-au ColorScheme * hi RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
-fu! HighlightCursor()
+" Match cursor after searching
+fu! MatchCursor()
     let c = 0
     while c<2
         let pat = "\\%#" . @/
@@ -176,16 +148,10 @@ fu! HighlightCursor()
         let c+=1
     endwhile
 endf
-no n n:call HighlightCursor()<CR>
-no N N:call HighlightCursor()<CR>
+noremap n n:call MatchCursor()<CR>
+noremap N N:call MatchCursor()<CR>
 
-" Highlight bigger comment sections
-hi HlComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
-au ColorScheme * hi HlComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
-augroup HlCommentsGroup
-    au!
-    au FileType,VimEnter,GUIEnter * call HlComments()
-augroup END
+" Match bigger comment sections
 fun! HlComments()
     let w:doComment=1
 
@@ -207,6 +173,10 @@ fun! HlComments()
         unlet w:match
     endif
 endf
+augroup HlCommentsGroup
+    autocmd!
+    au FileType * call HlComments()
+augroup END
 
 "
 " C/CPP abbreviations
@@ -217,3 +187,44 @@ fun! CAbbrvs()
 endf
 au FileType c call CAbbrvs()
 au FileType cpp call CAbbrvs()
+
+"
+" Clang_complete
+"
+
+if !has("python")
+    echo "Python not available. Disabling clang_complete"
+    let g:clang_complete_loaded
+else
+    " Point to libclang on OS X
+    if g:os_uname == "Darwin"
+        let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"
+    endif
+    let g:clang_complete_copen=1 " Quickfixing
+    let g:clang_snippets=1
+    let g:clang_complete_patterns=1
+    let g:clang_jumpto_declaration_key='<C-f>'
+endif
+
+"
+" Taglist
+"
+
+noremap <C-g> :TlistToggle<CR>
+let Tlist_Use_Right_Window = 1
+let Tlist_Use_SingleClick = 1
+let Tlist_Inc_Winwidth = 1
+let Tlist_Max_Tag_Length = 100
+let Tlist_Use_SingleClick = 1
+
+"
+" Pathogen
+"
+
+call pathogen#infect()
+
+"
+" Color Theme
+"
+
+color codeschool
