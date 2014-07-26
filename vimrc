@@ -11,7 +11,7 @@ let g:os_uname = substitute(system('uname'), "\n", "", "")
 syntax on
 set hlsearch incsearch
 set shiftwidth=4 tabstop=4 expandtab smartindent
-silent! set ruler relativenumber number scrolloff=10 backspace=2
+silent! set ruler relativenumber number scrolloff=5 backspace=2
 set history=1000 wildmenu autowrite
 let mapleader = ","
 
@@ -29,10 +29,12 @@ function! SetHlGroups()
     " Big comment sections
     highlight HlComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
     " Taglist
-    highlight link MyTagListTagScope Keyword
-    highlight link MyTagListTitle StatusLineNC
-    highlight link MyTagListFileName HlComment
+    highlight link MyTagListTagScope Keyword | highlight link MyTagListTitle StatusLineNC | highlight link MyTagListFileName HlComment
     highlight link MyTagListTagName Error
+    " Misc
+    highlight clear CursorLineNr | highlight link CursorLineNr HlComment
+    highlight clear CursorLine | highlight link CursorLine Search
+    highlight clear CursorColumn | highlight link CursorColumn Search
 endf
 " Update HlGroups
 call SetHlGroups()
@@ -42,10 +44,40 @@ augroup HlGroupsAuGrp
 augroup END
 
 "
-" Handy mappings
+" Functions
+"
+
+" Search and Replace word under cursor
+function! SearchAndReplace(op)
+    " Highlight the words
+        if a:op ==# "iw"
+            silent! execute "normal! viwy"
+        elseif a:op ==# "iW"
+            silent! execute "normal! viWy"
+        else
+            echom "Invalid argument given to SearchAndReplace()!"
+            return
+        endif
+    let l:wordToReplace = substitute(@", "\n", "", "")
+    let l:wordToReplace = escape(l:wordToReplace, '"\')
+    let l:match = matchadd('Error', l:wordToReplace)
+    redraw!
+    call matchdelete(l:match)
+
+    " Get string with which to substitute
+    let l:replaceString = input("Replace \"" . l:wordToReplace . "\" with: ")
+
+    " Perform substitution
+    execute "%s/" . l:wordToReplace . "/" . l:replaceString . "/g"
+endf
+
+"
+" Handy mappings and abbreviations
 "
 
 " Dont use arrow keys nor escape
+nnoremap <leader>riw :call SearchAndReplace("iw")<cr>
+nnoremap <leader>riW :call SearchAndReplace("iW")<cr>
 inoremap <esc> <nop>
 noremap <Up> <Nop>
 noremap <Down> <Nop>
@@ -74,7 +106,7 @@ noremap <leader>ev :vsp $MYVIMRC<cr>
 noremap <leader>sv :source $MYVIMRC<cr>
 if has("gui")
     noremap <leader>eg :vsp $MYGVIMRC<cr>
-    noremap <leader>sg :source $MYVIMRC<cr>
+    noremap <leader>sg :source $MYGVIMRC<cr>
 endif
 
 " Misc
@@ -95,27 +127,26 @@ command! W w
 command! Q q
 command! Wq wq
 command! WQ wq
-cnoremap sp vsp
+cnoreabbrev sp vsp
 cnoremap <c-p> <c-r>"
 inoremap jk <esc>
 noremap <silent> <leader>c :call ToggleComment()<cr>
-fun! ToggleComment()
-    if !exists("w:cChar")
+function! ToggleComment()
+    if !exists("b:cChar")
         return
     else
         let v:errmsg = ""
-        " execute ':s/^\(\s*\)\([^ ' . w:cChar . ']\)/\1' . w:cChar . ' \2/'
-        silent! execute ':s/^\(\s*\)\([^ ' . w:cChar . ']\)/\1' . w:cChar . ' \2/'
+        silent! execute ':s/^\(\s*\)\([^ ' . b:cChar . ']\)/' . b:cChar .
+            \ ' \1\2/'
         if v:errmsg == ""
             return
         endif
-        " execute ':s/^\(\s*\)' . w:cChar . '\s*/\1/'
-        silent! execute ':s/^\(\s*\)' . w:cChar . '\s*/\1/'
+        silent! execute ':s/^\(\s*\)' . b:cChar . ' /\1/'
     endif
 endf
 
 " Remap apples <a-space> to <space>
-if g:os_uname == "Darwin"
+if g:os_uname ==# "Darwin"
     noremap <a-space> <space>
     noremap! <a-space> <space>
 endif
@@ -125,52 +156,57 @@ endif
 "
 
 " Bad coding style
-fun! HlBadStyle()
+function! HlBadStyle()
     call matchadd('BadStyle', '\%80v.\+')
     call matchadd('BadStyle', '\s\+\n')
     call matchadd('BadStyle', '^\n\n')
-    if g:os_uname == "Darwin"
+    if g:os_uname ==# "Darwin"
         call matchadd('BadStyle', ' ')
     endif
 endf
+call HlBadStyle()
+augroup WinEnterGrp
+    autocmd!
+    autocmd WinEnter * call HlBadStyle()
+augroup END
 
 " Match cursor after searching
-fu! MatchCursor()
+fu! HlCursor()
     let c = 0
     while c<2
-        let pat = "\\%#" . @/
-        let m = matchadd('RevSearch', pat)
-        redr!
-        sleep 50 m
-        call matchdelete(m)
-        redr!
-        sleep 50 m
-        let c+=1
+        set cursorcolumn cursorline
+        redraw! | sleep 20 m
+        set nocursorcolumn nocursorline
+        redraw! | sleep 20 m | let c = c+1
     endwhile
 endf
-noremap n n:call MatchCursor()<CR>
-noremap N N:call MatchCursor()<CR>
+augroup HlCursorGrp
+    autocmd!
+    autocmd BufEnter * call HlCursor()
+augroup END
+noremap n n:call HlCursor()<CR>
+noremap N N:call HlCursor()<CR>
 
 " Match bigger comment sections
-fun! HlComments()
-    let w:doComment=1
+function! HlComments()
+    let b:doComment=1
 
-    if &filetype == "vim"
-        let w:cChar = '\"'
-    elseif &filetype == "c" || &filetype == "cpp"
-        let w:cChar = '\/\/'
-    elseif &filetype == "bash" || &filetype == "sh"
-        let w:cChar = '#'
+    if &filetype ==# "vim"
+        let b:cChar = '\"'
+    elseif &filetype ==# "c" || &filetype ==# "cpp"
+        let b:cChar = '\/\/'
+    elseif &filetype ==# "bash" || &filetype ==# "sh"
+        let b:cChar = '#'
     else
-        let w:doComment=0
+        let b:doComment=0
     endif
 
-    if w:doComment == 1
-        let w:hlString = '\(^\s*' . w:cChar . '.*\n\)\{3,}'
-        let w:match = matchadd('HlComment', w:hlString)
-    elseif exists("w:match")
-        call matchdelete(w:match)
-        unlet w:match
+    if b:doComment == 1
+        let b:hlString = '\(^\s*' . b:cChar . '.*\n\)\{3,}'
+        let b:match = matchadd('HlComment', b:hlString)
+    elseif exists("b:match")
+        call matchdelete(b:match)
+        unlet b:match
     endif
 endf
 augroup HlCommentsGroup
@@ -182,11 +218,14 @@ augroup END
 " C/CPP abbreviations
 "
 
-fun! CAbbrvs()
+function! CAbbrvs()
     inorea <buffer> iff if ( )<Left><Left>
 endf
-au FileType c call CAbbrvs()
-au FileType cpp call CAbbrvs()
+augroup FileTypeGrp
+    autocmd!
+    autocmd FileType c call CAbbrvs()
+    autocmd FileType cpp call CAbbrvs()
+augroup END
 
 "
 " Clang_complete
@@ -197,7 +236,7 @@ if !has("python")
     let g:clang_complete_loaded
 else
     " Point to libclang on OS X
-    if g:os_uname == "Darwin"
+    if g:os_uname ==# "Darwin"
         let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"
     endif
     let g:clang_complete_copen=1 " Quickfixing
