@@ -9,6 +9,4 @@ set guioptions-=l guioptions-=L guioptions-=b
 " Behavior
 "
 
-set guioptions+=a
-
 so $MYVIMRC

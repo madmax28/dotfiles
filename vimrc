@@ -3,6 +3,7 @@
 "
 
 let g:os_uname = substitute(system('uname'), "\n", "", "")
+call clearmatches()
 
 "
 " Settings
@@ -50,14 +51,16 @@ augroup END
 " Search and Replace word under cursor
 function! SearchAndReplace(op)
     " Highlight the words
-        if a:op ==# "iw"
-            silent! execute "normal! viwy"
-        elseif a:op ==# "iW"
-            silent! execute "normal! viWy"
-        else
-            echom "Invalid argument given to SearchAndReplace()!"
-            return
-        endif
+    if a:op ==# "iw"
+        silent! execute "normal! viwy"
+    elseif a:op ==# "iW"
+        silent! execute "normal! viWy"
+    elseif a:op ==# "ii"
+        silent! execute 'normal! ?\i\@!' . "\<cr>" . 'lv/\i\@!' . "\<cr>hy"
+    else
+        echom "Invalid argument given to SearchAndReplace()!"
+        return
+    endif
     let l:wordToReplace = substitute(@", "\n", "", "")
     let l:wordToReplace = escape(l:wordToReplace, '"\')
     let l:match = matchadd('Error', l:wordToReplace)
@@ -78,11 +81,12 @@ endf
 " Dont use arrow keys nor escape
 nnoremap <leader>riw :call SearchAndReplace("iw")<cr>
 nnoremap <leader>riW :call SearchAndReplace("iW")<cr>
+nnoremap <leader>rii :call SearchAndReplace("ii")<cr>
 inoremap <esc> <nop>
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
+nnoremap <Up> <Nop>
+nnoremap <Down> <Nop>
+nnoremap <Left> <Nop>
+nnoremap <Right> <Nop>
 inoremap <Up> <Nop>
 inoremap <Down> <Nop>
 inoremap <Left> <Nop>
@@ -90,14 +94,25 @@ inoremap <Right> <Nop>
 noremap / <Nop>
 
 " Moving lines
+function! DragBlock(dir)
+    " Get yanked text
+"     echom '@" = ' . @"
+    let l:toFind = '\V' . substitute(escape(@", '\?'), '\n', '\\n', 'g')
+"     echom "l:toFind = " . l:toFind
+    let l:cmd = "normal! ?" . l:toFind . "\<cr>//\<cr>gn"
+"     echom "l:cmd = " . l:cmd
+    silent! execute l:cmd
+endf
+vno <leader>- <esc>'<V'>xp
+vnoremap + Vdp:call DragBlock("down")<cr>
+vnoremap - VdkP:call DragBlock("down")<cr>
 nnoremap + ddp
 nnoremap - ddkP
-vno <leader>- <esc>'<V'>xp
 
 " Movement
+nnoremap K gg
 nnoremap H ^
 nnoremap J G$
-nnoremap K gg
 nnoremap L $
 nnoremap <leader>, /
 
@@ -110,6 +125,13 @@ if has("gui")
 endif
 
 " Misc
+nnoremap <leader>m :messages<cr>
+" Buffer resizing
+noremap <leader>iw :vertical :resize +10<cr>
+noremap <leader>ih :resize +10<cr>
+noremap <leader>dw :vertical :resize -10<cr>
+noremap <leader>dh :resize -10<cr>
+noremap <leader>n :nohlsearch<cr>
 inoremap jk <esc>
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
 nnoremap <C-f> <C-]>
@@ -151,13 +173,20 @@ if g:os_uname ==# "Darwin"
     noremap! <a-space> <space>
 endif
 
+" Filetype mappings
+augroup FileTypeMapGrp
+    autocmd!
+    autocmd FileType bash nnoremap <leader>x :!bash %<cr>
+    autocmd FileType python nnoremap <leader>x :!python %<cr>
+augroup END
+
 "
 " Matching
 "
 
 " Bad coding style
 function! HlBadStyle()
-    call matchadd('BadStyle', '\%80v.\+')
+    call matchadd('BadStyle', '\%80v.')
     call matchadd('BadStyle', '\s\+\n')
     call matchadd('BadStyle', '^\n\n')
     if g:os_uname ==# "Darwin"
@@ -171,21 +200,32 @@ augroup WinEnterGrp
 augroup END
 
 " Match cursor after searching
-fu! HlCursor()
+fu! HlCursor(...)
     let c = 0
-    while c<2
-        set cursorcolumn cursorline
-        redraw! | sleep 20 m
-        set nocursorcolumn nocursorline
-        redraw! | sleep 20 m | let c = c+1
+    while c<3
+        if a:0 > 0
+            if a:1 ==# "Match"
+                let l:pat = '\%#' . @/
+            else
+                echom "Invalid argument given to HlCursor(...)!"
+                return
+            endif
+        else
+            let l:pat = '\v.{0,3}%#.{0,3}'
+        endif
+        let l:match = matchadd('Error', l:pat)
+        redraw | sleep 50 m
+        call matchdelete(l:match)
+        redraw | sleep 50 m
+        let c = c+1
     endwhile
 endf
 augroup HlCursorGrp
     autocmd!
     autocmd BufEnter * call HlCursor()
 augroup END
-noremap n n:call HlCursor()<CR>
-noremap N N:call HlCursor()<CR>
+noremap n n:call HlCursor("Match")<CR>
+noremap N N:call HlCursor("Match")<CR>
 
 " Match bigger comment sections
 function! HlComments()
@@ -195,7 +235,7 @@ function! HlComments()
         let b:cChar = '\"'
     elseif &filetype ==# "c" || &filetype ==# "cpp"
         let b:cChar = '\/\/'
-    elseif &filetype ==# "bash" || &filetype ==# "sh"
+    elseif &filetype ==# "bash" || &filetype ==# "sh" || &filetype ==# "python"
         let b:cChar = '#'
     else
         let b:doComment=0
@@ -209,6 +249,7 @@ function! HlComments()
         unlet b:match
     endif
 endf
+call HlComments()
 augroup HlCommentsGroup
     autocmd!
     au FileType * call HlComments()
