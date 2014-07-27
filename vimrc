@@ -1,68 +1,141 @@
-"
-" Detect os
-"
+""
+"" Detect os
+""
 
 let g:os_uname = substitute(system('uname'), "\n", "", "")
 call clearmatches()
 
-"
-" Settings
-"
+""
+"" Functions
+""
 
-syntax on
-set hlsearch incsearch
-set shiftwidth=4 tabstop=4 expandtab smartindent
-silent! set ruler relativenumber number scrolloff=5 backspace=2
-set history=1000 wildmenu autowrite
-let mapleader = ","
+" Things to do when a buffer is entered
+" function! OnBufEnter()
+"     if &filetype !=# "help" || &filetype !=# "taglist"
+"         call HighlightCursor()
+"     endif
+" endfunction
 
-"
-" My highlighting groups
-"
+" Things to do when a filetype is detected
+function! OnFileType()
+    call DetectCommentCharacter()
+    call HighlightComments()
+    if &filetype !=# "help" || &filetype !=# "taglist"
+        call HighlightBadStyle()
+    endif
 
-function! SetHlGroups()
-    " Errors
-    highlight Error ctermbg=88 guibg=#880708
-    " Bad Style
-    highlight link BadStyle Error
-    " Highlight for current search result
-    highlight RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
-    " Big comment sections
-    highlight HlComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
-    " Taglist
-    highlight link MyTagListTagScope Keyword | highlight link MyTagListTitle StatusLineNC | highlight link MyTagListFileName HlComment
-    highlight link MyTagListTagName Error
-    " Misc
-    highlight clear CursorLineNr | highlight link CursorLineNr HlComment
-    highlight clear CursorLine | highlight link CursorLine Search
-    highlight clear CursorColumn | highlight link CursorColumn Search
-endf
-" Update HlGroups
-call SetHlGroups()
-augroup HlGroupsAuGrp
-    autocmd!
-    autocmd ColorScheme * call SetHlGroups()
-augroup END
+    " In Taglist, highlight the cursorline
+    if &filetype ==# "taglist"
+        set cursorline
+    endif
 
-"
-" Functions
-"
+    " Filetype mappings
+    if &filetype ==# "bash"
+        nnoremap <leader>x :w<cr>:!bash %<cr>
+    elseif &filetype ==# "python"
+        nnoremap <leader>x :w<cr>:!python %<cr>
+    endif
+endfunction
 
-" Search and Replace word under cursor
-function! SearchAndReplace(op)
-    " Highlight the words
-    if a:op ==# "iw"
-        silent! execute "normal! viwy"
-    elseif a:op ==# "iW"
-        silent! execute "normal! viWy"
-    elseif a:op ==# "ii"
-        silent! execute 'normal! ?\i\@!' . "\<cr>" . 'lv/\i\@!' . "\<cr>hy"
-    else
-        echom "Invalid argument given to SearchAndReplace()!"
+" Detect which character starts comments
+function! DetectCommentCharacter()
+    " Decide which character starts a comment
+    if &filetype ==# "vim"
+        let b:cString = '"'
+    elseif &filetype ==# "c" || &filetype ==# "cpp"
+        let b:cString = '\/\/'
+    elseif &filetype ==# "bash" || &filetype ==# "sh" || &filetype ==# "python"
+        let b:cString = '#'
+    endif
+endfunction
+
+" Match bigger comment sections
+function! HighlightComments()
+    " Are they highlighted already?
+    if !exists("b:cString")
         return
     endif
-    let l:wordToReplace = substitute(@", "\n", "", "")
-    let l:wordToReplace = escape(l:wordToReplace, '"\')
+
+    " Get last character of comment string
+    let b:cChar = substitute( b:cString, '\v^.*(.$)', '\1', '')
+
+    " Highlight the big comments
+    let b:hlString = '^\s*' . b:cString . b:cChar . '.*\n'
+    let b:match = matchadd('HighlightComment', b:hlString)
+endfunction
+
+" Match cursor after searching
+function! HighlightCursor(...)
+    " Do 3 blinks
+    let c = 0
+    while c<3
+        " What to highlight?
+        if a:0 > 0
+            if a:1 ==# "Match"
+                let l:pat = '\%#' . @/
+            else
+                echom "Invalid argument given to HighlightCursor(...)!"
+                return
+            endif
+        else
+            let l:pat = '\v.{0,3}%#.{0,3}'
+        endif
+
+        " Let it blink for 50ms
+        let l:match = matchadd('Todo', l:pat)
+        redraw | sleep 50 m
+        call matchdelete(l:match)
+        redraw | sleep 50 m
+
+        let c = c+1
+    endwhile
+
+    " If we highlighted a match, also activate visual mode
+    if exists("a:2")
+        if a:2 ==# "Visual"
+            " Select the match visually
+            normal! gno
+        endif
+    endif
+endfunction
+
+" Search and Replace word under cursor
+function! SearchAndReplace(...) " TODO: make it accept a range
+    " Decide what to replace
+    if a:0 > 0
+        if a:1 ==# "iw"
+            " S&R word under cursor
+            silent! execute "normal! viwy"
+        elseif a:1 ==# "iW"
+
+            " S&R Word under cursor
+            silent! execute "normal! viWy"
+        elseif a:1 ==# "ii"
+            silent! execute 'normal! ?\j\@!' . "\<cr>" . 'lv/\k\@!' . "\<cr>hy"
+        endif
+
+        " Replace literal by actualy newlines and escape backslashes
+        let l:wordToReplace = substitute(@", "\n", "", "")
+        let l:wordToReplace = escape(l:wordToReplace, '"\')
+    else
+        " No argument given. Ask for what to replace
+        let l:wordToReplace = input("What to replace? ")
+    endif
+
+    " If the string starts or ends with a keyword character, only replace if
+    " not besides another keyword character
+    echom l:wordToReplace
+    if match(l:wordToReplace, '^\k') > -1
+        echom "Begins with \k"
+        let l:wordToReplace = '\<' . l:wordToReplace
+    endif
+    echom l:wordToReplace
+    if match(l:wordToReplace, '\k$') > -1
+        echom "Ends with \k"
+        let l:wordToReplace = l:wordToReplace . '\>'
+    endif
+
+    " Highlight all words
     let l:match = matchadd('Error', l:wordToReplace)
     redraw!
     call matchdelete(l:match)
@@ -72,28 +145,9 @@ function! SearchAndReplace(op)
 
     " Perform substitution
     execute "%s/" . l:wordToReplace . "/" . l:replaceString . "/g"
-endf
+endfunction
 
-"
-" Handy mappings and abbreviations
-"
-
-" Dont use arrow keys nor escape
-nnoremap <leader>riw :call SearchAndReplace("iw")<cr>
-nnoremap <leader>riW :call SearchAndReplace("iW")<cr>
-nnoremap <leader>rii :call SearchAndReplace("ii")<cr>
-inoremap <esc> <nop>
-nnoremap <Up> <Nop>
-nnoremap <Down> <Nop>
-nnoremap <Left> <Nop>
-nnoremap <Right> <Nop>
-inoremap <Up> <Nop>
-inoremap <Down> <Nop>
-inoremap <Left> <Nop>
-inoremap <Right> <Nop>
-noremap / <Nop>
-
-" Moving lines
+" Moving lines TODO: This is inefficient and does not accept a [count]
 function! DragBlock(dir)
     " Get yanked text
 "     echom '@" = ' . @"
@@ -102,19 +156,107 @@ function! DragBlock(dir)
     let l:cmd = "normal! ?" . l:toFind . "\<cr>//\<cr>gn"
 "     echom "l:cmd = " . l:cmd
     silent! execute l:cmd
-endf
-vno <leader>- <esc>'<V'>xp
+endfunction
+
+" (Un)commenting lines
+function! ToggleComment()
+    if !exists("b:cString")
+        return
+    else
+        let v:errmsg = ""
+        silent! execute ':s/^\(\s*\)\([^ ' . b:cString . ']\)/' . b:cString .
+            \ ' \1\2/'
+        if v:errmsg == ""
+            return
+        endif
+        silent! execute ':s/^\(\s*\)' . b:cString . ' /\1/'
+    endif
+endfunction" Bad coding style
+
+" Highlight bad coding style
+function! HighlightBadStyle()
+    if &filetype ==# "help" || &filetype ==# "taglist"
+        return
+    endif
+
+    " Character on 81th column
+    call matchadd('BadStyle', '\%81v.')
+    " Trailing whitespaces
+    call matchadd('BadStyle', '\s\+\n')
+    " More than one newline in a row
+    call matchadd('BadStyle', '^\n\n\+')
+    " Non-breaking spaces
+    call matchadd('BadStyle', ' ')
+endfunction
+
+" Set my highlighting groups
+function! SetHighlightGroups()
+    " Errors
+    highlight Error ctermbg=88 guibg=#880708
+    " Bad Style
+    highlight link BadStyle Error
+    " Highlight for current search result
+    highlight RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
+    " Big comment sections
+    highlight HighlightComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
+    " Taglist
+    highlight link MyTagListTagScope Keyword | highlight link MyTagListTitle
+        \ StatusLineNC | highlight link MyTagListFileName HighlightComment
+    highlight link MyTagListTagName Error
+    " Misc
+    highlight clear CursorLineNr | highlight link CursorLineNr HighlightComment
+    highlight clear CursorLine | highlight link CursorLine HighlightComment
+    highlight clear CursorColumn | highlight link CursorColumn HighlightComment
+    highlight clear Todo | highlight Todo ctermbg=11 ctermfg=0 guibg=#ffff00
+        \ guifg=#000000
+endfunction
+
+""
+"" Settings
+""
+
+syntax on
+set hlsearch incsearch
+set shiftwidth=4 tabstop=4 expandtab smartindent
+silent! set ruler relativenumber number scrolloff=5 backspace=2 nowrap
+set history=1000 wildmenu autowrite
+let mapleader = ","
+
+" Update highlighting groups
+call SetHighlightGroups()
+augroup HighlightGroupsAuGrp
+    autocmd!
+    autocmd ColorScheme * call SetHighlightGroups()
+augroup END
+
+""
+"" Handy mappings and abbreviations
+""
+
+" Search and Replace stuff TODO: Think about when to use \< and \>
+nnoremap <leader>R :call SearchAndReplace()<cr>
+nnoremap <leader>rr v:call SearchAndReplace()<cr>
+nnoremap <leader>riw :call SearchAndReplace("iw")<cr>
+nnoremap <leader>riW :call SearchAndReplace("iW")<cr>
+nnoremap <leader>rii :call SearchAndReplace("ii")<cr>
+
+" Force yourself to not use some keys
+inoremap <esc> <esc><esc>i
+nnoremap <Up> <esc>
+nnoremap <Down> <esc>
+nnoremap <Left> <esc>
+nnoremap <Right> <esc>
+inoremap <Up> <esc><esc>i
+inoremap <Down> <esc><esc>i
+inoremap <Left> <esc><esc>i
+inoremap <Right> <esc><esc>i
+nnoremap / <esc>
+
+" Moving lines or blocks
 vnoremap + Vdp:call DragBlock("down")<cr>
-vnoremap - VdkP:call DragBlock("down")<cr>
+vnoremap - VdkP:call DragBlock("up")<cr>
 nnoremap + ddp
 nnoremap - ddkP
-
-" Movement
-nnoremap K gg
-nnoremap H ^
-nnoremap J G$
-nnoremap L $
-nnoremap <leader>, /
 
 " ~/.vimrc editing
 noremap <leader>ev :vsp $MYVIMRC<cr>
@@ -124,48 +266,20 @@ if has("gui")
     noremap <leader>sg :source $MYGVIMRC<cr>
 endif
 
-" Misc
-nnoremap <leader>m :messages<cr>
 " Buffer resizing
 noremap <leader>iw :vertical :resize +10<cr>
 noremap <leader>ih :resize +10<cr>
 noremap <leader>dw :vertical :resize -10<cr>
 noremap <leader>dh :resize -10<cr>
-noremap <leader>n :nohlsearch<cr>
-inoremap jk <esc>
-nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
-nnoremap <C-f> <C-]>
-noremap <C-j> <C-w>j
-noremap <C-k> <C-w>k
-noremap <C-h> <C-w>h
-noremap <C-l> <C-w>l
-noremap <C-P> :tabp<CR>
-noremap <C-N> :tabn<CR>
-noremap q <nop>
-noremap <leader>q, q/
-noremap <leader>q: q:
-inoremap <s-tab> <esc><<A
-command! W w
-command! Q q
-command! Wq wq
-command! WQ wq
-cnoreabbrev sp vsp
-cnoremap <c-p> <c-r>"
-inoremap jk <esc>
-noremap <silent> <leader>c :call ToggleComment()<cr>
-function! ToggleComment()
-    if !exists("b:cChar")
-        return
-    else
-        let v:errmsg = ""
-        silent! execute ':s/^\(\s*\)\([^ ' . b:cChar . ']\)/' . b:cChar .
-            \ ' \1\2/'
-        if v:errmsg == ""
-            return
-        endif
-        silent! execute ':s/^\(\s*\)' . b:cChar . ' /\1/'
-    endif
-endf
+
+" Helpfile, split and tab navigation
+nnoremap <c-f> <c-]>
+noremap <c-j> <c-w>j:call HighlightCursor()
+noremap <c-k> <c-w>k:call HighlightCursor()
+noremap <c-h> <c-w>h:call HighlightCursor()
+noremap <c-l> <c-w>l:call HighlightCursor()
+noremap <c-P> :tabp<cr>:call HighlightCursor()
+noremap <c-N> :tabn<cr>:call HighlightCursor()
 
 " Remap apples <a-space> to <space>
 if g:os_uname ==# "Darwin"
@@ -173,104 +287,45 @@ if g:os_uname ==# "Darwin"
     noremap! <a-space> <space>
 endif
 
-" Filetype mappings
-augroup FileTypeMapGrp
+" Make cursor easier visible after switching the buffer and jumping to the next
+" search result
+nnoremap n n:call HighlightCursor("Match", "Visual")<cr>
+nnoremap N N:call HighlightCursor("Match", "Visual")<cr>
+vnoremap n <esc>n:call HighlightCursor("Match", "Visual")<cr>
+vnoremap N <esc>N:call HighlightCursor("Match", "Visual")<cr>
+
+" Misc
+noremap <silent> <leader>c :call ToggleComment()<cr>
+noremap <leader>n :nohlsearch<cr>
+nnoremap <leader>, /
+nnoremap <leader>m :messages<cr>
+nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
+nnoremap K gg
+nnoremap H ^
+nnoremap J G$
+nnoremap L $
+nnoremap <c-q> :q<cr>
+inoremap jk <esc>
+cnoremap <c-p> <c-r>"
+cnoreabbrev sp vsp
+command! W w
+command! Q q
+command! Wq wq
+command! WQ wq
+
+""
+"" Matching
+""
+
+call OnFileType() " To immediately apply changes when sourced
+augroup FileTypeAuGrp
     autocmd!
-    autocmd FileType bash nnoremap <leader>x :!bash %<cr>
-    autocmd FileType python nnoremap <leader>x :!python %<cr>
+    au FileType * call OnFileType()
 augroup END
 
-"
-" Matching
-"
-
-" Bad coding style
-function! HlBadStyle()
-    call matchadd('BadStyle', '\%80v.')
-    call matchadd('BadStyle', '\s\+\n')
-    call matchadd('BadStyle', '^\n\n')
-    if g:os_uname ==# "Darwin"
-        call matchadd('BadStyle', ' ')
-    endif
-endf
-call HlBadStyle()
-augroup WinEnterGrp
-    autocmd!
-    autocmd WinEnter * call HlBadStyle()
-augroup END
-
-" Match cursor after searching
-fu! HlCursor(...)
-    let c = 0
-    while c<3
-        if a:0 > 0
-            if a:1 ==# "Match"
-                let l:pat = '\%#' . @/
-            else
-                echom "Invalid argument given to HlCursor(...)!"
-                return
-            endif
-        else
-            let l:pat = '\v.{0,3}%#.{0,3}'
-        endif
-        let l:match = matchadd('Error', l:pat)
-        redraw | sleep 50 m
-        call matchdelete(l:match)
-        redraw | sleep 50 m
-        let c = c+1
-    endwhile
-endf
-augroup HlCursorGrp
-    autocmd!
-    autocmd BufEnter * call HlCursor()
-augroup END
-noremap n n:call HlCursor("Match")<CR>
-noremap N N:call HlCursor("Match")<CR>
-
-" Match bigger comment sections
-function! HlComments()
-    let b:doComment=1
-
-    if &filetype ==# "vim"
-        let b:cChar = '\"'
-    elseif &filetype ==# "c" || &filetype ==# "cpp"
-        let b:cChar = '\/\/'
-    elseif &filetype ==# "bash" || &filetype ==# "sh" || &filetype ==# "python"
-        let b:cChar = '#'
-    else
-        let b:doComment=0
-    endif
-
-    if b:doComment == 1
-        let b:hlString = '\(^\s*' . b:cChar . '.*\n\)\{3,}'
-        let b:match = matchadd('HlComment', b:hlString)
-    elseif exists("b:match")
-        call matchdelete(b:match)
-        unlet b:match
-    endif
-endf
-call HlComments()
-augroup HlCommentsGroup
-    autocmd!
-    au FileType * call HlComments()
-augroup END
-
-"
-" C/CPP abbreviations
-"
-
-function! CAbbrvs()
-    inorea <buffer> iff if ( )<Left><Left>
-endf
-augroup FileTypeGrp
-    autocmd!
-    autocmd FileType c call CAbbrvs()
-    autocmd FileType cpp call CAbbrvs()
-augroup END
-
-"
-" Clang_complete
-"
+""
+"" Clang_complete
+""
 
 if !has("python")
     echo "Python not available. Disabling clang_complete"
@@ -278,33 +333,34 @@ if !has("python")
 else
     " Point to libclang on OS X
     if g:os_uname ==# "Darwin"
-        let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"
+        let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/To
+            \olchains/XcodeDefault.xctoolchain/usr/lib"
     endif
     let g:clang_complete_copen=1 " Quickfixing
     let g:clang_snippets=1
     let g:clang_complete_patterns=1
-    let g:clang_jumpto_declaration_key='<C-f>'
+    let g:clang_jumpto_declaration_key='<c-f>'
 endif
 
-"
-" Taglist
-"
+""
+"" Taglist
+""
 
-noremap <C-g> :TlistToggle<CR>
+noremap <c-g> :TlistToggle<cr>
 let Tlist_Use_Right_Window = 1
 let Tlist_Use_SingleClick = 1
 let Tlist_Inc_Winwidth = 1
 let Tlist_Max_Tag_Length = 100
 let Tlist_Use_SingleClick = 1
 
-"
-" Pathogen
-"
+""
+"" Pathogen
+""
 
 call pathogen#infect()
 
-"
-" Color Theme
-"
+""
+"" Color Theme
+""
 
 color codeschool
