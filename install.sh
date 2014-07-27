@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#
-# Vim stuff
-#
+##
+## Vim stuff
+##
 
 for FILE in vimrc gvimrc; do
     if [ ! -f $HOME/.$FILE ]; then
@@ -10,13 +10,26 @@ for FILE in vimrc gvimrc; do
         touch $HOME/.$FILE
     fi
 
-    CMDSTR="so $PWD/$FILE"
-    if [ `grep "$CMDSTR" $HOME/.$FILE | wc -l` -eq 0 ]; then
-        echo "Appending \"$CMDSTR\" to $HOME/.$FILE"
-        printf "\n\" This line was added automatically" >> $HOME/.$FILE
-        printf "\n$CMDSTR" >> $HOME/.$FILE
+    appendString="\" This stuff was added automatically"
+    if [ `grep "$appendString" $HOME/.$FILE | wc -l` -eq 0 ]; then
+        echo "Appending \"$appendString\" to $HOME/.$FILE"
+        printf "\n$appendString" >> $HOME/.$FILE
+    fi
+
+    sourceString="so $PWD/$FILE"
+    if [ `grep "$sourceString" $HOME/.$FILE | wc -l` -eq 0 ]; then
+        echo "Appending \"$sourceString\" to $HOME/.$FILE"
+        printf "\n$sourceString" >> $HOME/.$FILE
     fi
 done
+
+# Point pydiction to its complete-dict file
+pydictionCfgStr="let g:pydiction_location = \"$HOME/.vim/bundle/pydiction/complete-dict\""
+vimrc="$HOME/.vimrc"
+if [ `grep "$pydictionCfgStr" "$vimrc" | wc -l` -eq 0 ]; then
+    echo "Appending $pydictionCfgStr to $vimrc"
+    printf "\n$pydictionCfgStr" >> $vimrc
+fi
 
 # Install plugins
 if [ ! -d $HOME/.vim ]; then
@@ -38,18 +51,18 @@ else
     fi
 fi
 
-#
-# Bash stuff
-#
+##
+## Bash stuff
+##
 
 if [ ! -f $HOME/.bashrc ]; then
     echo "Touching $HOME/.bashrc"
     touch $HOME/.bashrc
 fi
 
-CMDSTR="source $PWD/bashrc"
-if [ `grep "$CMDSTR" $HOME/.bashrc | wc -l` -eq 0 ]; then
-    echo "Appending \"$CMDSTR\" to $HOME/.bashrc"
+sourceString="source $PWD/bashrc"
+if [ `grep "$sourceString" $HOME/.bashrc | wc -l` -eq 0 ]; then
+    echo "Appending \"$sourceString\" to $HOME/.bashrc"
     printf "\n# This line was added automatically" >> $HOME/.bashrc
-    printf "\n$CMDSTR" >> $HOME/.bashrc
+    printf "\n$sourceString" >> $HOME/.bashrc
 fi

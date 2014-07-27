@@ -18,9 +18,13 @@ call clearmatches()
 
 " Things to do when a filetype is detected
 function! OnFileType()
-    call DetectCommentCharacter()
-    call HighlightComments()
+    " Do nothing for help files and taglist
     if &filetype !=# "help" || &filetype !=# "taglist"
+        " Which characters start a comment?
+        call DetectCommentCharacter()
+        " Highlight special comments, e.g. '///' for c or '""' for vim
+        call HighlightComments()
+        " Highlight bad coding style
         call HighlightBadStyle()
     endif
 
@@ -29,8 +33,16 @@ function! OnFileType()
         set cursorline
     endif
 
+    " For python, add our dictionary
+    if &filetype ==# "python"
+        if exists("g:pydiction_location")
+            let &dictionary = &dictionary . "," . g:pydiction_location
+            set complete+=k
+        endif
+    endif
+
     " Filetype mappings
-    if &filetype ==# "bash"
+    if &filetype ==# "bash" || &filetype ==# "sh"
         nnoremap <leader>x :w<cr>:!bash %<cr>
     elseif &filetype ==# "python"
         nnoremap <leader>x :w<cr>:!python %<cr>
@@ -224,10 +236,10 @@ endfunction
 ""
 
 syntax on
-set hlsearch incsearch
-set shiftwidth=4 tabstop=4 expandtab smartindent
-silent! set ruler relativenumber number scrolloff=5 backspace=2 nowrap
-set history=1000 wildmenu autowrite
+filetype plugin on
+set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
+    \ relativenumber number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
+    \ autowrite completeopt=menuone,preview,longest wildmode=list:longest,full
 let mapleader = ","
 
 " Update highlighting groups
@@ -282,15 +294,22 @@ noremap <leader>dh :resize -10<cr>
 
 " Helpfile, split and tab navigation
 nnoremap <c-f> <c-]>
-noremap <silent> <c-j> <c-w>j:call HighlightCursor()<cr>
-noremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
-noremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
-noremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
-noremap <silent> <c-P> :tabp<cr>:call HighlightCursor()<cr>
-noremap <silent> <c-N> :tabn<cr>:call HighlightCursor()<cr>
+"Open last closed buffer
+nnoremap <leader>el :vsp<bar>:b#<cr>
+inoremap <silent> <c-j> <esc><c-w>j:call HighlightCursor()<cr>
+inoremap <silent> <c-k> <esc><c-w>k:call HighlightCursor()<cr>
+inoremap <silent> <c-h> <esc><c-w>h:call HighlightCursor()<cr>
+inoremap <silent> <c-l> <esc><c-w>l:call HighlightCursor()<cr>
+nnoremap <silent> <c-j> <c-w>j:call HighlightCursor()<cr>
+nnoremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
+nnoremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
+nnoremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
+nnoremap <silent> <c-p> :tabp<cr>:call HighlightCursor()<cr>
+nnoremap <silent> <c-p> :tabn<cr>:call HighlightCursor()<cr>
 
-" Remap apples <a-space> to <space>
+" Apple specific stuff
 if g:os_uname ==# "Darwin"
+    " Remap <a-space> to <space>
     noremap <a-space> <space>
     noremap! <a-space> <space>
 endif
@@ -303,6 +322,7 @@ vnoremap n <esc>n:call HighlightCursor("Match", "Visual")<cr>
 vnoremap N <esc>N:call HighlightCursor("Match", "Visual")<cr>
 
 " Misc
+inoremap <tab> <c-n>
 noremap <silent> <leader>c :call ToggleComment()<cr>
 noremap <leader>n :nohlsearch<cr>
 nnoremap <leader>, /
@@ -312,7 +332,6 @@ nnoremap K gg
 nnoremap H ^
 nnoremap J G$
 nnoremap L $
-nnoremap <c-q> :q<cr>
 inoremap jk <esc>
 cnoremap <c-p> <c-r>"
 cnoreabbrev sp vsp
@@ -332,9 +351,10 @@ augroup FileTypeAuGrp
 augroup END
 
 ""
-"" Clang_complete
+"" Plugins
 ""
 
+" Clang_complete
 if !has("python")
     echo "Python not available. Disabling clang_complete"
     let g:clang_complete_loaded
@@ -350,10 +370,7 @@ else
     let g:clang_jumpto_declaration_key='<c-f>'
 endif
 
-""
-"" Taglist
-""
-
+" Taglist
 noremap <c-g> :TlistToggle<cr>
 let Tlist_Use_Right_Window = 1
 let Tlist_Use_SingleClick = 1
@@ -361,10 +378,7 @@ let Tlist_Inc_Winwidth = 1
 let Tlist_Max_Tag_Length = 100
 let Tlist_Use_SingleClick = 1
 
-""
-"" Pathogen
-""
-
+" Pathogen
 call pathogen#infect()
 
 ""
