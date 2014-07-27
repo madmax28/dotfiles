@@ -149,12 +149,20 @@ endfunction
 
 " Moving lines TODO: This is inefficient and does not accept a [count]
 function! DragBlock(dir)
-    " Get yanked text
-"     echom '@" = ' . @"
+    " Delete and put
+    silent! execute "normal! :'<,'>delete\<cr>"
+    if a:dir ==# "down"
+        silent! normal! p
+    elseif a:dir ==# "up"
+        silent! normal! kP
+    else
+        echom "DragBlock(): Invalid argument"
+    endif
+
+    " Get yanked text; Escape \ since we use \V and ? for backwards search
+    " Substitute actual newlines with symbolic newlines
     let l:toFind = '\V' . substitute(escape(@", '\?'), '\n', '\\n', 'g')
-"     echom "l:toFind = " . l:toFind
     let l:cmd = "normal! ?" . l:toFind . "\<cr>//\<cr>gn"
-"     echom "l:cmd = " . l:cmd
     silent! execute l:cmd
 endfunction
 
@@ -171,7 +179,7 @@ function! ToggleComment()
         endif
         silent! execute ':s/^\(\s*\)' . b:cString . ' /\1/'
     endif
-endfunction" Bad coding style
+endfunction
 
 " Highlight bad coding style
 function! HighlightBadStyle()
@@ -253,8 +261,8 @@ inoremap <Right> <esc><esc>i
 nnoremap / <esc>
 
 " Moving lines or blocks
-vnoremap + Vdp:call DragBlock("down")<cr>
-vnoremap - VdkP:call DragBlock("up")<cr>
+vnoremap <silent> + <esc>:call DragBlock("down")<cr>
+vnoremap <silent> - <esc>:call DragBlock("up")<cr>
 nnoremap + ddp
 nnoremap - ddkP
 
@@ -274,12 +282,12 @@ noremap <leader>dh :resize -10<cr>
 
 " Helpfile, split and tab navigation
 nnoremap <c-f> <c-]>
-noremap <c-j> <c-w>j:call HighlightCursor()
-noremap <c-k> <c-w>k:call HighlightCursor()
-noremap <c-h> <c-w>h:call HighlightCursor()
-noremap <c-l> <c-w>l:call HighlightCursor()
-noremap <c-P> :tabp<cr>:call HighlightCursor()
-noremap <c-N> :tabn<cr>:call HighlightCursor()
+noremap <silent> <c-j> <c-w>j:call HighlightCursor()<cr>
+noremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
+noremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
+noremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
+noremap <silent> <c-P> :tabp<cr>:call HighlightCursor()<cr>
+noremap <silent> <c-N> :tabn<cr>:call HighlightCursor()<cr>
 
 " Remap apples <a-space> to <space>
 if g:os_uname ==# "Darwin"
