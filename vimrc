@@ -33,19 +33,24 @@ function! OnFileType()
         set cursorline
     endif
 
-    " For python, add our dictionary
+    " For python
     if &filetype ==# "python"
+        " Add our dictionary
         if exists("g:pydiction_location")
-            let &dictionary = &dictionary . "," . g:pydiction_location
-            set complete+=k
+            execute "setlocal dictionary=" . g:pydiction_location
+            set complete+=k complete-=t
         endif
+        " Add a mapping to open pydoc
+        command! -nargs=1 Pydoc execute "normal! :vnew\<cr>:read !pydoc <args>\<cr>gg"
+        nnoremap <buffer> <silent> <leader>K yiw:Pydoc <c-r>"<cr>
+        nnoremap <buffer> <leader>k :Pydoc 
     endif
 
     " Filetype mappings
     if &filetype ==# "bash" || &filetype ==# "sh"
-        nnoremap <leader>x :w<cr>:!bash %<cr>
+        nnoremap <buffer> <leader>x :w<cr>:!bash %<cr>
     elseif &filetype ==# "python"
-        nnoremap <leader>x :w<cr>:!python %<cr>
+        nnoremap <buffer> <leader>x :w<cr>:!python %<cr>
     endif
 endfunction
 
@@ -184,12 +189,14 @@ function! ToggleComment()
         return
     else
         let v:errmsg = ""
+        " Comment
         silent! execute ':s/^\(\s*\)\([^ ' . b:cString . ']\)/' . b:cString .
-            \ ' \1\2/'
+            \ '\1\2/'
         if v:errmsg == ""
             return
         endif
-        silent! execute ':s/^\(\s*\)' . b:cString . ' /\1/'
+        " Uncomment
+      silent! execute ':s/^\(\s*\)' . b:cString . '\1/'
     endif
 endfunction
 
@@ -239,7 +246,7 @@ syntax on
 filetype plugin on
 set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
     \ relativenumber number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
-    \ autowrite completeopt=menuone,preview,longest wildmode=list:longest,full
+    \ autowrite completeopt=menuone,preview wildmode=list:longest,full
 let mapleader = ","
 
 " Update highlighting groups
@@ -279,10 +286,10 @@ nnoremap + ddp
 nnoremap - ddkP
 
 " ~/.vimrc editing
-noremap <leader>ev :vsp $MYVIMRC<cr>
+noremap <leader>ev :sp $MYVIMRC<cr>
 noremap <leader>sv :source $MYVIMRC<cr>
 if has("gui")
-    noremap <leader>eg :vsp $MYGVIMRC<cr>
+    noremap <leader>eg :sp $MYGVIMRC<cr>
     noremap <leader>sg :source $MYGVIMRC<cr>
 endif
 
@@ -294,8 +301,10 @@ noremap <leader>dh :resize -10<cr>
 
 " Helpfile, split and tab navigation
 nnoremap <c-f> <c-]>
-"Open last closed buffer
-nnoremap <leader>el :vsp<bar>:b#<cr>
+" Open last closed buffer
+nnoremap <leader>el :sp<bar>:b#<cr>
+" Move active buffer to new tab
+nnoremap <leader>t <c-W>T
 inoremap <silent> <c-j> <esc><c-w>j:call HighlightCursor()<cr>
 inoremap <silent> <c-k> <esc><c-w>k:call HighlightCursor()<cr>
 inoremap <silent> <c-h> <esc><c-w>h:call HighlightCursor()<cr>
@@ -322,7 +331,10 @@ vnoremap n <esc>n:call HighlightCursor("Match", "Visual")<cr>
 vnoremap N <esc>N:call HighlightCursor("Match", "Visual")<cr>
 
 " Misc
-inoremap <tab> <c-n>
+nnoremap <leader>x :echom "Don't know how to execute filetype '" . &filetype
+    \ . "'"<cr>
+nnoremap <leader>j J
+nnoremap <leader>J kJ
 noremap <silent> <leader>c :call ToggleComment()<cr>
 noremap <leader>n :nohlsearch<cr>
 nnoremap <leader>, /
@@ -334,7 +346,6 @@ nnoremap J G$
 nnoremap L $
 inoremap jk <esc>
 cnoremap <c-p> <c-r>"
-cnoreabbrev sp vsp
 command! W w
 command! Q q
 command! Wq wq
@@ -367,7 +378,8 @@ else
     let g:clang_complete_copen=1 " Quickfixing
     let g:clang_snippets=1
     let g:clang_complete_patterns=1
-    let g:clang_jumpto_declaration_key='<c-f>'
+    let g:clang_jumpto_declaration_in_preview_key='<c-f>'
+    let g:clang_jumpto_declaration_key='<c-F>'
 endif
 
 " Taglist
