@@ -1,12 +1,17 @@
-"
-" Appearance
-"
+""
+"" Appearance
+""
 
-set guifont=Monaco:h13 guioptions-=r guioptions-=R
-set guioptions-=l guioptions-=L guioptions-=b
+if g:os_uname ==# "Darwin"
+    set guifont=Monaco:h13 guioptions-=r guioptions-=R
+elseif g:os_uname ==# "Linux"
+    set guifont=Monospace\ 14
+endif
+set guioptions-=l guioptions-=L guioptions-=b guioptions-=T guioptions-=m
+set guioptions-=r guioptions-=R
 
-"
-" Behavior
-"
+""
+"" Behavior
+""
 
 so $MYVIMRC

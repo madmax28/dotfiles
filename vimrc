@@ -33,7 +33,7 @@ function! OnFileType()
         set cursorline
     endif
 
-    " For python
+    " Python
     if &filetype ==# "python"
         " Add our dictionary
         if exists("g:pydiction_location")
@@ -44,13 +44,18 @@ function! OnFileType()
         command! -nargs=1 Pydoc execute "normal! :vnew\<cr>:read !pydoc <args>\<cr>gg"
         nnoremap <buffer> <silent> <leader>K yiw:Pydoc <c-r>"<cr>
         nnoremap <buffer> <leader>k :Pydoc 
+        nnoremap <buffer> <leader>x :w<cr>:!python %<cr>
     endif
 
-    " Filetype mappings
+    " Bash
     if &filetype ==# "bash" || &filetype ==# "sh"
         nnoremap <buffer> <leader>x :w<cr>:!bash %<cr>
-    elseif &filetype ==# "python"
-        nnoremap <buffer> <leader>x :w<cr>:!python %<cr>
+    endif
+
+    " C / CPP
+    if &filetype ==# "c" || &filetype ==# "cpp"
+        set iskeyword=a-z,A-Z,48-57,_
+        nnoremap <buffer> <leader>b :wa<cr>:!make -j8<cr>
     endif
 endfunction
 
@@ -124,14 +129,13 @@ function! SearchAndReplace(...) " TODO: make it accept a range
             " S&R word under cursor
             silent! execute "normal! viwy"
         elseif a:1 ==# "iW"
-
-            " S&R Word under cursor
+            " S&R WORD under cursor
             silent! execute "normal! viWy"
         elseif a:1 ==# "ii"
             silent! execute 'normal! ?\j\@!' . "\<cr>" . 'lv/\k\@!' . "\<cr>hy"
         endif
 
-        " Replace literal by actualy newlines and escape backslashes
+        " Replace literal by actual newlines and escape backslashes
         let l:wordToReplace = substitute(@", "\n", "", "")
         let l:wordToReplace = escape(l:wordToReplace, '"\')
     else
@@ -143,13 +147,13 @@ function! SearchAndReplace(...) " TODO: make it accept a range
     " not besides another keyword character
     echom l:wordToReplace
     if match(l:wordToReplace, '^\k') > -1
-        echom "Begins with \k"
-        let l:wordToReplace = '\<' . l:wordToReplace
+        " Begins with \k
+        let l:wordToReplace = '\k\@<!' . l:wordToReplace
     endif
     echom l:wordToReplace
     if match(l:wordToReplace, '\k$') > -1
-        echom "Ends with \k"
-        let l:wordToReplace = l:wordToReplace . '\>'
+        " Ends with \k
+        let l:wordToReplace = l:wordToReplace . '\k\@!'
     endif
 
     " Highlight all words
@@ -245,7 +249,7 @@ endfunction
 syntax on
 filetype plugin on
 set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
-    \ relativenumber number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
+    \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
     \ autowrite completeopt=menuone,preview wildmode=list:longest,full
 let mapleader = ","
 
@@ -394,7 +398,7 @@ else
 endif
 
 " Taglist
-noremap <c-g> :TlistToggle<cr>
+noremap <leader>g :TlistToggle<cr>
 let Tlist_Use_Right_Window = 1
 let Tlist_Use_SingleClick = 1
 let Tlist_Inc_Winwidth = 1
