@@ -1,5 +1,5 @@
 ""
-"" Detect os
+"" Init
 ""
 
 let g:os_uname = substitute(system('uname'), "\n", "", "")
@@ -202,10 +202,6 @@ endfunction
 
 " Highlight bad coding style
 function! HighlightBadStyle()
-    if &filetype ==# "help" || &filetype ==# "taglist"
-        return
-    endif
-
     " Character on 81th column
     call matchadd('BadStyle', '\%81v.')
     " Trailing whitespaces
@@ -226,11 +222,15 @@ function! SetHighlightGroups()
     highlight RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
     " Big comment sections
     highlight HighlightComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
+    " Matchin parenthesis
+    highlight MatchParen cterm=underline ctermfg=255 ctermbg=26
+        \ gui=underline guibg=#4f76b6 guifg=#f0f0f0
     " Taglist
     highlight link MyTagListTagScope Keyword | highlight link MyTagListTitle
         \ StatusLineNC | highlight link MyTagListFileName HighlightComment
     highlight link MyTagListTagName Error
     " Misc
+    highlight clear FoldColumn | highlight link FoldColumn Statusline
     highlight clear CursorLineNr | highlight link CursorLineNr HighlightComment
     highlight clear CursorLine | highlight link CursorLine HighlightComment
     highlight clear CursorColumn | highlight link CursorColumn HighlightComment
@@ -256,6 +256,11 @@ augroup HighlightGroupsAuGrp
     autocmd ColorScheme * call SetHighlightGroups()
 augroup END
 
+augroup FileTypeGrp
+    autocmd!
+    autocmd BufEnter *vim set filetype=vim
+augroup END
+
 ""
 "" Handy mappings and abbreviations
 ""
@@ -268,15 +273,25 @@ nnoremap <leader>riW :call SearchAndReplace("iW")<cr>
 nnoremap <leader>rii :call SearchAndReplace("ii")<cr>
 
 " Force yourself to not use some keys
-inoremap <esc> <esc><esc>i
-nnoremap <Up> <esc>
-nnoremap <Down> <esc>
-nnoremap <Left> <esc>
-nnoremap <Right> <esc>
-inoremap <Up> <esc><esc>i
-inoremap <Down> <esc><esc>i
-inoremap <Left> <esc><esc>i
-inoremap <Right> <esc><esc>i
+if g:os_uname ==# "Darwin"
+    nnoremap OA <esc>
+    inoremap OA <esc><esc>li
+    nnoremap OB <esc>
+    inoremap OB <esc><esc>li
+    nnoremap OD <esc>
+    inoremap OD <esc><esc>li
+    nnoremap OC <esc>
+    inoremap OC <esc><esc>li
+else
+    nnoremap <Up> <esc>
+    nnoremap <Down> <esc>
+    nnoremap <Left> <esc>
+    nnoremap <Right> <esc>
+    inoremap <Up> <esc><esc>li
+    inoremap <Down> <esc><esc>li
+    inoremap <Left> <esc><esc>li
+    inoremap <Right> <esc><esc>li
+endif
 nnoremap / <esc>
 
 " Moving lines or blocks
@@ -294,11 +309,10 @@ if has("gui")
 endif
 
 " Buffer resizing
-noremap <leader>iw :vertical :resize +10<cr>
-noremap <leader>ih :resize +10<cr>
-noremap <leader>dw :vertical :resize -10<cr>
-noremap <leader>dh :resize -10<cr>
-
+noremap <c-right> :vertical :resize +5<cr>
+noremap <c-up> :resize +5<cr>
+noremap <c-left> :vertical :resize -5<cr>
+noremap <c-down> :resize -5<cr>
 " Helpfile, split and tab navigation
 nnoremap <c-f> <c-]>
 " Open last closed buffer
@@ -375,9 +389,6 @@ else
         let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/To
             \olchains/XcodeDefault.xctoolchain/usr/lib"
     endif
-    let g:clang_complete_copen=1 " Quickfixing
-    let g:clang_snippets=1
-    let g:clang_complete_patterns=1
     let g:clang_jumpto_declaration_in_preview_key='<c-f>'
     let g:clang_jumpto_declaration_key='<c-F>'
 endif
