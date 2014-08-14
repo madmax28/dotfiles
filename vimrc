@@ -20,12 +20,22 @@ call clearmatches()
 function! OnFileType()
     " Do nothing for help files and taglist
     if &filetype !=# "help" || &filetype !=# "taglist"
-        " Which characters start a comment?
-        call DetectCommentCharacter()
         " Highlight special comments, e.g. '///' for c or '""' for vim
         call HighlightComments()
         " Highlight bad coding style
         call HighlightBadStyle()
+    endif
+
+    " Decide which character starts a comment
+    if &filetype ==# "vim"
+        let b:cString = '"'
+    elseif &filetype ==# "c" || &filetype ==# "cpp"
+        let b:cString = '\/\/'
+    elseif &filetype ==# "bash" || &filetype ==# "sh" || &filetype ==# "python"
+        let b:cString = '#'
+    elseif &filetype ==# "xml"
+        let b:cString = '<!--'
+        let b:cEndString = '-->'
     endif
 
     " In Taglist, highlight the cursorline
@@ -59,18 +69,6 @@ function! OnFileType()
     endif
 endfunction
 
-" Detect which character starts comments
-function! DetectCommentCharacter()
-    " Decide which character starts a comment
-    if &filetype ==# "vim"
-        let b:cString = '"'
-    elseif &filetype ==# "c" || &filetype ==# "cpp"
-        let b:cString = '\/\/'
-    elseif &filetype ==# "bash" || &filetype ==# "sh" || &filetype ==# "python"
-        let b:cString = '#'
-    endif
-endfunction
-
 " Match bigger comment sections
 function! HighlightComments()
     " Are they highlighted already?
@@ -79,14 +77,14 @@ function! HighlightComments()
     endif
 
     " Get last character of comment string
-    let b:cChar = substitute( b:cString, '\v^.*(.$)', '\1', '')
+    let b:cChar = substitute( b:cString, '\v^.*(.)$', '\1', '')
 
     " Highlight the big comments
     let b:hlString = '^\s*' . b:cString . b:cChar . '.*\n'
     let b:match = matchadd('HighlightComment', b:hlString)
 endfunction
 
-" Match cursor after searching
+" Make the cursor easily visible
 function! HighlightCursor(...)
     " Do 3 blinks
     let c = 0
@@ -113,59 +111,64 @@ function! HighlightCursor(...)
     endwhile
 
     " If we highlighted a match, also activate visual mode
-    if exists("a:2")
-        if a:2 ==# "Visual"
+"    if exists("a:2")
+"        if a:2 ==# "Visual"
             " Select the match visually
-            normal! gno
-        endif
-    endif
+"            normal! gno
+"        endif
+"    endif
 endfunction
 
 " Search and Replace word under cursor
-function! SearchAndReplace(...) " TODO: make it accept a range
-    " Decide what to replace
-    if a:0 > 0
-        if a:1 ==# "iw"
-            " S&R word under cursor
-            silent! execute "normal! viwy"
-        elseif a:1 ==# "iW"
-            " S&R WORD under cursor
-            silent! execute "normal! viWy"
-        elseif a:1 ==# "ii"
-            silent! execute 'normal! ?\j\@!' . "\<cr>" . 'lv/\k\@!' . "\<cr>hy"
+function! SearchAndReplace(mode, ...) " TODO: make it accept a range
+    " In normal mode
+    if a:mode ==# "normal"
+        if a:0 > 0
+            if a:1 ==# "iw"
+                " S&R word under cursor
+                silent! execute "normal! viwy"
+            elseif a:1 ==# "iW"
+                " S&R WORD under cursor
+                silent! execute "normal! viWy"
+            endif
+        else
+            " No argument given. Ask for what to replace
+            let l:word = input("What to replace? ")
         endif
+    endif
 
-        " Replace literal by actual newlines and escape backslashes
-        let l:wordToReplace = substitute(@", "\n", "", "")
-        let l:wordToReplace = escape(l:wordToReplace, '"\')
+    " Escape backslashes
+    let l:word = escape(@", '\')
+
+    " If the string is a whole keyword, only replace if
+    " not preceded/followed by keyword character
+    echo l:word
+    if match(l:word, '^\k\+$') > -1
+        let l:pattern = '\<' . l:word . '\>'
+        let l:isKeyword = 1
     else
-        " No argument given. Ask for what to replace
-        let l:wordToReplace = input("What to replace? ")
-    endif
-
-    " If the string starts or ends with a keyword character, only replace if
-    " not besides another keyword character
-    echom l:wordToReplace
-    if match(l:wordToReplace, '^\k') > -1
-        " Begins with \k
-        let l:wordToReplace = '\k\@<!' . l:wordToReplace
-    endif
-    echom l:wordToReplace
-    if match(l:wordToReplace, '\k$') > -1
-        " Ends with \k
-        let l:wordToReplace = l:wordToReplace . '\k\@!'
+        let l:isKeyword = 0
+        let l:pattern = l:word
     endif
 
     " Highlight all words
-    let l:match = matchadd('Error', l:wordToReplace)
+    let l:match = matchadd('Error', l:word)
     redraw!
     call matchdelete(l:match)
 
     " Get string with which to substitute
-    let l:replaceString = input("Replace \"" . l:wordToReplace . "\" with: ")
+    let l:replaceString = input("Replace \"" . l:word . "\" with: ")
 
     " Perform substitution
-    execute "%s/" . l:wordToReplace . "/" . l:replaceString . "/g"
+    execute '%s/\V' . l:pattern . "/" . l:replaceString . "/g"
+
+    " Set last search to inserted string
+    if l:isKeyword
+        let @/ = '\<' . l:replaceString . '\>'
+    else
+        let @/ = l:replaceString
+    endif
+    set hlsearch
 endfunction
 
 " Moving lines TODO: This is inefficient and does not accept a [count]
@@ -194,13 +197,21 @@ function! ToggleComment()
     else
         let v:errmsg = ""
         " Comment
-        silent! execute ':s/^\(\s*\)\([^ ' . b:cString . ']\)/' . b:cString .
-            \ '\1\2/'
+        silent! execute ':s/\v^(\s*)((\V' . b:cString . '\v)|\s)@!/' . b:cString .
+            \ ' \1\2'
         if v:errmsg == ""
+            " Add closing comment string at end of line if needed
+            if exists("b:cEndString")
+                silent! execute ':s/$/ ' . b:cEndString . '/'
+            endif
             return
         endif
+
         " Uncomment
-      silent! execute ':s/^\(\s*\)' . b:cString . '\1/'
+        silent! execute ':s/\v^(\s*)(\V' . b:cString . '\v)\s(\s*)/\1\3/'
+        if exists("b:cEndString")
+            silent! execute ':s/ ' . b:cEndString . '$//'
+        endif
     endif
 endfunction
 
@@ -240,6 +251,8 @@ function! SetHighlightGroups()
     highlight clear CursorColumn | highlight link CursorColumn HighlightComment
     highlight clear Todo | highlight Todo ctermbg=11 ctermfg=0 guibg=#ffff00
         \ guifg=#000000
+    highlight clear TabLineSel | highlight link TabLineSel HighlightComment
+    highlight clear TabLineFill | highlight link TabLineFill TabLine
 endfunction
 
 ""
@@ -251,6 +264,9 @@ filetype plugin on
 set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
     \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
     \ autowrite completeopt=menuone,preview wildmode=list:longest,full
+if v:version >= 703
+    set relativenumber
+endif
 let mapleader = ","
 
 " Update highlighting groups
@@ -270,11 +286,10 @@ augroup END
 ""
 
 " Search and Replace stuff TODO: Think about when to use \< and \>
-nnoremap <leader>R :call SearchAndReplace()<cr>
-nnoremap <leader>rr v:call SearchAndReplace()<cr>
-nnoremap <leader>riw :call SearchAndReplace("iw")<cr>
-nnoremap <leader>riW :call SearchAndReplace("iW")<cr>
-nnoremap <leader>rii :call SearchAndReplace("ii")<cr>
+vnoremap <leader>r y:call SearchAndReplace("visual")<cr>
+nnoremap <leader>rr v:call SearchAndReplace("normal")<cr>
+nnoremap <leader>riw :call SearchAndReplace("normal", "iw")<cr>
+nnoremap <leader>riW :call SearchAndReplace("normal", "iW")<cr>
 
 " Force yourself to not use some keys
 if g:os_uname ==# "Darwin"
@@ -313,10 +328,10 @@ if has("gui")
 endif
 
 " Buffer resizing
-noremap <c-right> :vertical :resize +5<cr>
-noremap <c-up> :resize +5<cr>
-noremap <c-left> :vertical :resize -5<cr>
-noremap <c-down> :resize -5<cr>
+noremap <leader><right> :vertical :resize +5<cr>
+noremap <leader><up> :resize +5<cr>
+noremap <leader><left> :vertical :resize -5<cr>
+noremap <leader><down> :resize -5<cr>
 " Helpfile, split and tab navigation
 nnoremap <c-f> <c-]>
 " Open last closed buffer
@@ -343,10 +358,10 @@ endif
 
 " Make cursor easier visible after switching the buffer and jumping to the next
 " search result
-nnoremap n n:call HighlightCursor("Match", "Visual")<cr>
-nnoremap N N:call HighlightCursor("Match", "Visual")<cr>
-vnoremap n <esc>n:call HighlightCursor("Match", "Visual")<cr>
-vnoremap N <esc>N:call HighlightCursor("Match", "Visual")<cr>
+nnoremap n n:call HighlightCursor("Match")<cr>
+nnoremap N N:call HighlightCursor("Match")<cr>
+vnoremap n <esc>n:call HighlightCursor("Match")<cr>
+vnoremap N <esc>N:call HighlightCursor("Match")<cr>
 
 " Misc
 nnoremap <leader>x :echom "Don't know how to execute filetype '" . &filetype
