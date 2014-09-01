@@ -332,7 +332,7 @@ nnoremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
 nnoremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
 nnoremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
 nnoremap <silent> <c-p> :tabp<cr>:call HighlightCursor()<cr>
-nnoremap <silent> <c-p> :tabn<cr>:call HighlightCursor()<cr>
+nnoremap <silent> <c-n> :tabn<cr>:call HighlightCursor()<cr>
 
 " Apple specific stuff
 if g:os_uname ==# "Darwin"
@@ -407,9 +407,3 @@ let Tlist_Use_SingleClick = 1
 
 " Pathogen
 call pathogen#infect()
-
-""
-"" Color Theme
-""
-
-color codeschool
