@@ -218,11 +218,11 @@ endfunction
 " Highlight bad coding style
 function! HighlightBadStyle()
     " Character on 81th column
-    call matchadd('BadStyle', '\%81v.')
+"     call matchadd('BadStyle', '\%81v.')
     " Trailing whitespaces
-    call matchadd('BadStyle', '\s\+\n')
+"     call matchadd('BadStyle', '\s\+\n')
     " More than one newline in a row
-    call matchadd('BadStyle', '^\n\n\+')
+"     call matchadd('BadStyle', '^\n\n\+')
     " Non-breaking spaces
     call matchadd('BadStyle', ' ')
 endfunction
@@ -311,7 +311,6 @@ else
     inoremap <Left> <esc><esc>li
     inoremap <Right> <esc><esc>li
 endif
-nnoremap / <esc>
 
 " Moving lines or blocks
 vnoremap <silent> + <esc>:call DragBlock("down")<cr>
@@ -370,7 +369,6 @@ nnoremap <leader>j J
 nnoremap <leader>J kJ
 noremap <silent> <leader>c :call ToggleComment()<cr>
 noremap <leader>n :nohlsearch<cr>
-nnoremap <leader>, /
 nnoremap <leader>m :messages<cr>
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
 nnoremap K gg
