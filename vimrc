@@ -220,9 +220,9 @@ function! HighlightBadStyle()
     " Character on 81th column
 "     call matchadd('BadStyle', '\%81v.')
     " Trailing whitespaces
-    call matchadd('BadStyle', '\s\+\n')
+"     call matchadd('BadStyle', '\s\+\n')
     " More than one newline in a row
-    call matchadd('BadStyle', '^\n\n\+')
+"     call matchadd('BadStyle', '^\n\n\+')
     " Non-breaking spaces
     call matchadd('BadStyle', ' ')
 endfunction
