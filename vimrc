@@ -306,10 +306,10 @@ nnoremap + ddp
 nnoremap - ddkP
 
 " ~/.vimrc editing
-noremap <leader>ev :sp $MYVIMRC<cr>
+noremap <leader>ev :e $MYVIMRC<cr>
 noremap <leader>sv :source $MYVIMRC<cr>
 if has("gui")
-    noremap <leader>eg :sp $MYGVIMRC<cr>
+    noremap <leader>eg :e $MYGVIMRC<cr>
     noremap <leader>sg :source $MYGVIMRC<cr>
 endif
 
@@ -398,7 +398,7 @@ endfunction
 if has("cscope")
     " Use a quickfix window
     if has("quickfix")
-"         set cscopequickfix=s-,c-,d-,i-,t-,e-
+        set cscopequickfix=s-,c-,d-,i-,t-,e-
     endif
 
     " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
@@ -420,23 +420,23 @@ if has("cscope")
     " Mappings
     nnoremap <leader>fa :call AddCreateCscopeDb()<CR>
 
-    nnoremap <leader>fs :cs find s <C-R>=expand("<cword>")<CR><CR>	
-    nnoremap <leader>fg :cs find g <C-R>=expand("<cword>")<CR><CR>	
-    nnoremap <leader>fc :cs find c <C-R>=expand("<cword>")<CR><CR>	
-    nnoremap <leader>ft :cs find t <C-R>=expand("<cword>")<CR><CR>	
-    nnoremap <leader>fe :cs find e <C-R>=expand("<cword>")<CR><CR>	
-    nnoremap <leader>ff :cs find f <C-R>=expand("<cfile>")<CR><CR>	
-    nnoremap <leader>fi :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-    nnoremap <leader>fd :cs find d <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>fs :cs find s <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
+    nnoremap <leader>fg :cs find g <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
+    nnoremap <leader>fc :cs find c <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
+    nnoremap <leader>ft :cs find t <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
+    nnoremap <leader>fe :cs find e <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
+    nnoremap <leader>ff :cs find f <C-R>=expand("<cfile>")<cr><cr><c-o>:cw<cr>
+    nnoremap <leader>fi :cs find i ^<C-R>=expand("<cfile>")<cr>$<cr><c-o>:cw<cr>
+    nnoremap <leader>fd :cs find d <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
 
-    nnoremap <leader>Fs :vert scs find s <C-R>=expand("<cword>")<CR><CR>	
-    nnoremap <leader>Fg :vert scs find g <C-R>=expand("<cword>")<CR><CR>	
-    nnoremap <leader>Fc :vert scs find c <C-R>=expand("<cword>")<CR><CR>	
-    nnoremap <leader>Ft :vert scs find t <C-R>=expand("<cword>")<CR><CR>	
-    nnoremap <leader>Fe :vert scs find e <C-R>=expand("<cword>")<CR><CR>	
-    nnoremap <leader>Ff :vert scs find f <C-R>=expand("<cfile>")<CR><CR>	
-    nnoremap <leader>Fi :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-    nnoremap <leader>Fd :vert scs find d <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>Fs :vert scs find s <C-R>=expand("<cword>")<cr><cr>
+    nnoremap <leader>Fg :vert scs find g <C-R>=expand("<cword>")<cr><cr>
+    nnoremap <leader>Fc :vert scs find c <C-R>=expand("<cword>")<cr><cr>
+    nnoremap <leader>Ft :vert scs find t <C-R>=expand("<cword>")<cr><cr>
+    nnoremap <leader>Fe :vert scs find e <C-R>=expand("<cword>")<cr><cr>
+    nnoremap <leader>Ff :vert scs find f <C-R>=expand("<cfile>")<cr><cr>
+    nnoremap <leader>Fi :vert scs find i ^<C-R>=expand("<cfile>")<cr>$<cr>
+    nnoremap <leader>Fd :vert scs find d <C-R>=expand("<cword>")<cr><cr>
 endif
 
 ""
