@@ -31,7 +31,7 @@ function! OnFileType()
         let b:cString = '"'
     elseif &filetype ==# "c" || &filetype ==# "cpp"
         let b:cString = '\/\/'
-    elseif &filetype ==# "bash" || &filetype ==# "sh" || &filetype ==# "python"
+    elseif &filetype ==# "bash" || &filetype ==# "sh" || &filetype ==# "python" || &filetype ==# "conf"
         let b:cString = '#'
     elseif &filetype ==# "xml"
         let b:cString = '<!--'
@@ -217,8 +217,8 @@ endfunction
 
 " Highlight bad coding style
 function! HighlightBadStyle()
-    " Character on 81th column
-"     call matchadd('BadStyle', '\%81v.')
+    " Character on 80th column
+    call matchadd('BadStyle', '\%80v.')
     " Trailing whitespaces
 "     call matchadd('BadStyle', '\s\+\n')
     " More than one newline in a row
@@ -264,6 +264,7 @@ filetype plugin on
 set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
     \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
     \ autowrite completeopt=menuone,preview wildmode=list:longest,full
+    \ noswapfile
 if v:version >= 703
     set relativenumber
 endif
@@ -383,6 +384,76 @@ command! Wq wq
 command! WQ wq
 
 ""
+"" Cscope stuff
+""
+
+" Add any cscope databases present in current working directory
+function! AddCscopeDb()
+    if filereadable("cscope.out")
+        silent! cs add cscope.out  
+    endif
+endfunction
+
+" Add any cscope databases present in current working directory
+" If none are present, call AirTies' newscript.sh to generate one and add it
+function! AddCreateCscopeDb()
+    if !filereadable("cscope.out")
+        echom "Building Cscope db"
+        silent! execute "!newscope.sh " . getcwd()
+    endif
+
+    if filereadable("cscope.out")
+        call AddCscopeDb()
+    else
+        echoe "Couldn't create Cscope db"
+    endif
+endfunction
+
+if has("cscope")
+    " Use a quickfix window
+    if has("quickfix")
+"         set cscopequickfix=s-,c-,d-,i-,t-,e-
+    endif
+
+    " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
+    set cscopetag
+
+    " check cscope for definition of a symbol before checking ctags: set to 1
+    " if you want the reverse search order.
+    set csto=0
+ 
+    " show msg when any other cscope db added
+    set cscopeverbose
+
+    " When present, automatically add Cscope db
+    augroup AddCreateCscopeDb
+        autocmd!
+        autocmd BufCreate * call AddCscopeDb()
+    augroup END
+
+    " Mappings
+    nnoremap <leader>fa :call AddCreateCscopeDb()<CR>
+
+    nnoremap <leader>fs :cs find s <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>fg :cs find g <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>fc :cs find c <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>ft :cs find t <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>fe :cs find e <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>ff :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+    nnoremap <leader>fi :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+    nnoremap <leader>fd :cs find d <C-R>=expand("<cword>")<CR><CR>	
+
+    nnoremap <leader>Fs :vert scs find s <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>Fg :vert scs find g <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>Fc :vert scs find c <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>Ft :vert scs find t <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>Fe :vert scs find e <C-R>=expand("<cword>")<CR><CR>	
+    nnoremap <leader>Ff :vert scs find f <C-R>=expand("<cfile>")<CR><CR>	
+    nnoremap <leader>Fi :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+    nnoremap <leader>Fd :vert scs find d <C-R>=expand("<cword>")<CR><CR>	
+endif
+
+""
 "" Matching
 ""
 
@@ -398,7 +469,7 @@ augroup END
 
 " Clang_complete
 if !has("python")
-    echo "Python not available. Disabling clang_complete"
+    echom "Python not available. Disabling clang_complete"
     let g:clang_complete_loaded
 else
     " Point to libclang on OS X
@@ -420,3 +491,9 @@ let Tlist_Use_SingleClick = 1
 
 " Pathogen
 call pathogen#infect()
+
+""
+"" Colorscheme
+""
+
+colorscheme codeschool
