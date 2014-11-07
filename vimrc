@@ -206,10 +206,10 @@ function! HighlightBadStyle()
     " Character on 80th column
     call matchadd('BadStyle', '\%80v.')
     " Trailing whitespaces
-"     call matchadd('BadStyle', '\s\+\n')
+    call matchadd('BadStyle', '\s\+\n')
     " More than one newline in a row
 "     call matchadd('BadStyle', '^\n\n\+')
-    " Non-breaking spaces
+    " Non-breaking spaces, useful on Macs, where i tend to hit Alt+Space
     call matchadd('BadStyle', ' ')
 endfunction
 
@@ -313,15 +313,8 @@ if has("gui")
     noremap <leader>sg :source $MYGVIMRC<cr>
 endif
 
-" Buffer resizing
-noremap <leader><right> :vertical :resize +5<cr>
-noremap <leader><up> :resize +5<cr>
-noremap <leader><left> :vertical :resize -5<cr>
-noremap <leader><down> :resize -5<cr>
 " Helpfile, split and tab navigation
 nnoremap <c-f> <c-]>
-" Open last closed buffer
-nnoremap <leader>el :sp<bar>:b#<cr>
 " Move active buffer to new tab
 nnoremap <leader>t <c-W>T
 inoremap <silent> <c-j> <esc><c-w>j:call HighlightCursor()<cr>
@@ -338,7 +331,6 @@ nnoremap <silent> <c-n> :tabn<cr>:call HighlightCursor()<cr>
 " Apple specific stuff
 if g:os_uname ==# "Darwin"
     " Remap <a-space> to <space>
-    noremap <a-space> <space>
     noremap! <a-space> <space>
 endif
 
