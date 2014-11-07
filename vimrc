@@ -10,11 +10,11 @@ call clearmatches()
 ""
 
 " Things to do when a buffer is entered
-" function! OnBufEnter()
-"     if &filetype !=# "help" || &filetype !=# "taglist"
-"         call HighlightCursor()
-"     endif
-" endfunction
+function! OnBufEnter()
+    if &filetype !=# "help" || &filetype !=# "taglist"
+        call HighlightCursor()
+    endif
+endfunction
 
 " Things to do when a filetype is detected
 function! OnFileType()
@@ -41,20 +41,6 @@ function! OnFileType()
     " In Taglist, highlight the cursorline
     if &filetype ==# "taglist"
         set cursorline
-    endif
-
-    " Python
-    if &filetype ==# "python"
-        " Add our dictionary
-        if exists("g:pydiction_location")
-            execute "setlocal dictionary=" . g:pydiction_location
-            set complete+=k complete-=t
-        endif
-        " Add a mapping to open pydoc
-        command! -nargs=1 Pydoc execute "normal! :vnew\<cr>:read !pydoc <args>\<cr>gg"
-        nnoremap <buffer> <silent> <leader>K yiw:Pydoc <c-r>"<cr>
-        nnoremap <buffer> <leader>k :Pydoc 
-        nnoremap <buffer> <leader>x :w<cr>:!python %<cr>
     endif
 
     " Bash
@@ -466,20 +452,6 @@ augroup END
 ""
 "" Plugins
 ""
-
-" Clang_complete
-if !has("python")
-    echom "Python not available. Disabling clang_complete"
-    let g:clang_complete_loaded
-else
-    " Point to libclang on OS X
-    if g:os_uname ==# "Darwin"
-        let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/To
-            \olchains/XcodeDefault.xctoolchain/usr/lib"
-    endif
-    let g:clang_jumpto_declaration_in_preview_key='<c-f>'
-    let g:clang_jumpto_declaration_key='<c-F>'
-endif
 
 " Taglist
 noremap <leader>g :TlistToggle<cr>

@@ -3,7 +3,7 @@
 ""
 
 if g:os_uname ==# "Darwin"
-    set guifont=Monaco:h13 guioptions-=r guioptions-=R
+    set guifont=Monaco:h12 guioptions-=r guioptions-=R
 elseif g:os_uname ==# "Linux"
     set guifont=Monospace\ 10
 endif
