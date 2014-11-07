@@ -4,7 +4,7 @@
 ## Vim stuff
 ##
 
-for FILE in vimrc gvimrc; do
+for FILE in vimrc; do
     if [ ! -f $HOME/.$FILE ]; then
         echo "Touching $HOME/.$FILE"
         touch $HOME/.$FILE
@@ -22,14 +22,6 @@ for FILE in vimrc gvimrc; do
         printf "\n$sourceString" >> $HOME/.$FILE
     fi
 done
-
-# Point pydiction to its complete-dict file
-pydictionCfgStr="let g:pydiction_location = \"$HOME/.vim/bundle/pydiction/complete-dict\""
-vimrc="$HOME/.vimrc"
-if [ `grep "$pydictionCfgStr" "$vimrc" | wc -l` -eq 0 ]; then
-    echo "Appending $pydictionCfgStr to $vimrc"
-    printf "\n$pydictionCfgStr" >> $vimrc
-fi
 
 # Install plugins
 if [ ! -d $HOME/.vim ]; then
