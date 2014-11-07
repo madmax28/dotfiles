@@ -272,6 +272,23 @@ augroup END
 "" Handy mappings and abbreviations
 ""
 
+" Yank and paste to system clipboard
+if has("clipboard")
+    function! YankToClipboard(mode)
+        " Mode is either 'char', 'block' or 'line'
+        execute "normal! `[v`]\"+y"
+    endfunction
+    nnoremap <silent> <leader>y :set opfunc=YankToClipboard<cr>g@
+    vnoremap <leader>y "+y
+    nnoremap <leader>p "+p
+    vnoremap <leader>p d"+P
+endif
+
+" Indentation
+noremap <tab> >>
+noremap <s-tab> <<
+inoremap <s-tab> <bs><bs><bs><bs>
+
 " Search and Replace stuff TODO: Think about when to use \< and \>
 vnoremap <leader>r y:call SearchAndReplace("visual")<cr>
 nnoremap <leader>rr v:call SearchAndReplace("normal")<cr>
