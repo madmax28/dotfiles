@@ -1,74 +1,50 @@
-""
-"" Init
-""
+"" Init {{{1
 
 let g:os_uname = substitute(system('uname'), "\n", "", "")
-call clearmatches()
 
-""
-"" Functions
-""
+"" Settings {{{1
 
-" Things to do when a buffer is entered
-function! OnBufEnter()
-    if &filetype !=# "help" || &filetype !=# "taglist"
-        call HighlightCursor()
+syntax on
+set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
+    \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
+    \ autowrite completeopt=menuone,preview wildmode=list:longest,full
+    \ noswapfile nocompatible foldmethod=marker
+if v:version >= 703
+    set relativenumber
+endif
+let mapleader = ","
+
+" Gui stuff
+if has("gui")
+    " Appearance
+    if g:os_uname ==# "Darwin"
+        set guifont=Monaco:h12 guioptions-=r guioptions-=R
+    elseif g:os_uname ==# "Linux"
+        set guifont=Monospace\ 10
     endif
-endfunction
+    set guioptions-=l guioptions-=L guioptions-=b guioptions-=T guioptions-=m
+    set guioptions-=r guioptions-=R
+endif
 
-" Things to do when a filetype is detected
-function! OnFileType()
-    " Do nothing for help files and taglist
-    if &filetype !=# "help" || &filetype !=# "taglist"
-        " Highlight special comments, e.g. '///' for c or '""' for vim
-        call HighlightComments()
-        " Highlight bad coding style
-        call HighlightBadStyle()
-    endif
 
-    " Decide which character starts a comment
-    if &filetype ==# "vim"
-        let b:cString = '"'
-    elseif &filetype ==# "c" || &filetype ==# "cpp"
-        let b:cString = '\/\/'
-    elseif &filetype ==# "bash" || &filetype ==# "sh" || &filetype ==# "python" || &filetype ==# "conf"
-        let b:cString = '#'
-    elseif &filetype ==# "xml"
-        let b:cString = '<!--'
-        let b:cEndString = '-->'
-    endif
+"" Syntax and colors {{{1
 
-    " In Taglist, highlight the cursorline
-    if &filetype ==# "taglist"
-        set cursorline
-    endif
+" Use codeschool
+colorscheme codeschool
 
-    " Bash
-    if &filetype ==# "bash" || &filetype ==# "sh"
-        nnoremap <buffer> <leader>x :w<cr>:!bash %<cr>
-    endif
-
-    " C / CPP
-    if &filetype ==# "c" || &filetype ==# "cpp"
-        set iskeyword=a-z,A-Z,48-57,_
-        nnoremap <buffer> <leader>b :wa<cr>:!make -j8<cr>
-    endif
-endfunction
-
-" Match bigger comment sections
-function! HighlightComments()
-    " Are they highlighted already?
-    if !exists("b:cString")
-        return
-    endif
-
-    " Get last character of comment string
-    let b:cChar = substitute( b:cString, '\v^.*(.)$', '\1', '')
-
-    " Highlight the big comments
-    let b:hlString = '^\s*' . b:cString . b:cChar . '.*\n'
-    let b:match = matchadd('HighlightComment', b:hlString)
-endfunction
+highlight Error ctermbg=88 guibg=#880708
+highlight RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
+highlight MatchParen cterm=underline ctermfg=255 ctermbg=26
+    \ gui=underline guibg=#4f76b6 guifg=#f0f0f0
+highlight clear FoldColumn | highlight link FoldColumn Statusline
+highlight clear CursorLineNr | highlight link CursorLineNr HighlightComment
+highlight clear CursorLine | highlight link CursorLine HighlightComment
+highlight clear CursorColumn | highlight link CursorColumn HighlightComment
+highlight clear Todo | highlight Todo ctermbg=11 ctermfg=0 guibg=#ffff00
+    \ guifg=#000000
+highlight clear TabLineSel | highlight link TabLineSel HighlightComment
+highlight clear TabLineFill | highlight link TabLineFill TabLine
+"" Cursor highlighting {{{1
 
 " Make the cursor easily visible
 function! HighlightCursor(...)
@@ -105,7 +81,89 @@ function! HighlightCursor(...)
 "    endif
 endfunction
 
-" Search and Replace word under cursor
+" Things to do when a buffer is entered
+function! OnBufEnter()
+    if &filetype !=# "help" || &filetype !=# "taglist"
+        call HighlightCursor()
+    endif
+endfunction
+
+" Make cursor easier visible after switching the buffer and jumping to the next
+" search result
+nnoremap n n:call HighlightCursor("Match")<cr>
+nnoremap N N:call HighlightCursor("Match")<cr>
+vnoremap n <esc>n:call HighlightCursor("Match")<cr>
+vnoremap N <esc>N:call HighlightCursor("Match")<cr>
+
+"" Un-/Commenting {{{1
+
+" Things to do when a filetype is detected
+function! OnFileType()
+    " Decide which character starts a comment
+    if &filetype ==# "vim"
+        let b:cString = '"'
+    elseif &filetype ==# "c" || &filetype ==# "cpp"
+        let b:cString = '\/\/'
+    elseif &filetype ==# "bash" || &filetype ==# "sh" || &filetype ==# "python" || &filetype ==# "conf"
+        let b:cString = '#'
+    elseif &filetype ==# "xml"
+        let b:cString = '<!--'
+        let b:cEndString = '-->'
+    endif
+endfunction
+
+" (Un)commenting lines
+function! ToggleComment()
+    if !exists("b:cString")
+        return
+    else
+        let v:errmsg = ""
+        " Comment
+        silent! execute ':s/\v^(\s*)((\V' . b:cString . '\v)|\s)@!/' . b:cString .
+            \ ' \1\2'
+        if v:errmsg == ""
+            " Add closing comment string at end of line if needed
+            if exists("b:cEndString")
+                silent! execute ':s/$/ ' . b:cEndString . '/'
+            endif
+            return
+        endif
+
+        " Uncomment
+        silent! execute ':s/\v^(\s*)(\V' . b:cString . '\v)\s(\s*)/\1\3/'
+        if exists("b:cEndString")
+            silent! execute ':s/ ' . b:cEndString . '$//'
+        endif
+    endif
+endfunction
+
+noremap <silent> <leader>c :call ToggleComment()<cr>
+
+"" Highlight bad style {{{1
+
+highlight link BadStyle Error
+
+function! HighlightBadStyle()
+    " TODO Dont highlight in help files
+    " Character on 80th column
+    call matchadd('BadStyle', '\%80v.')
+    " Trailing whitespaces
+    call matchadd('BadStyle', '\s\+\n')
+    " More than one newline in a row
+"     call matchadd('BadStyle', '^\n\n\+')
+    " Non-breaking spaces, useful on Macs, where i tend to hit Alt+Space
+    call matchadd('BadStyle', ' ')
+endfunction
+
+augroup HighlightBadStyle
+    autocmd!
+    autocmd FileType * call HighlightBadStyle()
+augroup END
+
+"" TODO Execute programs/scripts from within vim {{{1
+
+"" Search and Replace {{{1
+
 function! SearchAndReplace(mode, ...) " TODO: make it accept a range
     " In normal mode
     if a:mode ==# "normal"
@@ -157,122 +215,15 @@ function! SearchAndReplace(mode, ...) " TODO: make it accept a range
     set hlsearch
 endfunction
 
-" Moving lines TODO: This is inefficient and does not accept a [count]
-function! DragBlock(dir)
-    " Delete and put
-    silent! execute "normal! :'<,'>delete\<cr>"
-    if a:dir ==# "down"
-        silent! normal! p
-    elseif a:dir ==# "up"
-        silent! normal! kP
-    else
-        echom "DragBlock(): Invalid argument"
-    endif
+" Search and Replace stuff TODO: Think about when to use \< and \>
+vnoremap <leader>r y:call SearchAndReplace("visual")<cr>
+nnoremap <leader>rr v:call SearchAndReplace("normal")<cr>
+nnoremap <leader>riw :call SearchAndReplace("normal", "iw")<cr>
+nnoremap <leader>riW :call SearchAndReplace("normal", "iW")<cr>
 
-    " Get yanked text; Escape \ since we use \V and ? for backwards search
-    " Substitute actual newlines with symbolic newlines
-    let l:toFind = '\V' . substitute(escape(@", '\?'), '\n', '\\n', 'g')
-    let l:cmd = "normal! ?" . l:toFind . "\<cr>//\<cr>gn"
-    silent! execute l:cmd
-endfunction
 
-" (Un)commenting lines
-function! ToggleComment()
-    if !exists("b:cString")
-        return
-    else
-        let v:errmsg = ""
-        " Comment
-        silent! execute ':s/\v^(\s*)((\V' . b:cString . '\v)|\s)@!/' . b:cString .
-            \ ' \1\2'
-        if v:errmsg == ""
-            " Add closing comment string at end of line if needed
-            if exists("b:cEndString")
-                silent! execute ':s/$/ ' . b:cEndString . '/'
-            endif
-            return
-        endif
+"" Yank and paste to clipboard {{{1
 
-        " Uncomment
-        silent! execute ':s/\v^(\s*)(\V' . b:cString . '\v)\s(\s*)/\1\3/'
-        if exists("b:cEndString")
-            silent! execute ':s/ ' . b:cEndString . '$//'
-        endif
-    endif
-endfunction
-
-" Highlight bad coding style
-function! HighlightBadStyle()
-    " Character on 80th column
-    call matchadd('BadStyle', '\%80v.')
-    " Trailing whitespaces
-    call matchadd('BadStyle', '\s\+\n')
-    " More than one newline in a row
-"     call matchadd('BadStyle', '^\n\n\+')
-    " Non-breaking spaces, useful on Macs, where i tend to hit Alt+Space
-    call matchadd('BadStyle', ' ')
-endfunction
-
-" Set my highlighting groups
-function! SetHighlightGroups()
-    " Errors
-    highlight Error ctermbg=88 guibg=#880708
-    " Bad Style
-    highlight link BadStyle Error
-    " Highlight for current search result
-    highlight RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
-    " Big comment sections
-    highlight HighlightComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
-    " Matchin parenthesis
-    highlight MatchParen cterm=underline ctermfg=255 ctermbg=26
-        \ gui=underline guibg=#4f76b6 guifg=#f0f0f0
-    " Taglist
-    highlight link MyTagListTagScope Keyword | highlight link MyTagListTitle
-        \ StatusLineNC | highlight link MyTagListFileName HighlightComment
-    highlight link MyTagListTagName Error
-    " Misc
-    highlight clear FoldColumn | highlight link FoldColumn Statusline
-    highlight clear CursorLineNr | highlight link CursorLineNr HighlightComment
-    highlight clear CursorLine | highlight link CursorLine HighlightComment
-    highlight clear CursorColumn | highlight link CursorColumn HighlightComment
-    highlight clear Todo | highlight Todo ctermbg=11 ctermfg=0 guibg=#ffff00
-        \ guifg=#000000
-    highlight clear TabLineSel | highlight link TabLineSel HighlightComment
-    highlight clear TabLineFill | highlight link TabLineFill TabLine
-endfunction
-
-""
-"" Settings
-""
-
-syntax on
-filetype off
-set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
-    \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
-    \ autowrite completeopt=menuone,preview wildmode=list:longest,full
-    \ noswapfile nocompatible
-if v:version >= 703
-    set relativenumber
-endif
-let mapleader = ","
-
-" Update highlighting groups
-call SetHighlightGroups()
-augroup HighlightGroupsAuGrp
-    autocmd!
-    autocmd ColorScheme * call SetHighlightGroups()
-augroup END
-
-augroup FileTypeGrp
-    autocmd!
-    autocmd BufEnter *vim set filetype=vim
-augroup END
-
-""
-"" Handy mappings and abbreviations
-""
-
-" Yank and paste to system clipboard
 if has("clipboard")
     function! YankToClipboard(mode)
         " Mode is either 'char', 'block' or 'line'
@@ -284,16 +235,7 @@ if has("clipboard")
     vnoremap <leader>p d"+P
 endif
 
-" Indentation
-noremap <tab> >>
-noremap <s-tab> <<
-inoremap <s-tab> <bs><bs><bs><bs>
-
-" Search and Replace stuff TODO: Think about when to use \< and \>
-vnoremap <leader>r y:call SearchAndReplace("visual")<cr>
-nnoremap <leader>rr v:call SearchAndReplace("normal")<cr>
-nnoremap <leader>riw :call SearchAndReplace("normal", "iw")<cr>
-nnoremap <leader>riW :call SearchAndReplace("normal", "iW")<cr>
+"" Mappings {{{1
 
 " Force yourself to not use some keys
 if g:os_uname ==# "Darwin"
@@ -316,24 +258,20 @@ else
     inoremap <Right> <esc><esc>li
 endif
 
+" Indentation
+noremap <tab> >>
+noremap <s-tab> <<
+inoremap <s-tab> <bs><bs><bs><bs>
+
 " Moving lines or blocks
-vnoremap <silent> + <esc>:call DragBlock("down")<cr>
-vnoremap <silent> - <esc>:call DragBlock("up")<cr>
 nnoremap + ddp
 nnoremap - ddkP
 
 " ~/.vimrc editing
 noremap <leader>ev :e $MYVIMRC<cr>
 noremap <leader>sv :source $MYVIMRC<cr>
-if has("gui")
-    noremap <leader>eg :e $MYGVIMRC<cr>
-    noremap <leader>sg :source $MYGVIMRC<cr>
-endif
 
-" Helpfile, split and tab navigation
-nnoremap <c-f> <c-]>
-" Move active buffer to new tab
-nnoremap <leader>t <c-W>T
+" Split navigation
 inoremap <silent> <c-j> <esc><c-w>j:call HighlightCursor()<cr>
 inoremap <silent> <c-k> <esc><c-w>k:call HighlightCursor()<cr>
 inoremap <silent> <c-h> <esc><c-w>h:call HighlightCursor()<cr>
@@ -342,6 +280,8 @@ nnoremap <silent> <c-j> <c-w>j:call HighlightCursor()<cr>
 nnoremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
 nnoremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
 nnoremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
+
+" Tab navigation
 nnoremap <silent> <c-p> :tabp<cr>:call HighlightCursor()<cr>
 nnoremap <silent> <c-n> :tabn<cr>:call HighlightCursor()<cr>
 
@@ -353,36 +293,36 @@ if g:os_uname ==# "Darwin"
     unmap <c-i>
 endif
 
-" Make cursor easier visible after switching the buffer and jumping to the next
-" search result
-nnoremap n n:call HighlightCursor("Match")<cr>
-nnoremap N N:call HighlightCursor("Match")<cr>
-vnoremap n <esc>n:call HighlightCursor("Match")<cr>
-vnoremap N <esc>N:call HighlightCursor("Match")<cr>
-
-" Misc
-nnoremap <leader>x :echom "Don't know how to execute filetype '" . &filetype
-    \ . "'"<cr>
+" Joing lines
 nnoremap <leader>j J
 nnoremap <leader>J kJ
-noremap <silent> <leader>c :call ToggleComment()<cr>
-noremap <leader>n :nohlsearch<cr>
-nnoremap <leader>m :messages<cr>
-nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
+
+" 'Strong' hjkl
 noremap K gg
 noremap H ^
 noremap J G$
 noremap L $
+
+" Clear hlsearch
+noremap <leader>n :nohlsearch<cr>
+
+" Message log
+nnoremap <leader>m :messages<cr>
+
+" Check highlighting
+nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
 inoremap jk <esc>
+
+" Pasting in command mode
 cnoremap <c-p> <c-r>"
+
+" Ignore command typos
 command! W w
 command! Q q
 command! Wq wq
 command! WQ wq
 
-""
-"" Cscope stuff
-""
+"" Cscope stuff {{{1
 
 " Add any cscope databases present in current working directory
 function! AddCscopeDb()
@@ -416,7 +356,7 @@ if has("cscope")
     set cscopetag
 
     " check cscope for definition of a symbol before checking ctags: set to 1
-                                                                                " if you want the reverse search order.
+    " if you want the reverse search order.
     set csto=0
 
     " show msg when any other cscope db added
@@ -450,54 +390,14 @@ if has("cscope")
     nnoremap <leader>Fd :vert scs find d <C-R>=expand("<cword>")<cr><cr>
 endif
 
-""
-"" Matching
-""
-
-call OnFileType() " To immediately apply changes when sourced
-augroup FileTypeAuGrp
-    autocmd!
-    au FileType * call OnFileType()
-augroup END
-
-""
-"" Plugins
-""
+"" Plugins {{{1
 
 " Vundle
+filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/plugins')
 Plugin 'gmarik/Vundle.vim'
 " Add Plugins here
 call vundle#end()
 filetype plugin indent on
-
-" Taglist
-" noremap <leader>g :TlistToggle<cr>
-" let Tlist_Use_Right_Window = 1
-" let Tlist_Use_SingleClick = 1
-" let Tlist_Inc_Winwidth = 1
-" let Tlist_Max_Tag_Length = 100
-" let Tlist_Use_SingleClick = 1
-
-""
-"" Colorscheme
-""
-
-colorscheme codeschool
-
-""
-"" Gui stuff
-""
-
-if has("gui")
-    " Appearance
-    if g:os_uname ==# "Darwin"
-        set guifont=Monaco:h12 guioptions-=r guioptions-=R
-    elseif g:os_uname ==# "Linux"
-        set guifont=Monospace\ 10
-    endif
-    set guioptions-=l guioptions-=L guioptions-=b guioptions-=T guioptions-=m
-    set guioptions-=r guioptions-=R
-endif
 
