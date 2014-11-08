@@ -246,11 +246,11 @@ endfunction
 ""
 
 syntax on
-filetype plugin on
+filetype off
 set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
     \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
     \ autowrite completeopt=menuone,preview wildmode=list:longest,full
-    \ noswapfile
+    \ noswapfile nocompatible
 if v:version >= 703
     set relativenumber
 endif
@@ -347,8 +347,10 @@ nnoremap <silent> <c-n> :tabn<cr>:call HighlightCursor()<cr>
 
 " Apple specific stuff
 if g:os_uname ==# "Darwin"
-    " Remap <a-space> to <space>
     noremap! <a-space> <space>
+
+    " For some reason, on osx CTRL-I is remapped to Tab
+    unmap <c-i>
 endif
 
 " Make cursor easier visible after switching the buffer and jumping to the next
@@ -367,10 +369,10 @@ noremap <silent> <leader>c :call ToggleComment()<cr>
 noremap <leader>n :nohlsearch<cr>
 nnoremap <leader>m :messages<cr>
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
-nnoremap K gg
-nnoremap H ^
-nnoremap J G$
-nnoremap L $
+noremap K gg
+noremap H ^
+noremap J G$
+noremap L $
 inoremap jk <esc>
 cnoremap <c-p> <c-r>"
 command! W w
@@ -414,7 +416,7 @@ if has("cscope")
     set cscopetag
 
     " check cscope for definition of a symbol before checking ctags: set to 1
-    " if you want the reverse search order.
+                                                                                " if you want the reverse search order.
     set csto=0
 
     " show msg when any other cscope db added
@@ -462,16 +464,21 @@ augroup END
 "" Plugins
 ""
 
-" Taglist
-noremap <leader>g :TlistToggle<cr>
-let Tlist_Use_Right_Window = 1
-let Tlist_Use_SingleClick = 1
-let Tlist_Inc_Winwidth = 1
-let Tlist_Max_Tag_Length = 100
-let Tlist_Use_SingleClick = 1
+" Vundle
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin('~/.vim/plugins')
+Plugin 'gmarik/Vundle.vim'
+" Add Plugins here
+call vundle#end()
+filetype plugin indent on
 
-" Pathogen
-call pathogen#infect()
+" Taglist
+" noremap <leader>g :TlistToggle<cr>
+" let Tlist_Use_Right_Window = 1
+" let Tlist_Use_SingleClick = 1
+" let Tlist_Inc_Winwidth = 1
+" let Tlist_Max_Tag_Length = 100
+" let Tlist_Use_SingleClick = 1
 
 ""
 "" Colorscheme
@@ -493,3 +500,4 @@ if has("gui")
     set guioptions-=l guioptions-=L guioptions-=b guioptions-=T guioptions-=m
     set guioptions-=r guioptions-=R
 endif
+
