@@ -385,7 +385,7 @@ command! WQ wq
 " Add any cscope databases present in current working directory
 function! AddCscopeDb()
     if filereadable("cscope.out")
-        silent! cs add cscope.out  
+        silent! cs add cscope.out
     endif
 endfunction
 
@@ -416,7 +416,7 @@ if has("cscope")
     " check cscope for definition of a symbol before checking ctags: set to 1
     " if you want the reverse search order.
     set csto=0
- 
+
     " show msg when any other cscope db added
     set cscopeverbose
 
@@ -492,7 +492,4 @@ if has("gui")
     endif
     set guioptions-=l guioptions-=L guioptions-=b guioptions-=T guioptions-=m
     set guioptions-=r guioptions-=R
-    "
-    " Use a black background
-    highlight Normal guibg=#000000
 endif
