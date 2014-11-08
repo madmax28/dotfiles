@@ -144,7 +144,11 @@ noremap <silent> <leader>c :call ToggleComment()<cr>
 highlight link BadStyle Error
 
 function! HighlightBadStyle()
-    " TODO Dont highlight in help files
+    " Dont highlight in help files
+    if &filetype ==# "help"
+        return
+    endif
+
     " Character on 80th column
     call matchadd('BadStyle', '\%80v.')
     " Trailing whitespaces
@@ -326,7 +330,8 @@ command! WQ wq
 
 " Add any cscope databases present in current working directory
 function! AddCscopeDb()
-    if filereadable("cscope.out")
+    if filereadable(".myscope/cscope.out")
+        echom "Added cscope db"
         silent! cs add cscope.out
     endif
 endfunction
@@ -334,15 +339,15 @@ endfunction
 " Add any cscope databases present in current working directory
 " If none are present, call AirTies' newscript.sh to generate one and add it
 function! AddCreateCscopeDb()
-    if !filereadable("cscope.out")
+    if !filereadable(".myscope/cscope.out")
         echom "Building Cscope db"
-        silent! execute "!newscope.sh " . getcwd()
+        silent! execute "!~/.vim/bin/myscope.sh " . getcwd()
     endif
 
-    if filereadable("cscope.out")
+    if filereadable(".myscope/cscope.out")
         call AddCscopeDb()
     else
-        echoe "Couldn't create Cscope db"
+        echom "Couldn't create Cscope db"
     endif
 endfunction
 
@@ -352,24 +357,22 @@ if has("cscope")
         set cscopequickfix=s-,c-,d-,i-,t-,e-
     endif
 
-    " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
+    " Use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
     set cscopetag
-
-    " check cscope for definition of a symbol before checking ctags: set to 1
+    " Check cscope for definition of a symbol before checking ctags: set to 1
     " if you want the reverse search order.
     set csto=0
-
-    " show msg when any other cscope db added
+    " Show msg when any other cscope db added
     set cscopeverbose
 
-    " When present, automatically add Cscope db
+    " Automatically add Cscope db
     augroup AddCreateCscopeDb
         autocmd!
         autocmd BufCreate * call AddCscopeDb()
     augroup END
 
     " Mappings
-    nnoremap <leader>fa :call AddCreateCscopeDb()<CR>
+    nnoremap <silent> <leader>fa :call AddCreateCscopeDb()<CR>
 
     nnoremap <leader>fs :cs find s <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
     nnoremap <leader>fg :cs find g <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
