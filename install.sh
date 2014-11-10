@@ -4,12 +4,14 @@
 ## Initialize git submodules
 ##
 
+echo "========== Initializing git submodules =========="
 git submodule update --init
 
 ##
 ## Vim stuff
 ##
 
+echo "========== Installing vim configuration ========="
 for FILE in vimrc; do
     if [ ! -f $HOME/.$FILE ]; then
         echo "Touching $HOME/.$FILE"
