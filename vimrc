@@ -36,6 +36,7 @@ highlight Error ctermbg=88 guibg=#880708
 highlight RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
 highlight MatchParen cterm=underline ctermfg=255 ctermbg=26
     \ gui=underline guibg=#4f76b6 guifg=#f0f0f0
+highlight HighlightComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
 highlight clear FoldColumn | highlight link FoldColumn Statusline
 highlight clear CursorLineNr | highlight link CursorLineNr HighlightComment
 highlight clear CursorLine | highlight link CursorLine HighlightComment
@@ -44,6 +45,8 @@ highlight clear Todo | highlight Todo ctermbg=11 ctermfg=0 guibg=#ffff00
     \ guifg=#000000
 highlight clear TabLineSel | highlight link TabLineSel HighlightComment
 highlight clear TabLineFill | highlight link TabLineFill TabLine
+highlight clear VertSplit | highlight link VertSplit LineNr
+
 "" Cursor highlighting {{{1
 
 " Make the cursor easily visible
@@ -236,6 +239,7 @@ if has("clipboard")
     nnoremap <silent> <leader>y :set opfunc=YankToClipboard<cr>g@
     vnoremap <leader>y "+y
     nnoremap <leader>p "+p
+    nnoremap <leader>P "+P
     vnoremap <leader>p d"+P
 endif
 
@@ -284,10 +288,12 @@ nnoremap <silent> <c-j> <c-w>j:call HighlightCursor()<cr>
 nnoremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
 nnoremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
 nnoremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
-
 " Tab navigation
 nnoremap <silent> <c-p> :tabp<cr>:call HighlightCursor()<cr>
 nnoremap <silent> <c-n> :tabn<cr>:call HighlightCursor()<cr>
+
+" Quickfix
+nnoremap <leader>q :copen<cr>
 
 " Apple specific stuff
 if g:os_uname ==# "Darwin"
@@ -332,7 +338,7 @@ command! WQ wq
 function! AddCscopeDb()
     if filereadable(".myscope/cscope.out")
         echom "Added cscope db"
-        silent! cs add cscope.out
+        silent! cs add .myscope/cscope.out
     endif
 endfunction
 
