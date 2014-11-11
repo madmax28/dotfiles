@@ -7,11 +7,8 @@ let g:os_uname = substitute(system('uname'), "\n", "", "")
 syntax on
 set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
     \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
-    \ autowrite completeopt=menuone,preview wildmode=list:longest,full
-    \ noswapfile nocompatible foldmethod=marker
-if v:version >= 703
-    set relativenumber
-endif
+    \ autowrite completeopt=menuone,longest,preview wildmode=list:longest,full
+    \ noswapfile nocompatible foldmethod=marker relativenumber
 let mapleader = ","
 
 " Gui stuff
@@ -275,10 +272,6 @@ inoremap <s-tab> <bs><bs><bs><bs>
 nnoremap + ddp
 nnoremap - ddkP
 
-" ~/.vimrc editing
-noremap <leader>ev :e $MYVIMRC<cr>
-noremap <leader>sv :source $MYVIMRC<cr>
-
 " Quickfix
 nnoremap <leader>q :copen<cr>
 
@@ -318,6 +311,10 @@ command! W w
 command! Q q
 command! Wq wq
 command! WQ wq
+
+" ~/.vimrc editing
+noremap <leader>ev :e $MYVIMRC<cr>
+noremap <leader>sv :source $MYVIMRC<cr>
 
 "" Tabs and splits {{{1
 
