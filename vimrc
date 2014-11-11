@@ -279,19 +279,6 @@ nnoremap - ddkP
 noremap <leader>ev :e $MYVIMRC<cr>
 noremap <leader>sv :source $MYVIMRC<cr>
 
-" Split navigation
-inoremap <silent> <c-j> <esc><c-w>j:call HighlightCursor()<cr>
-inoremap <silent> <c-k> <esc><c-w>k:call HighlightCursor()<cr>
-inoremap <silent> <c-h> <esc><c-w>h:call HighlightCursor()<cr>
-inoremap <silent> <c-l> <esc><c-w>l:call HighlightCursor()<cr>
-nnoremap <silent> <c-j> <c-w>j:call HighlightCursor()<cr>
-nnoremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
-nnoremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
-nnoremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
-" Tab navigation
-nnoremap <silent> <c-p> :tabp<cr>:call HighlightCursor()<cr>
-nnoremap <silent> <c-n> :tabn<cr>:call HighlightCursor()<cr>
-
 " Quickfix
 nnoremap <leader>q :copen<cr>
 
@@ -331,6 +318,35 @@ command! W w
 command! Q q
 command! Wq wq
 command! WQ wq
+
+"" Tabs and splits {{{1
+
+" More natural split directions
+set splitright splitbelow
+
+" Split navigation
+inoremap <silent> <c-j> <esc><c-w>j:call HighlightCursor()<cr>
+inoremap <silent> <c-k> <esc><c-w>k:call HighlightCursor()<cr>
+inoremap <silent> <c-h> <esc><c-w>h:call HighlightCursor()<cr>
+inoremap <silent> <c-l> <esc><c-w>l:call HighlightCursor()<cr>
+nnoremap <silent> <c-j> <c-w>j:call HighlightCursor()<cr>
+nnoremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
+nnoremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
+nnoremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
+" Tab navigation
+nnoremap <silent> <c-p> :tabp<cr>:call HighlightCursor()<cr>
+nnoremap <silent> <c-n> :tabn<cr>:call HighlightCursor()<cr>
+
+" Maximize quickfix windows' width
+function! MaxQuickfixWin()
+    if &buftype ==# "quickfix"
+        execute "normal! \<c-w>J"
+    endif
+endfunction
+augroup MaxQuickfixWinGrp
+    autocmd!
+    autocmd BufWinEnter * call MaxQuickfixWin()
+augroup END
 
 "" Cscope stuff {{{1
 
