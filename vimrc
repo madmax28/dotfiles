@@ -11,8 +11,8 @@ set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
     \ noswapfile nocompatible foldmethod=marker relativenumber
 let mapleader = ","
 
-" Jump to existent window when switching buffers and prevent quickfix from
-" hiding buffers
+" Jump to existent window when spllitting new buffers and jumping from
+" quicklist window
 set switchbuf=usetab,split
 
 " Gui stuff
