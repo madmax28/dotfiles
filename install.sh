@@ -50,6 +50,10 @@ else
         cp -R $PWD/vim $HOME/.vim
     fi
 fi
+# Let vundle install plugins
+vim +PluginInstall +qall -c "q"
+# Apply some patches
+patch $HOME/.vim/plugins/snipMate/snippets/c.snippets ./c.snippets.patch
 
 ##
 ## Bash stuff
