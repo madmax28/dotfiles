@@ -8,17 +8,18 @@ let g:os_uname = substitute(system('uname'), "\n", "", "")
 syntax on
 set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
     \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
-    \ autowrite completeopt=menuone,preview wildmode=list:longest,full
-    \ noswapfile nocompatible foldmethod=marker
-if v:version >= 703
-    set relativenumber
-endif
+    \ autowrite completeopt=menuone,longest,preview wildmode=list:longest,full
+    \ noswapfile nocompatible foldmethod=marker relativenumber
 
 " Use the mouse even without GUI
 set mouse=a
 
 " Leader key
 let mapleader = ","
+
+" Jump to existent window when spllitting new buffers and jumping from
+" quicklist window
+set switchbuf=usetab,split
 
 " Gui stuff
 if has("gui")
@@ -280,23 +281,6 @@ inoremap <s-tab> <bs><bs><bs><bs>
 nnoremap + ddp
 nnoremap - ddkP
 
-" ~/.vimrc editing
-noremap <leader>ev :e $MYVIMRC<cr>
-noremap <leader>sv :source $MYVIMRC<cr>
-
-" Split navigation
-inoremap <silent> <c-j> <esc><c-w>j:call HighlightCursor()<cr>
-inoremap <silent> <c-k> <esc><c-w>k:call HighlightCursor()<cr>
-inoremap <silent> <c-h> <esc><c-w>h:call HighlightCursor()<cr>
-inoremap <silent> <c-l> <esc><c-w>l:call HighlightCursor()<cr>
-nnoremap <silent> <c-j> <c-w>j:call HighlightCursor()<cr>
-nnoremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
-nnoremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
-nnoremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
-" Tab navigation
-nnoremap <silent> <c-p> :tabp<cr>:call HighlightCursor()<cr>
-nnoremap <silent> <c-n> :tabn<cr>:call HighlightCursor()<cr>
-
 " Quickfix
 nnoremap <leader>q :copen<cr>
 
@@ -339,6 +323,39 @@ unmap <c-i>
 
 " Building
 nnoremap <silent> <leader>b :wa<cr>:make<cr>:cw<cr>
+
+" ~/.vimrc editing
+noremap <leader>ev :e $MYVIMRC<cr>
+noremap <leader>sv :source $MYVIMRC<cr>
+
+"" Tabs and splits {{{1
+
+" More natural split directions
+set splitright splitbelow
+
+" Split navigation
+inoremap <silent> <c-j> <esc><c-w>j:call HighlightCursor()<cr>
+inoremap <silent> <c-k> <esc><c-w>k:call HighlightCursor()<cr>
+inoremap <silent> <c-h> <esc><c-w>h:call HighlightCursor()<cr>
+inoremap <silent> <c-l> <esc><c-w>l:call HighlightCursor()<cr>
+nnoremap <silent> <c-j> <c-w>j:call HighlightCursor()<cr>
+nnoremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
+nnoremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
+nnoremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
+" Tab navigation
+nnoremap <silent> <c-p> :tabp<cr>:call HighlightCursor()<cr>
+nnoremap <silent> <c-n> :tabn<cr>:call HighlightCursor()<cr>
+
+" Maximize quickfix windows' width
+function! MaxQuickfixWin()
+    if &buftype ==# "quickfix"
+        execute "normal! \<c-w>J"
+    endif
+endfunction
+augroup MaxQuickfixWinGrp
+    autocmd!
+    autocmd BufWinEnter * call MaxQuickfixWin()
+augroup END
 
 "" Cscope stuff {{{1
 
