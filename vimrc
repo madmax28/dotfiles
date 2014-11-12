@@ -4,6 +4,7 @@ let g:os_uname = substitute(system('uname'), "\n", "", "")
 
 "" Settings {{{1
 
+
 syntax on
 set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
     \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
@@ -12,6 +13,11 @@ set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
 if v:version >= 703
     set relativenumber
 endif
+
+" Use the mouse even without GUI
+set mouse=a
+
+" Leader key
 let mapleader = ","
 
 " Gui stuff
@@ -34,8 +40,6 @@ colorscheme codeschool
 
 highlight Error ctermbg=88 guibg=#880708
 highlight RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
-highlight MatchParen cterm=underline ctermfg=255 ctermbg=26
-    \ gui=underline guibg=#4f76b6 guifg=#f0f0f0
 highlight HighlightComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
 highlight clear FoldColumn | highlight link FoldColumn Statusline
 highlight clear CursorLineNr | highlight link CursorLineNr HighlightComment
@@ -43,6 +47,7 @@ highlight clear CursorLine | highlight link CursorLine HighlightComment
 highlight clear CursorColumn | highlight link CursorColumn HighlightComment
 highlight clear Todo | highlight Todo ctermbg=11 ctermfg=0 guibg=#ffff00
     \ guifg=#000000
+highlight clear MatchParen | highlight link MatchParen Todo
 highlight clear TabLineSel | highlight link TabLineSel HighlightComment
 highlight clear TabLineFill | highlight link TabLineFill TabLine
 highlight clear VertSplit | highlight link VertSplit LineNr
@@ -298,9 +303,6 @@ nnoremap <leader>q :copen<cr>
 " Apple specific stuff
 if g:os_uname ==# "Darwin"
     noremap! <a-space> <space>
-
-    " For some reason, on osx CTRL-I is remapped to Tab
-    unmap <c-i>
 endif
 
 " Joing lines
@@ -331,6 +333,12 @@ command! W w
 command! Q q
 command! Wq wq
 command! WQ wq
+
+" For some reason, CTRL-I is remapped to Tab
+unmap <c-i>
+
+" Building
+nnoremap <silent> <leader>b :wa<cr>:make<cr>:cw<cr>
 
 "" Cscope stuff {{{1
 
