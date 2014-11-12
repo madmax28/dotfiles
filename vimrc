@@ -7,7 +7,7 @@ let g:os_uname = substitute(system('uname'), "\n", "", "")
 syntax on
 set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
     \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
-    \ autowrite completeopt=menuone,longest,preview wildmode=list:longest,full
+    \ completeopt=menuone,longest,preview wildmode=list:longest,full
     \ noswapfile nocompatible foldmethod=marker relativenumber
 let mapleader = ","
 
@@ -246,27 +246,6 @@ endif
 
 "" Mappings {{{1
 
-" Force yourself to not use some keys
-if g:os_uname ==# "Darwin"
-    nnoremap OA <esc>
-    inoremap OA <esc><esc>li
-    nnoremap OB <esc>
-    inoremap OB <esc><esc>li
-    nnoremap OD <esc>
-    inoremap OD <esc><esc>li
-    nnoremap OC <esc>
-    inoremap OC <esc><esc>li
-else
-    nnoremap <Up> <esc>
-    nnoremap <Down> <esc>
-    nnoremap <Left> <esc>
-    nnoremap <Right> <esc>
-    inoremap <Up> <esc><esc>li
-    inoremap <Down> <esc><esc>li
-    inoremap <Left> <esc><esc>li
-    inoremap <Right> <esc><esc>li
-endif
-
 " Indentation
 noremap <tab> >>
 noremap <s-tab> <<
@@ -420,10 +399,13 @@ endif
 
 " Vundle
 filetype off
+set nocompatible
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/plugins')
 Plugin 'gmarik/Vundle.vim'
+Plugin 'snipMate'
 " Add Plugins here
 call vundle#end()
 filetype plugin indent on
+
 
