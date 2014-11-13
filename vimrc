@@ -416,8 +416,11 @@ filetype off
 set nocompatible
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin('~/.vim/plugins')
+
 Plugin 'gmarik/Vundle.vim'
 Plugin 'snipMate'
+Plugin 'taglist.vim'
+
 " Add Plugins here
 call vundle#end()
 filetype plugin indent on
