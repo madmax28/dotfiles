@@ -21,7 +21,12 @@ let mapleader = ","
 set switchbuf=useopen
 
 " Use undofiles
-set undodir=~/.vim/undos undofile
+let s:undodir = $HOME . "/.vim/undos"
+if !isdirectory( s:undodir )
+    call mkdir( s:undodir )
+endif
+let &undodir = s:undodir
+set undofile
 
 " Gui stuff
 if has("gui")
@@ -35,6 +40,24 @@ if has("gui")
     set guioptions-=r guioptions-=R
 endif
 
+" Viminfo
+if has("viminfo")
+    set viminfo=<100,%10,'10,n~/.viminfo
+endif
+
+"" Restore cursor position per buffer {{{1
+
+function! ResCur()
+    if line("'\"") <= line("$")
+        normal! g`"
+        return 1
+    endif
+endfunction
+
+augroup resCur
+    autocmd!
+    autocmd BufWinEnter * call ResCur()
+augroup END
 
 "" Syntax and colors {{{1
 
