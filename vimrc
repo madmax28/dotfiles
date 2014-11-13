@@ -394,9 +394,9 @@ if has("cscope")
     nnoremap <leader>fc :cs find c <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
     nnoremap <leader>ft :cs find t <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
     nnoremap <leader>fe :cs find e <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
-    nnoremap <leader>ff :cs find f <C-R>=expand("<cfile>")<cr><cr><c-o>:cw<cr>
-    nnoremap <leader>fi :cs find i ^<C-R>=expand("<cfile>")<cr>$<cr><c-o>:cw<cr>
-    nnoremap <leader>fd :cs find d <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
+    nnoremap <leader>ff :cs find f <C-R>=expand("<cfile>")<cr><cr>
+    nnoremap <leader>fi :cs find i ^<C-R>=expand("<cfile>")<cr>$<cr>
+    nnoremap <leader>fd :cs find d <C-R>=expand("<cword>")<cr><cr>
 
     nnoremap <leader>Fs :vert scs find s <C-R>=expand("<cword>")<cr><cr>
     nnoremap <leader>Fg :vert scs find g <C-R>=expand("<cword>")<cr><cr>
