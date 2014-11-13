@@ -254,6 +254,14 @@ endif
 
 "" Mappings {{{1
 
+" Follow symbols with Enter
+nnoremap <cr> <c-]>
+" Not in quickfix windows though
+augroup QuickfixCr
+    autocmd!
+    autocmd BufReadPost quickfix noremap <buffer> <cr> <cr>
+augroup END
+
 " Moving lines or blocks
 nnoremap + ddp
 nnoremap - ddkP
@@ -400,3 +408,17 @@ if has("cscope")
     nnoremap <leader>Fi :vert scs find i ^<C-R>=expand("<cfile>")<cr>$<cr>
     nnoremap <leader>Fd :vert scs find d <C-R>=expand("<cword>")<cr><cr>
 endif
+
+"" Plugins {{{1
+
+" Vundle
+filetype off
+set nocompatible
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin('~/.vim/plugins')
+Plugin 'gmarik/Vundle.vim'
+Plugin 'snipMate'
+" Add Plugins here
+call vundle#end()
+filetype plugin indent on
+
