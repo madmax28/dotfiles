@@ -6,7 +6,7 @@ let g:os_uname = substitute(system('uname'), "\n", "", "")
 
 
 syntax on
-set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
+set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab smartindent ruler
     \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
     \ completeopt=menuone,longest,preview wildmode=list:longest,full
     \ noswapfile nocompatible foldmethod=marker relativenumber hidden
@@ -254,11 +254,6 @@ endif
 
 "" Mappings {{{1
 
-" Indentation
-noremap <tab> >>
-noremap <s-tab> <<
-inoremap <s-tab> <bs><bs><bs><bs>
-
 " Moving lines or blocks
 nnoremap + ddp
 nnoremap - ddkP
@@ -300,15 +295,15 @@ command! Q q
 command! Wq wq
 command! WQ wq
 
-" For some reason, CTRL-I is remapped to Tab
-unmap <c-i>
-
 " Building
 nnoremap <silent> <leader>b :wa<cr>:make<cr>:cw<cr>
 
 " ~/.vimrc editing
-noremap <leader>ev :e $MYVIMRC<cr>
-noremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>ev :e $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
+
+" Jumplist navigation
+nnoremap <s-tab> <c-o>
 
 "" Tabs and splits {{{1
 
@@ -405,17 +400,3 @@ if has("cscope")
     nnoremap <leader>Fi :vert scs find i ^<C-R>=expand("<cfile>")<cr>$<cr>
     nnoremap <leader>Fd :vert scs find d <C-R>=expand("<cword>")<cr><cr>
 endif
-
-"" Plugins {{{1
-
-" Vundle
-filetype off
-set nocompatible
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin('~/.vim/plugins')
-Plugin 'gmarik/Vundle.vim'
-Plugin 'snipMate'
-" Add Plugins here
-call vundle#end()
-filetype plugin indent on
-
