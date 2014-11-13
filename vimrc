@@ -9,7 +9,7 @@ syntax on
 set hlsearch incsearch shiftwidth=4 tabstop=4 expandtab smartindent ruler
     \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
     \ autowrite completeopt=menuone,longest,preview wildmode=list:longest,full
-    \ noswapfile nocompatible foldmethod=marker relativenumber
+    \ noswapfile nocompatible foldmethod=marker relativenumber hidden
 
 " Use the mouse even without GUI
 set mouse=a
@@ -20,6 +20,9 @@ let mapleader = ","
 " Jump to existent window when spllitting new buffers and jumping from
 " quicklist window
 set switchbuf=usetab,split
+
+" Use undofiles
+set undodir=~/.vim/undos undofile
 
 " Gui stuff
 if has("gui")
