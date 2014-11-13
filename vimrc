@@ -17,9 +17,8 @@ set mouse=a
 " Leader key
 let mapleader = ","
 
-" Jump to existent window when spllitting new buffers and jumping from
-" quicklist window
-set switchbuf=usetab,split
+" Jump to existent windows when splitting new buffers
+set switchbuf=useopen
 
 " Use undofiles
 set undodir=~/.vim/undos undofile
@@ -391,7 +390,7 @@ if has("cscope")
     nnoremap <silent> <leader>fa :call AddCreateCscopeDb()<CR>
 
     nnoremap <leader>fs :cs find s <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
-    nnoremap <leader>fg :cs find g <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
+    nnoremap <leader>fg :cs find g <C-R>=expand("<cword>")<cr><cr>
     nnoremap <leader>fc :cs find c <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
     nnoremap <leader>ft :cs find t <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
     nnoremap <leader>fe :cs find e <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
