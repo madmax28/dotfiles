@@ -17,6 +17,7 @@ PRJ_DIR=$PWD
 # Create a working directory
 if [ -d $PRJ_DIR/.myscope ]; then
     echo "Directory $PRJ_DIR/.myscope exists. Rebuilding."
+    rm -rf $PRJ_DIR/.myscope
 fi
 mkdir $PRJ_DIR/.myscope
 cd $PRJ_DIR/.myscope

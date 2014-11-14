@@ -56,7 +56,7 @@ endfunction
 
 augroup resCur
     autocmd!
-    autocmd BufWinEnter * call ResCur()
+    autocmd BufWinEnter * silent! call ResCur()
 augroup END
 
 "" Syntax and colors {{{1
@@ -366,26 +366,36 @@ augroup END
 
 "" Cscope stuff {{{1
 
+let s:myscope_dir = getcwd() . '/.myscope'
+let s:cscope_db   = s:myscope_dir . '/cscope.out'
+
 " Add any cscope databases present in current working directory
 function! AddCscopeDb()
-    if filereadable(".myscope/cscope.out")
+    if filereadable( s:cscope_db )
         echom "Added cscope db"
-        silent! cs add .myscope/cscope.out
+        execute "silent! cs add " . s:cscope_db
+        " Avoid duplicate databases
+        silent! cscope reset
+    else
+        echoe "Couldn't find cscope db"
     endif
+    redraw!
 endfunction
 
 " Add any cscope databases present in current working directory
 " If none are present, call AirTies' newscript.sh to generate one and add it
 function! AddCreateCscopeDb()
-    if !filereadable(".myscope/cscope.out")
-        echom "Building Cscope db"
-        silent! execute "!~/.vim/bin/myscope.sh " . getcwd()
+    if filereadable( s:cscope_db )
+        echom "Rebuilding cscope db"
+        call delete( s:cscope_db )
     endif
 
-    if filereadable(".myscope/cscope.out")
+    execute "silent! !~/.vim/bin/myscope.sh " . getcwd()
+
+    if filereadable( s:cscope_db )
         call AddCscopeDb()
     else
-        echom "Couldn't create Cscope db"
+        echoe "Couldn't create Cscope db"
     endif
 endfunction
 
@@ -406,11 +416,11 @@ if has("cscope")
     " Automatically add Cscope db
     augroup AddCreateCscopeDb
         autocmd!
-        autocmd BufCreate * call AddCscopeDb()
+        autocmd BufCreate * silent! call AddCscopeDb()
     augroup END
 
     " Mappings
-    nnoremap <silent> <leader>fa :call AddCreateCscopeDb()<CR>
+    nnoremap <leader>fa :call AddCreateCscopeDb()<CR>
 
     nnoremap <leader>fs :cs find s <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
     nnoremap <leader>fg :cs find g <C-R>=expand("<cword>")<cr><cr>
@@ -453,6 +463,6 @@ noremap <silent> <leader>t :TlistToggle<cr>
 
 let Tlist_Close_On_Select = 1
 let Tlist_Exit_OnlyWindow = 1
-let Tlist_Show_One_File = 1
 let Tlist_Use_Right_Window = 1
 let Tlist_GainFocus_On_ToggleOpen = 1
+let Tlist_WinWidth = 50
