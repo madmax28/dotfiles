@@ -2,14 +2,51 @@
 
 let g:os_uname = substitute(system('uname'), "\n", "", "")
 
-"" Settings {{{1
+"" Plugins {{{1
 
+" Vundle
+filetype off
+set nocompatible
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin('~/.vim/plugins')
+
+Plugin 'gmarik/Vundle.vim'
+Plugin 'snipMate'
+Plugin 'taglist.vim'
+Plugin 'xterm-color-table.vim'
+
+" Add Plugins here
+call vundle#end()
+filetype plugin indent on
+
+"" Taglist {{{1
+
+noremap <silent> <leader>t :TlistToggle<cr>
+
+let Tlist_Close_On_Select = 1
+let Tlist_Exit_OnlyWindow = 1
+let Tlist_Use_Right_Window = 1
+let Tlist_GainFocus_On_ToggleOpen = 1
+let Tlist_WinWidth = 50
+
+highlight link TagListFileName StatusLineNC
+highlight link TagListTitle    Keyword
+
+augroup TlistUpdate
+    autocmd!
+    autocmd BufWinEnter * :TlistUpdate
+augroup END
+"" Settings {{{1
 
 syntax on
 set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab smartindent ruler
     \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
     \ completeopt=menuone,longest,preview wildmode=list:longest,full
-    \ noswapfile nocompatible foldmethod=marker relativenumber hidden
+    \ noswapfile nocompatible relativenumber hidden gdefault
+
+" Folding
+set foldmethod=marker foldclose=all
+set foldopen=hor,insert,jump,mark,quickfix,search,tag,undo
 
 " Use the mouse even without GUI
 set mouse=a
@@ -20,7 +57,12 @@ let mapleader = ","
 " Jump to existent windows when splitting new buffers
 set switchbuf=useopen
 
-" Use undofiles
+" Viminfo
+if has("viminfo")
+    set viminfo=<100,%10,'10,n~/.viminfo
+endif
+
+"" Use undofiles {{{1
 let s:undodir = $HOME . "/.vim/undos"
 if !isdirectory( s:undodir )
     call mkdir( s:undodir )
@@ -28,7 +70,7 @@ endif
 let &undodir = s:undodir
 set undofile
 
-" Gui stuff
+"" Gui stuff {{{1
 if has("gui")
     " Appearance
     if g:os_uname ==# "Darwin"
@@ -40,11 +82,6 @@ if has("gui")
     set guioptions-=r guioptions-=R
 endif
 
-" Viminfo
-if has("viminfo")
-    set viminfo=<100,%10,'10,n~/.viminfo
-endif
-
 "" Restore cursor position per buffer {{{1
 
 function! ResCur()
@@ -54,7 +91,7 @@ function! ResCur()
     endif
 endfunction
 
-augroup resCur
+augroup ResCur
     autocmd!
     autocmd BufWinEnter * silent! call ResCur()
 augroup END
@@ -74,46 +111,99 @@ highlight clear CursorColumn | highlight link CursorColumn HighlightComment
 highlight clear Todo | highlight Todo ctermbg=11 ctermfg=0 guibg=#ffff00
     \ guifg=#000000
 highlight clear MatchParen | highlight link MatchParen Todo
-highlight clear TabLineSel | highlight link TabLineSel HighlightComment
-highlight clear TabLineFill | highlight link TabLineFill TabLine
 highlight clear VertSplit | highlight link VertSplit LineNr
 
-"" Cursor highlighting {{{1
+call matchadd('Todo', '\ctodo')
 
-" Make the cursor easily visible
-function! HighlightCursor(...)
-    " Do 3 blinks
-    let c = 0
-    while c<3
-        " What to highlight?
-        if a:0 > 0
-            if a:1 ==# "Match"
-                let l:pat = '\%#' . @/
-            else
-                echom "Invalid argument given to HighlightCursor(...)!"
-                return
-            endif
-        else
-            let l:pat = '\v.{0,3}%#.{0,3}'
+"" Status-/Tabline {{{1
+
+" StatusLine
+highlight StatusLine   cterm=NONE ctermbg=26 ctermfg=255 guibg=#4f76b6
+            \ guifg=#005fdf
+highlight User1        cterm=NONE ctermbg=26 ctermfg=9   guibg=#4f76b6
+            \ guifg=#ff0000
+highlight StatusLineNC cterm=NONE ctermbg=17 ctermfg=255 guibg=#00005f
+            \ guifg=#f0f0f0
+
+function! Modified()
+    if &filetype ==# 'help'
+        return ''
+    endif
+
+    if &modified
+        return '[+]'
+    endif
+
+    return ''
+endfunction
+
+" Returns tag prototype for c/cpp files
+function! Prototype()
+    if match(&filetype, '\v\c[ch](pp)?') != -1
+        return Tlist_Get_Tag_Prototype_By_Line()
+    endif
+
+    return ''
+endfunction
+
+function! MyStatusLine()
+    let l:statusline = '%n: %f%q %a%=%{Prototype()} (%p%%) %y %1*%{Modified()}'
+    return l:statusline
+endfunction
+
+set laststatus=2
+set statusline=%!MyStatusLine()
+
+" Tabline
+highlight clear TabLineSel | highlight link TabLineSel HighlightComment
+highlight clear TabLineFill | highlight link TabLineFill TabLine
+highlight clear TabLine | highlight link TabLine StatusLineNC
+
+function! MyTabLine()
+    let s = ''
+
+    for i in range(tabpagenr('$'))
+        " Dont print labels if only one tab
+        if tabpagenr('$') == 1
+            break
         endif
 
-        " Let it blink for 50ms
-        let l:match = matchadd('Todo', l:pat)
-        redraw | sleep 50 m
-        call matchdelete(l:match)
-        redraw | sleep 50 m
+        " Select the highlighting
+        if i + 1 == tabpagenr()
+            let s .= '%#TabLineSel#'
+        else
+            let s .= '%#TabLine#'
+        endif
+        " Set the tab page number (for mouse clicks)
+        let s .= '%' . (i + 1) . 'T'
+        " The label is made by MyTabLabel()
+        let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+    endfor
 
-        let c = c+1
-    endwhile
+    " After the last tab fill with TabLineFill and reset tab page nr
+    let s .= '%#TabLineFill#%T'
+    " Print currect working directory
+    let s .= '%=cwd: ' . getcwd() . '%#TabLine#'
 
-    " If we highlighted a match, also activate visual mode
-"    if exists("a:2")
-"        if a:2 ==# "Visual"
-            " Select the match visually
-"            normal! gno
-"        endif
-"    endif
+    return s
 endfunction
+
+function! MyTabLabel(n)
+    let l:buflist  = tabpagebuflist(a:n)
+    let l:winnr    = tabpagewinnr(a:n)
+    " Extract filename
+    let l:bufname  = bufname(l:buflist[l:winnr - 1])
+    let l:filename = matchstr(l:bufname, '\v[^/]*$')
+    if l:filename == ''
+        return '[No Name]'
+    else
+        return l:filename
+    endif
+endfunction
+
+set showtabline=2
+set tabline=%!MyTabLine()
+
 
 " Things to do when a buffer is entered
 function! OnBufEnter()
@@ -202,7 +292,8 @@ augroup END
 
 "" Search and Replace {{{1
 
-function! SearchAndReplace(mode, ...) " TODO: make it accept a range
+" TODO make it accept a range
+function! SearchAndReplace(mode, ...)
     " In normal mode
     if a:mode ==# "normal"
         if a:0 > 0
@@ -341,19 +432,20 @@ nnoremap <s-tab> <c-o>
 set splitright splitbelow
 
 " Split navigation
-inoremap <silent> <c-j> <esc><c-w>j:call HighlightCursor()<cr>
-inoremap <silent> <c-k> <esc><c-w>k:call HighlightCursor()<cr>
-inoremap <silent> <c-h> <esc><c-w>h:call HighlightCursor()<cr>
-inoremap <silent> <c-l> <esc><c-w>l:call HighlightCursor()<cr>
-nnoremap <silent> <c-j> <c-w>j:call HighlightCursor()<cr>
-nnoremap <silent> <c-k> <c-w>k:call HighlightCursor()<cr>
-nnoremap <silent> <c-h> <c-w>h:call HighlightCursor()<cr>
-nnoremap <silent> <c-l> <c-w>l:call HighlightCursor()<cr>
+inoremap <silent> <c-j> <esc><c-w>j
+inoremap <silent> <c-k> <esc><c-w>k
+inoremap <silent> <c-h> <esc><c-w>h
+inoremap <silent> <c-l> <esc><c-w>l
+nnoremap <silent> <c-j> <c-w>j
+nnoremap <silent> <c-k> <c-w>k
+nnoremap <silent> <c-h> <c-w>h
+nnoremap <silent> <c-l> <c-w>l
 " Tab navigation
-nnoremap <silent> <c-p> :tabp<cr>:call HighlightCursor()<cr>
-nnoremap <silent> <c-n> :tabn<cr>:call HighlightCursor()<cr>
+nnoremap <silent> <c-p> :tabp<cr>
+nnoremap <silent> <c-n> :tabn<cr>
 
-" Maximize quickfix windows' width
+"" Maximize quickfix windows' width {{{1
+
 function! MaxQuickfixWin()
     if &buftype ==# "quickfix"
         execute "normal! \<c-w>J"
@@ -441,28 +533,3 @@ if has("cscope")
     nnoremap <leader>Fd :vert scs find d <C-R>=expand("<cword>")<cr><cr>
 endif
 
-"" Plugins {{{1
-
-" Vundle
-filetype off
-set nocompatible
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin('~/.vim/plugins')
-
-Plugin 'gmarik/Vundle.vim'
-Plugin 'snipMate'
-Plugin 'taglist.vim'
-
-" Add Plugins here
-call vundle#end()
-filetype plugin indent on
-
-"" Taglist {{{1
-
-noremap <silent> <leader>t :TlistToggle<cr>
-
-let Tlist_Close_On_Select = 1
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_Use_Right_Window = 1
-let Tlist_GainFocus_On_ToggleOpen = 1
-let Tlist_WinWidth = 50
