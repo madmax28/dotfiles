@@ -205,20 +205,6 @@ set showtabline=2
 set tabline=%!MyTabLine()
 
 
-" Things to do when a buffer is entered
-function! OnBufEnter()
-    if &filetype !=# "help" || &filetype !=# "taglist"
-        call HighlightCursor()
-    endif
-endfunction
-
-" Make cursor easier visible after switching the buffer and jumping to the next
-" search result
-nnoremap n n:call HighlightCursor("Match")<cr>
-nnoremap N N:call HighlightCursor("Match")<cr>
-vnoremap n <esc>n:call HighlightCursor("Match")<cr>
-vnoremap N <esc>N:call HighlightCursor("Match")<cr>
-
 "" Un-/Commenting {{{1
 
 " Things to do when a filetype is detected
@@ -427,6 +413,9 @@ nnoremap <silent> <leader>b :wa<cr>:make<cr>:cw<cr>
 " ~/.vimrc editing
 nnoremap <leader>ev :e $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
+
+" Snippet editing
+nnoremap <leader>es :Explore $HOME/.vim/snippets<cr>
 
 " Jumplist navigation
 nnoremap <s-tab> <c-o>
