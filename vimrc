@@ -261,6 +261,11 @@ function! ToggleComment()
     endif
 endfunction
 
+augroup DetectCommentStr
+    autocmd!
+    autocmd BufWinEnter * call OnFileType()
+augroup END
+
 noremap <silent> <leader>c :call ToggleComment()<cr>
 
 "" Highlight bad style {{{1
