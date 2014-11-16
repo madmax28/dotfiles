@@ -1,5 +1,8 @@
 "" Init {{{1
 
+" Leader key
+let mapleader = ","
+
 let g:os_uname = substitute(system('uname'), "\n", "", "")
 
 "" Plugins {{{1
@@ -39,22 +42,26 @@ let Tlist_Exit_OnlyWindow = 1
 let Tlist_Use_Right_Window = 1
 let Tlist_GainFocus_On_ToggleOpen = 1
 let Tlist_WinWidth = 50
+let Tlist_Enable_Fold_Column = 0
 
 highlight link TagListFileName StatusLineNC
 highlight link TagListTitle    Keyword
 
-augroup TlistUpdate
+augroup TlistGrp
     autocmd!
-    autocmd BufWinEnter * :TlistUpdate
+    autocmd BufWinEnter * silent! TlistUpdate
+    autocmd FileType taglist setlocal nonumber norelativenumber
 augroup END
+
 
 "" Settings {{{1
 
 syntax on
 set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab smartindent ruler
-    \ number scrolloff=5 backspace=2 nowrap history=1000 wildmenu
+    \ scrolloff=5 backspace=2 nowrap history=1000 wildmenu
     \ completeopt=menuone,longest,preview wildmode=list:longest,full
-    \ noswapfile nocompatible relativenumber hidden gdefault
+    \ noswapfile nocompatible hidden gdefault
+    \ number relativenumber
 
 " Folding
 set foldmethod=marker foldclose=all
@@ -62,9 +69,6 @@ set foldopen=hor,insert,jump,mark,quickfix,search,tag,undo
 
 " Use the mouse even without GUI
 set mouse=a
-
-" Leader key
-let mapleader = ","
 
 " Jump to existent windows when splitting new buffers
 set switchbuf=useopen
@@ -120,7 +124,7 @@ highlight Highlighted ctermfg=231 ctermbg=24  cterm=NONE
 highlight MatchParen  ctermfg=231 ctermbg=250 cterm=NONE
 highlight Todo        ctermfg=235 ctermbg=184 cterm=NONE
 highlight NonText     ctermfg=24  ctermbg=235 cterm=NONE
-highlight! link FoldColumn Statusline
+highlight! link FoldColumn StatuslineNC
 highlight! link CursorLineNr Highlighted
 highlight! link CursorLine Highlighted
 highlight! link CursorColumn Highlighted
@@ -422,7 +426,10 @@ command! WQ wq
 nnoremap <silent> <leader>b :wa<cr>:make<cr>:cw<cr>
 
 " ~/.vimrc editing
-nnoremap <leader>ev :e $MYVIMRC<cr>
+function! EditVimrc()
+    execute "edit " . g:myvimrc
+endfunction
+nnoremap <leader>ev :call EditVimrc()<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " Snippet editing

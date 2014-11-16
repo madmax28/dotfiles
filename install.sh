@@ -24,6 +24,12 @@ for FILE in vimrc; do
         printf "\n$appendString" >> $HOME/.$FILE
     fi
 
+    appendString="let g:myvimrc = \"$PWD/vimrc\""
+    if [ `grep "$appendString" $HOME/.$FILE | wc -l` -eq 0 ]; then
+        echo "Appending \"$appendString\" to $HOME/.$FILE"
+        printf "\n$appendString" >> $HOME/.$FILE
+    fi
+
     sourceString="so $PWD/$FILE"
     if [ `grep "$sourceString" $HOME/.$FILE | wc -l` -eq 0 ]; then
         echo "Appending \"$sourceString\" to $HOME/.$FILE"
@@ -50,6 +56,8 @@ else
         cp -R $PWD/vim $HOME/.vim
     fi
 fi
+
+echo "========== Installing plugins via Vundle ========"
 # Let vundle install plugins
 vim +PluginInstall +qall -c "q"
 # Apply some patches
