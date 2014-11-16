@@ -14,10 +14,21 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'snipMate'
 Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
+Plugin 'clang-complete'
 
 " Add Plugins here
 call vundle#end()
 filetype plugin indent on
+
+"" clang complete {{{1
+
+let g:clang_auto_select = 1
+if g:os_uname ==# 'Darwin'
+    let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer
+                \/Toolchains/XcodeDefault.xctoolchain/usr/lib'
+endif
+let g:clang_use_library = 1
+let g:clang_close_preview = 1
 
 "" Taglist {{{1
 
@@ -36,6 +47,7 @@ augroup TlistUpdate
     autocmd!
     autocmd BufWinEnter * :TlistUpdate
 augroup END
+
 "" Settings {{{1
 
 syntax on
@@ -465,7 +477,6 @@ function! AddCscopeDb()
     else
         echoe "Couldn't find cscope db"
     endif
-    redraw!
 endfunction
 
 " Add any cscope databases present in current working directory
@@ -483,6 +494,8 @@ function! AddCreateCscopeDb()
     else
         echoe "Couldn't create Cscope db"
     endif
+
+    redraw!
 endfunction
 
 if has("cscope")
