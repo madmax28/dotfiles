@@ -113,29 +113,28 @@ augroup END
 " Use codeschool
 colorscheme codeschool
 
-highlight Error ctermbg=88 guibg=#880708
-highlight RevSearch ctermfg=239 ctermbg=148 guifg=#e7ddd9 guibg=#74499b
-highlight HighlightComment ctermbg=26 ctermfg=255 guibg=#4f76b6 guifg=#f0f0f0
-highlight clear FoldColumn | highlight link FoldColumn Statusline
-highlight clear CursorLineNr | highlight link CursorLineNr HighlightComment
-highlight clear CursorLine | highlight link CursorLine HighlightComment
-highlight clear CursorColumn | highlight link CursorColumn HighlightComment
-highlight clear Todo | highlight Todo ctermbg=11 ctermfg=0 guibg=#ffff00
-    \ guifg=#000000
-highlight clear MatchParen | highlight link MatchParen Todo
-highlight clear VertSplit | highlight link VertSplit LineNr
+highlight Error       ctermfg=231 ctermbg=88  cterm=NONE
+highlight Normal      ctermfg=231 ctermbg=235 cterm=NONE
+highlight Folded      ctermfg=247 ctermbg=235 cterm=NONE
+highlight Highlighted ctermfg=231 ctermbg=24  cterm=NONE
+highlight MatchParen  ctermfg=231 ctermbg=250 cterm=NONE
+highlight Todo        ctermfg=235 ctermbg=184 cterm=NONE
+highlight NonText     ctermfg=24  ctermbg=235 cterm=NONE
+highlight! link FoldColumn Statusline
+highlight! link CursorLineNr Highlighted
+highlight! link CursorLine Highlighted
+highlight! link CursorColumn Highlighted
+highlight! link VertSplit LineNr
 
+" StatusLine
+highlight StatusLineNC cterm=NONE ctermbg=238 ctermfg=255
+highlight User1        cterm=NONE ctermbg=24  ctermfg=9
+highlight! link StatusLine Highlighted
+
+" StatusLine
 call matchadd('Todo', '\ctodo')
 
 "" Status-/Tabline {{{1
-
-" StatusLine
-highlight StatusLine   cterm=NONE ctermbg=26 ctermfg=255 guibg=#4f76b6
-            \ guifg=#005fdf
-highlight User1        cterm=NONE ctermbg=26 ctermfg=9   guibg=#4f76b6
-            \ guifg=#ff0000
-highlight StatusLineNC cterm=NONE ctermbg=17 ctermfg=255 guibg=#00005f
-            \ guifg=#f0f0f0
 
 function! Modified()
     if &filetype ==# 'help'
@@ -167,7 +166,7 @@ set laststatus=2
 set statusline=%!MyStatusLine()
 
 " Tabline
-highlight clear TabLineSel | highlight link TabLineSel HighlightComment
+highlight clear TabLineSel | highlight link TabLineSel Highlighted
 highlight clear TabLineFill | highlight link TabLineFill TabLine
 highlight clear TabLine | highlight link TabLine StatusLineNC
 
