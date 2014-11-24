@@ -24,10 +24,10 @@ for FILE in vimrc; do
         printf "\n$appendString" >> $HOME/.$FILE
     fi
 
-    appendString="let g:myvimrc = \"$PWD/vimrc\""
-    if [ `grep "$appendString" $HOME/.$FILE | wc -l` -eq 0 ]; then
-        echo "Appending \"$appendString\" to $HOME/.$FILE"
-        printf "\n$appendString" >> $HOME/.$FILE
+    appendstring="let g:vimconfig_dir = \"$PWD\""
+    if [ `grep "$appendstring" $HOME/.$FILE | wc -l` -eq 0 ]; then
+        echo "appending \"$appendstring\" to $HOME/.$FILE"
+        printf "\n$appendstring" >> $HOME/.$FILE
     fi
 
     sourceString="so $PWD/$FILE"

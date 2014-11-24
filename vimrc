@@ -118,12 +118,12 @@ augroup END
 colorscheme codeschool
 
 highlight Error       ctermfg=231 ctermbg=88  cterm=NONE
-highlight Normal      ctermfg=231 ctermbg=235 cterm=NONE
-highlight Folded      ctermfg=247 ctermbg=235 cterm=NONE
+highlight Normal      ctermfg=231 ctermbg=234 cterm=NONE
+highlight Folded      ctermfg=247 ctermbg=234 cterm=NONE
 highlight Highlighted ctermfg=231 ctermbg=24  cterm=NONE
-highlight MatchParen  ctermfg=231 ctermbg=250 cterm=NONE
 highlight Todo        ctermfg=235 ctermbg=184 cterm=NONE
-highlight NonText     ctermfg=24  ctermbg=235 cterm=NONE
+highlight NonText     ctermfg=24  ctermbg=234 cterm=NONE
+highlight! link MatchParen Visual
 highlight! link FoldColumn StatuslineNC
 highlight! link CursorLineNr Highlighted
 highlight! link CursorLine Highlighted
@@ -427,13 +427,16 @@ nnoremap <silent> <leader>b :wa<cr>:make<cr>:cw<cr>
 
 " ~/.vimrc editing
 function! EditVimrc()
-    execute "edit " . g:myvimrc
+    execute "edit " . g:vimconfig_dir . "/vimrc"
 endfunction
 nnoremap <leader>ev :call EditVimrc()<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " Snippet editing
-nnoremap <leader>es :Explore $HOME/.vim/snippets<cr>
+function! EditSnippets()
+    execute "Explore " . g:vimconfig_dir . "/vim/snippets"
+endfunction
+nnoremap <leader>es :call EditSnippets()<cr>
 
 " Jumplist navigation
 nnoremap <s-tab> <c-o>
@@ -553,7 +556,7 @@ if has("cscope")
     " Automatically add Cscope db
     augroup AddCreateCscopeDb
         autocmd!
-        autocmd BufCreate * silent! call AddCscopeDb()
+        autocmd BufCreate * call AddCscopeDb()
     augroup END
 
     " Mappings
