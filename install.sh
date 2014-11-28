@@ -57,11 +57,9 @@ else
     fi
 fi
 
-echo "========== Installing plugins via Vundle ========"
 # Let vundle install plugins
+echo "========== Installing plugins via Vundle ========"
 vim +PluginInstall +qall -c "q"
-# Apply some patches
-patch $HOME/.vim/plugins/snipMate/snippets/c.snippets ./c.snippets.patch
 
 ##
 ## Bash stuff

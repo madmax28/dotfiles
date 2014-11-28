@@ -395,7 +395,7 @@ endif
 
 " Joing lines
 nnoremap <leader>j J
-nnoremap <leader>J kJ
+nnoremap <leader>J xi<cr><esc>
 
 " 'Strong' hjkl
 noremap K gg
@@ -433,8 +433,9 @@ nnoremap <leader>ev :call EditVimrc()<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " Snippet editing
+let g:snippets_dir = g:vimconfig_dir . "/vim/snippets"
 function! EditSnippets()
-    execute "Explore " . g:vimconfig_dir . "/vim/snippets"
+    execute "Explore " . g:snippets_dir
 endfunction
 nnoremap <leader>es :call EditSnippets()<cr>
 
@@ -556,7 +557,7 @@ if has("cscope")
     " Automatically add Cscope db
     augroup AddCreateCscopeDb
         autocmd!
-        autocmd BufCreate * call AddCscopeDb()
+        autocmd BufCreate * silent! call AddCscopeDb()
     augroup END
 
     " Mappings
@@ -572,12 +573,12 @@ if has("cscope")
     nnoremap <leader>fd :cs find d <C-R>=expand("<cword>")<cr><cr>
 
     nnoremap <leader>Fs :vert scs find s <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>Fg :vert scs find g <C-R>=expand("<cword>")<cr><cr>
+"     nnoremap <leader>Fg :vert scs find g <C-R>=expand("<cword>")<cr><cr>
     nnoremap <leader>Fc :vert scs find c <C-R>=expand("<cword>")<cr><cr>
     nnoremap <leader>Ft :vert scs find t <C-R>=expand("<cword>")<cr><cr>
     nnoremap <leader>Fe :vert scs find e <C-R>=expand("<cword>")<cr><cr>
     nnoremap <leader>Ff :vert scs find f <C-R>=expand("<cfile>")<cr><cr>
-    nnoremap <leader>Fi :vert scs find i ^<C-R>=expand("<cfile>")<cr>$<cr>
-    nnoremap <leader>Fd :vert scs find d <C-R>=expand("<cword>")<cr><cr>
+
+    nnoremap <leader>Fg :pta <C-R>=expand("<cword>")<cr><cr>
 endif
 
