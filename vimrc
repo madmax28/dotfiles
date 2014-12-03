@@ -31,8 +31,6 @@ if g:os_uname ==# 'Darwin'
                 \/Toolchains/XcodeDefault.xctoolchain/usr/lib'
 endif
 let g:clang_use_library = 1
-let g:clang_close_preview = 1
-
 "" Taglist {{{1
 
 noremap <silent> <leader>t :TlistToggle<cr>
@@ -490,7 +488,8 @@ function! ToggleList(bufname, pfx)
 endfunction
 
 noremap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
-noremap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
+noremap <silent> <leader>q :call ToggleList("Quickfix List",
+            \'c')<cr>:pclose<cr>
 
 "" Maximize quickfix windows' width {{{1
 
