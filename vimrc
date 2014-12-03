@@ -57,7 +57,7 @@ augroup END
 syntax on
 set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab smartindent ruler
     \ scrolloff=5 backspace=2 nowrap history=1000 wildmenu
-    \ completeopt=menuone,longest,preview wildmode=list:longest,full
+    \ completeopt=menuone,longest wildmode=list:longest,full
     \ noswapfile nocompatible hidden gdefault
     \ number relativenumber
 
@@ -505,14 +505,15 @@ augroup END
 
 "" Cscope stuff {{{1
 
-let s:myscope_dir = getcwd() . '/.myscope'
-let s:cscope_db   = s:myscope_dir . '/cscope.out'
 
 " Add any cscope databases present in current working directory
 function! AddCscopeDb()
-    if filereadable( s:cscope_db )
+    let l:myscope_dir = getcwd() . '/.myscope'
+    let l:cscope_db   = l:myscope_dir . '/cscope.out'
+
+    if filereadable( l:cscope_db )
         echom "Added cscope db"
-        execute "silent! cs add " . s:cscope_db
+        execute "silent! cs add " . l:cscope_db
         " Avoid duplicate databases
         silent! cscope reset
     else
@@ -523,14 +524,17 @@ endfunction
 " Add any cscope databases present in current working directory
 " If none are present, call AirTies' newscript.sh to generate one and add it
 function! AddCreateCscopeDb()
-    if filereadable( s:cscope_db )
+    let l:myscope_dir = getcwd() . '/.myscope'
+
+    let l:cscope_db   = l:myscope_dir . '/cscope.out'
+    if filereadable( l:cscope_db )
         echom "Rebuilding cscope db"
-        call delete( s:cscope_db )
+        call delete( l:cscope_db )
     endif
 
     execute "silent! !~/.vim/bin/myscope.sh " . getcwd()
 
-    if filereadable( s:cscope_db )
+    if filereadable( l:cscope_db )
         call AddCscopeDb()
     else
         echoe "Couldn't create Cscope db"
