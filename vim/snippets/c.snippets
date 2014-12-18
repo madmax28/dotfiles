@@ -60,7 +60,7 @@ snippet wh
 	}
 # For Loop
 snippet for
-	for (${2:i} = 0; $2 < ${1:count}; $2${3:++}) {
+	for( ${2:i} = 0; $2 < ${1:count}; $2${3:++} ) {
 		${4:/* code */}
 	}
 # Custom For Loop
@@ -105,3 +105,5 @@ snippet ifd
 	#ifdef DEBUG
 	    printf( "${1}\n"${2} );${3}
 	#endif
+snippet deb
+	debug( ${1:DEBUG_INF}, "${2:%s}\n"${3} );${4}

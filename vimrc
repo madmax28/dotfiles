@@ -575,12 +575,12 @@ if has("cscope")
     nnoremap <leader>fi :cs find i ^<C-R>=expand("<cfile>")<cr>$<cr>
     nnoremap <leader>fd :cs find d <C-R>=expand("<cword>")<cr><cr>
 
-    nnoremap <leader>Fs :vert scs find s <C-R>=expand("<cword>")<cr><cr>
-"     nnoremap <leader>Fg :vert scs find g <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>Fc :vert scs find c <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>Ft :vert scs find t <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>Fe :vert scs find e <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>Ff :vert scs find f <C-R>=expand("<cfile>")<cr><cr>
+    nnoremap <leader>FS :vert scs find s <C-R>=expand("<cword>")<cr><cr>
+    nnoremap <leader>FG :vert scs find g <C-R>=expand("<cword>")<cr><cr>
+    nnoremap <leader>FC :vert scs find c <C-R>=expand("<cword>")<cr><cr>
+    nnoremap <leader>FT :vert scs find t <C-R>=expand("<cword>")<cr><cr>
+    nnoremap <leader>FE :vert scs find e <C-R>=expand("<cword>")<cr><cr>
+    nnoremap <leader>FF :vert scs find f <C-R>=expand("<cfile>")<cr><cr>
 
     nnoremap <leader>Fg :pta <C-R>=expand("<cword>")<cr><cr>
 endif
