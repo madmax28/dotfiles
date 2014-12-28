@@ -29,5 +29,5 @@ function! ExecutePython(readargs)
     echo "=== Return value: " . v:shell_error
 endfunction
 
-nnoremap <leader>x :call ExecutePython("0")<cr>
-nnoremap <leader>X :call ExecutePython("1")<cr>
+nnoremap <leader>x :wa<cr>:call ExecutePython("0")<cr>
+nnoremap <leader>X :wa<cr>:call ExecutePython("1")<cr>
