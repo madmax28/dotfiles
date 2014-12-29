@@ -76,6 +76,20 @@ if has("viminfo")
     set viminfo=<100,%10,'10,n~/.viminfo
 endif
 
+" Viminfo
+let &grepprg = "grep -EHsn --color=auto $* /dev/null"
+function! Grep()
+    let l:args = input("grep ", "-R ", "file")
+    if l:args ==# ""
+        echoerr "Grep(): No arguments"
+        return
+    endif
+
+    echom "== args = " . l:args
+    execute "normal! :grep" . l:args . "\<cr>"
+    redraw!
+endfunction
+
 "" Use undofiles {{{1
 let s:undodir = $HOME . "/.vim/undos"
 if !isdirectory( s:undodir )
@@ -439,6 +453,9 @@ nnoremap <leader>es :call EditSnippets()<cr>
 
 " Jumplist navigation
 nnoremap <s-tab> <c-o>
+
+" Grep
+nnoremap <silent> <leader>g :call Grep()<cr>
 
 "" Tabs and splits {{{1
 
