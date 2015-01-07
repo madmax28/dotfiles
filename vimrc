@@ -540,8 +540,8 @@ augroup END
 let &sessionoptions = "blank,sesdir,buffers,help,tabpages,folds"
 
 function! RestoreSession()
-    if filereadable(".vimsession")
-       source .vimsession
+    if filereadable(".vimsession") && !argc()
+        source .vimsession
     endif
 endfunction
 
