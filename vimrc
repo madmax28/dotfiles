@@ -535,3 +535,18 @@ augroup MaxQuickfixWinGrp
     autocmd BufWinEnter * call MaxQuickfixWin()
 augroup END
 
+"" Sessions {{{1
+
+let &sessionoptions = "blank,sesdir,buffers,help,tabpages,folds"
+
+function! RestoreSession()
+    if filereadable(".vimsession")
+       source .vimsession
+    endif
+endfunction
+
+augroup SessionGrp
+    autocmd!
+    autocmd VimEnter * nested call RestoreSession()
+    autocmd VimLeave * mksession! .vimsession
+augroup END
