@@ -11,15 +11,18 @@ endif
 " Execute python script
 function! ExecutePython(readargs)
     if a:readargs
-        let l:args = input("Arguments: ", "", "file")
-    else
-        let l:args = ""
+        if !exists("s:args")
+            let s:args = input("Arguments: ", "",     "file")
+        else
+            let s:args = input("Arguments: ", s:args, "file")
+        endif
+        redraw!
     endif
 
     let l:file = @%
     let l:cmd = s:python . " " . l:file
-    if a:readargs
-        let l:cmd = l:cmd . " " . l:args
+    if exists("s:args")
+        let l:cmd = l:cmd . " " . s:args
     endif
 
     let l:output = system(l:cmd)
@@ -29,5 +32,5 @@ function! ExecutePython(readargs)
     echo "=== Return value: " . v:shell_error
 endfunction
 
-nnoremap <leader>x :wa<cr>:call ExecutePython("0")<cr>
-nnoremap <leader>X :wa<cr>:call ExecutePython("1")<cr>
+nnoremap <buffer> <leader>x :wa<cr>:call ExecutePython("0")<cr>
+nnoremap <buffer> <leader>X :wa<cr>:call ExecutePython("1")<cr>
