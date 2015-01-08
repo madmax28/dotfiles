@@ -18,10 +18,25 @@ Plugin 'snipMate'
 Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
 Plugin 'clang-complete'
+Plugin 'davidhalter/jedi-vim'
 
 " Add Plugins here
 call vundle#end()
 filetype plugin indent on
+
+"" Jedi-Vim {{{1
+
+" Mappings
+let g:jedi#completions_command      = "<c-n>"
+let g:jedi#goto_assignments_command = "<leader>fs"
+let g:jedi#goto_definitions_command = "<leader>fg"
+let g:jedi#documentation_command    = "<leader>fd"
+let g:jedi#usages_command           = "<leader>fn"
+
+let g:jedi#rename_command           = "<leader>f1"
+let g:jedi#auto_vim_configuration   = 0
+let g:jedi#pop_select_first         = 0
+let g:jedi#use_tabs_not_buffers     = 0
 
 "" clang complete {{{1
 
@@ -520,85 +535,18 @@ augroup MaxQuickfixWinGrp
     autocmd BufWinEnter * call MaxQuickfixWin()
 augroup END
 
-"" Cscope stuff {{{1
+"" Sessions {{{1
 
+let &sessionoptions = "blank,sesdir,buffers,help,tabpages,folds"
 
-" Add any cscope databases present in current working directory
-function! AddCscopeDb()
-    let l:myscope_dir = getcwd() . '/.myscope'
-    let l:cscope_db   = l:myscope_dir . '/cscope.out'
-
-    if filereadable( l:cscope_db )
-        echom "Added cscope db"
-        execute "silent! cs add " . l:cscope_db
-        " Avoid duplicate databases
-        silent! cscope reset
-    else
-        echoe "Couldn't find cscope db"
+function! RestoreSession()
+    if filereadable(".vimsession") && !argc()
+        source .vimsession
     endif
 endfunction
 
-" Add any cscope databases present in current working directory
-" If none are present, call AirTies' newscript.sh to generate one and add it
-function! AddCreateCscopeDb()
-    let l:myscope_dir = getcwd() . '/.myscope'
-
-    let l:cscope_db   = l:myscope_dir . '/cscope.out'
-    if filereadable( l:cscope_db )
-        echom "Rebuilding cscope db"
-        call delete( l:cscope_db )
-    endif
-
-    execute "silent! !~/.vim/bin/myscope.sh " . getcwd()
-
-    if filereadable( l:cscope_db )
-        call AddCscopeDb()
-    else
-        echoe "Couldn't create Cscope db"
-    endif
-
-    redraw!
-endfunction
-
-if has("cscope")
-    " Use a quickfix window
-    if has("quickfix")
-        set cscopequickfix=s-,c-,d-,i-,t-,e-
-    endif
-
-    " Use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
-    set cscopetag
-    " Check cscope for definition of a symbol before checking ctags: set to 1
-    " if you want the reverse search order.
-    set csto=0
-    " Show msg when any other cscope db added
-    set cscopeverbose
-
-    " Automatically add Cscope db
-    augroup AddCreateCscopeDb
-        autocmd!
-        autocmd BufCreate * silent! call AddCscopeDb()
-    augroup END
-
-    " Mappings
-    nnoremap <leader>fa :call AddCreateCscopeDb()<CR>
-
-    nnoremap <leader>fs :cs find s <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
-    nnoremap <leader>fg :cs find g <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>fc :cs find c <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
-    nnoremap <leader>ft :cs find t <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
-    nnoremap <leader>fe :cs find e <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
-    nnoremap <leader>ff :cs find f <C-R>=expand("<cfile>")<cr><cr>
-    nnoremap <leader>fi :cs find i ^<C-R>=expand("<cfile>")<cr>$<cr>
-    nnoremap <leader>fd :cs find d <C-R>=expand("<cword>")<cr><cr>
-
-    nnoremap <leader>FS :vert scs find s <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>FG :vert scs find g <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>FC :vert scs find c <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>FT :vert scs find t <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>FE :vert scs find e <C-R>=expand("<cword>")<cr><cr>
-    nnoremap <leader>FF :vert scs find f <C-R>=expand("<cfile>")<cr><cr>
-
-    nnoremap <leader>Fg :pta <C-R>=expand("<cword>")<cr><cr>
-endif
-
+augroup SessionGrp
+    autocmd!
+    autocmd VimEnter * nested call RestoreSession()
+    autocmd VimLeave * mksession! .vimsession
+augroup END
