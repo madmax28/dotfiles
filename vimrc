@@ -77,7 +77,7 @@ if has("viminfo")
 endif
 
 " Viminfo
-let &grepprg = "grep -EHsn --color=auto $* /dev/null"
+let &grepprg = "grep -IEHsn --color=auto $* /dev/null"
 function! Grep()
     let l:args = input("grep ", "-R ", "file")
     if l:args ==# ""
