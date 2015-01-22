@@ -20,11 +20,22 @@ Plugin 'clang-complete'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'L9'
 Plugin 'FuzzyFinder'
-Plugin 'vim-flake8'
+Plugin 'nvie/vim-flake8'
 
 " Add Plugins here
 call vundle#end()
 filetype plugin indent on
+
+"" Flake8 {{{1
+
+let g:flake8_show_quickfix = 0
+let g:flake8_show_in_gutter = 1
+
+highlight link Flake8_Error      Error
+highlight link Flake8_Warning    WarningMsg
+highlight link Flake8_Complexity WarningMsg
+highlight link Flake8_Naming     WarningMsg
+highlight link Flake8_PyFlake    WarningMsg
 
 "" FuzzyFinder {{{1
 
@@ -36,6 +47,7 @@ nnoremap <leader><tab> :FufJumpList<cr>
 nnoremap <leader>: :FufMruCmd<cr>
 nnoremap <leader>t :FufBufferTagAll<cr>
 nnoremap <leader>Q :FufQuickfix<cr>
+nnoremap <leader>/ :FufLine<cr>
 
 "" Jedi-Vim {{{1
 
@@ -164,8 +176,10 @@ highlight Folded      ctermfg=247 ctermbg=none cterm=NONE
 highlight Highlighted ctermfg=231 ctermbg=24  cterm=NONE
 highlight Todo        ctermfg=235 ctermbg=184 cterm=NONE
 highlight NonText     ctermfg=24  ctermbg=none cterm=NONE
+highlight SignColumn  ctermbg=none
+
 highlight! link MatchParen Visual
-highlight! link FoldColumn StatuslineNC
+highlight! link FoldColumn StatusLineNC
 highlight! link CursorLineNr Highlighted
 highlight! link CursorLine Highlighted
 highlight! link CursorColumn Highlighted
@@ -480,6 +494,8 @@ nnoremap <s-tab> <c-o>
 " More natural split directions
 set splitright splitbelow
 
+nnoremap <silent> <c-w>t :tabnew<cr>
+
 " Split navigation
 inoremap <silent> <c-j> <esc><c-w>j
 inoremap <silent> <c-k> <esc><c-w>k
@@ -492,6 +508,7 @@ nnoremap <silent> <c-l> <c-w>l
 " Tab navigation
 nnoremap <silent> <c-p> :tabp<cr>
 nnoremap <silent> <c-n> :tabn<cr>
+nnoremap <silent> <c-w>Q :tabc<cr>
 
 " Split arrangement
 nnoremap <silent> <c-w>h <c-w>H
