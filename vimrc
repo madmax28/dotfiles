@@ -19,10 +19,23 @@ Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
 Plugin 'clang-complete'
 Plugin 'davidhalter/jedi-vim'
+Plugin 'L9'
+Plugin 'FuzzyFinder'
 
 " Add Plugins here
 call vundle#end()
 filetype plugin indent on
+
+"" FuzzyFinder {{{1
+
+let g:fuf_modesDisable = []
+nnoremap <F1> :FufFile<cr>
+nnoremap <F2> :FufMruFile<cr>
+nnoremap <F12> :FufHelp<cr>
+nnoremap <leader><tab> :FufJumpList<cr>
+nnoremap <leader>: :FufMruCmd<cr>
+nnoremap <leader>t :FufBufferTagAll<cr>
+nnoremap <leader>Q :FufQuickfix<cr>
 
 "" Jedi-Vim {{{1
 
@@ -48,7 +61,7 @@ endif
 let g:clang_use_library = 1
 "" Taglist {{{1
 
-noremap <silent> <leader>t :TlistToggle<cr>
+noremap <silent> <leader>T :TlistToggle<cr>
 
 let Tlist_Close_On_Select = 1
 let Tlist_Exit_OnlyWindow = 1
@@ -91,12 +104,30 @@ if has("viminfo")
     set viminfo=<100,%10,'10,n~/.viminfo
 endif
 
-" Viminfo
-let &grepprg = "grep -IEHsn --color=auto $* /dev/null"
+" Grep
+let &grepprg = "grep -IHsn --color=auto $* /dev/null"
+
+function! GrepOp(mode)
+    " Mode is either 'char', 'block' or 'line'
+    " Rescue register a
+    let l:a = getreg('a')
+    " Yank to register a
+    if a:mode ==# 'v'
+        normal! `<v`>"ay
+    elseif a:mode ==# 'char'
+        normal! `[v`]"ay
+    else
+        return
+    endif
+    " Grep
+    execute "normal! :grep -R " . shellescape(getreg('a')) . " *\<cr>"
+    " Restore a
+    call setreg( 'a', l:a )
+endfunction
+
 function! Grep()
     let l:args = input("grep ", "-R ", "file")
     if l:args ==# ""
-        echoerr "Grep(): No arguments"
         return
     endif
 
@@ -104,6 +135,10 @@ function! Grep()
     execute "normal! :grep" . l:args . "\<cr>"
     redraw!
 endfunction
+
+nnoremap <silent> <leader>G :call Grep()<cr>
+nnoremap <silent> <leader>g :set opfunc=GrepOp<cr>g@
+vnoremap <silent> <leader>g :<c-u>call GrepOp(visualmode())<cr>
 
 "" Use undofiles {{{1
 let s:undodir = $HOME . "/.vim/undos"
@@ -145,11 +180,11 @@ augroup END
 colorscheme codeschool
 
 highlight Error       ctermfg=231 ctermbg=88  cterm=NONE
-highlight Normal      ctermfg=231 ctermbg=234 cterm=NONE
-highlight Folded      ctermfg=247 ctermbg=234 cterm=NONE
+highlight Normal      ctermfg=231 ctermbg=none cterm=NONE
+highlight Folded      ctermfg=247 ctermbg=none cterm=NONE
 highlight Highlighted ctermfg=231 ctermbg=24  cterm=NONE
 highlight Todo        ctermfg=235 ctermbg=184 cterm=NONE
-highlight NonText     ctermfg=24  ctermbg=234 cterm=NONE
+highlight NonText     ctermfg=24  ctermbg=none cterm=NONE
 highlight! link MatchParen Visual
 highlight! link FoldColumn StatuslineNC
 highlight! link CursorLineNr Highlighted
@@ -412,9 +447,6 @@ augroup END
 nnoremap + ddp
 nnoremap - ddkP
 
-" Quickfix
-nnoremap <leader>q :copen<cr>
-
 " Apple specific stuff
 if g:os_uname ==# "Darwin"
     noremap! <a-space> <space>
@@ -438,7 +470,9 @@ nnoremap <leader>m :messages<cr>
 
 " Check highlighting
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
+
 inoremap jk <esc>
+inoremap <c-c> <esc>
 
 " Pasting in command mode
 cnoremap <c-p> <c-r>"
@@ -469,10 +503,7 @@ nnoremap <leader>es :call EditSnippets()<cr>
 " Jumplist navigation
 nnoremap <s-tab> <c-o>
 
-" Grep
-nnoremap <silent> <leader>g :call Grep()<cr>
-
-"" Tabs and splits {{{1
+"" Tab,  splits and buffers {{{1
 
 " More natural split directions
 set splitright splitbelow
