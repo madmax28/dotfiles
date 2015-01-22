@@ -20,6 +20,7 @@ Plugin 'clang-complete'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'L9'
 Plugin 'FuzzyFinder'
+Plugin 'vim-flake8'
 
 " Add Plugins here
 call vundle#end()
@@ -451,6 +452,8 @@ command! W w
 command! Q q
 command! Wq wq
 command! WQ wq
+
+command! Cd cd %:p:h
 
 " Building
 nnoremap <silent> <leader>b :wa<cr>:make<cr>:cw<cr>
