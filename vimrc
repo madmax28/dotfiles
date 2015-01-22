@@ -15,7 +15,6 @@ call vundle#begin('~/.vim/plugins')
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'snipMate'
-Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
 Plugin 'clang-complete'
 Plugin 'davidhalter/jedi-vim'
@@ -59,27 +58,6 @@ if g:os_uname ==# 'Darwin'
                 \/Toolchains/XcodeDefault.xctoolchain/usr/lib'
 endif
 let g:clang_use_library = 1
-"" Taglist {{{1
-
-noremap <silent> <leader>T :TlistToggle<cr>
-
-let Tlist_Close_On_Select = 1
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_Use_Right_Window = 1
-let Tlist_GainFocus_On_ToggleOpen = 1
-let Tlist_WinWidth = 50
-let Tlist_Enable_Fold_Column = 0
-
-highlight link TagListFileName StatusLineNC
-highlight link TagListTitle    Keyword
-
-augroup TlistGrp
-    autocmd!
-    autocmd BufWinEnter * silent! TlistUpdate
-    autocmd FileType taglist setlocal nonumber norelativenumber
-augroup END
-
-
 "" Settings {{{1
 
 syntax on
@@ -520,6 +498,16 @@ nnoremap <silent> <c-l> <c-w>l
 " Tab navigation
 nnoremap <silent> <c-p> :tabp<cr>
 nnoremap <silent> <c-n> :tabn<cr>
+
+" Split arrangement
+nnoremap <silent> <c-w>h <c-w>H
+nnoremap <silent> <c-w>j <c-w>J
+nnoremap <silent> <c-w>k <c-w>K
+nnoremap <silent> <c-w>l <c-w>L
+inoremap <silent> <c-w>h <esc><c-w>Ha
+inoremap <silent> <c-w>j <esc><c-w>Ja
+inoremap <silent> <c-w>k <esc><c-w>Ka
+inoremap <silent> <c-w>l <esc><c-w>La
 
 "" Quickfix and location window toggle {{{1
 
