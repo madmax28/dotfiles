@@ -572,13 +572,22 @@ augroup END
 let &sessionoptions = "blank,sesdir,buffers,help,tabpages,folds"
 
 function! RestoreSession()
-    if filereadable(".vimsession") && !argc()
+    let l:sessionfile = getcwd() . "/.vimsession"
+    if filereadable(l:sessionfile) && !argc()
         source .vimsession
     endif
 endfunction
 
+function! MakeSession()
+    let l:sessionfile = getcwd() . "/.vimsession"
+    if !argc()
+        mksession! l:sessionfile
+    endif
+endfunction
+
+
 augroup SessionGrp
     autocmd!
     autocmd VimEnter * nested call RestoreSession()
-    autocmd VimLeave * mksession! .vimsession
+    autocmd VimLeave * nested call MakeSession()
 augroup END
