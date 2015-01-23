@@ -455,6 +455,10 @@ endif
 " Follow symbols with Enter
 nnoremap <cr> <c-]>
 nnoremap <leader><cr> :sp<cr>:cstag<cr>
+augroup CmdWin
+    autocmd!
+    autocmd CmdwinEnter * noremap <buffer> <cr> <cr>
+augroup END
 
 " Not in quickfix windows though
 augroup QuickfixCr
