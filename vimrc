@@ -15,6 +15,7 @@ call vundle#begin('~/.vim/plugins')
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'snipMate'
+Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
 Plugin 'clang-complete'
 Plugin 'davidhalter/jedi-vim'
@@ -73,6 +74,27 @@ if g:os_uname ==# 'Darwin'
                 \/Toolchains/XcodeDefault.xctoolchain/usr/lib'
 endif
 let g:clang_use_library = 1
+"" Taglist {{{1
+
+noremap <silent> <leader>T :TlistToggle<cr>
+
+let Tlist_Close_On_Select = 1
+let Tlist_Exit_OnlyWindow = 1
+let Tlist_Use_Right_Window = 1
+let Tlist_GainFocus_On_ToggleOpen = 1
+let Tlist_WinWidth = 30
+let Tlist_Enable_Fold_Column = 0
+
+highlight link TagListFileName StatusLineNC
+highlight link TagListTitle    Keyword
+
+augroup TlistGrp
+    autocmd!
+    autocmd BufWinEnter * silent! TlistUpdate
+    autocmd FileType taglist setlocal nonumber norelativenumber
+augroup END
+
+
 "" Settings {{{1
 
 syntax on
@@ -209,8 +231,17 @@ function! Modified()
     return ''
 endfunction
 
+" Returns tag prototype for c/cpp files
+function! Prototype()
+    if match(&filetype, '\v\c[ch](pp)?') != -1
+        return Tlist_Get_Tag_Prototype_By_Line()
+    endif
+
+    return ''
+endfunction
+
 function! MyStatusLine()
-    let l:statusline = '%n: %f%q %a%=(%p%%) %y %1*%{Modified()}'
+    let l:statusline = '%n: %f%q %a%=%{Prototype()} (%p%%) %y %1*%{Modified()}'
     return l:statusline
 endfunction
 
@@ -423,6 +454,8 @@ endif
 
 " Follow symbols with Enter
 nnoremap <cr> <c-]>
+nnoremap <leader><cr> :sp<cr>:cstag<cr>
+
 " Not in quickfix windows though
 augroup QuickfixCr
     autocmd!
@@ -476,6 +509,7 @@ nnoremap <silent> <leader>b :wa<cr>:make<cr>:cw<cr>
 
 " ~/.vimrc editing
 function! EditVimrc()
+    tabnew
     execute "edit " . g:vimconfig_dir . "/vimrc"
 endfunction
 nnoremap <leader>ev :call EditVimrc()<cr>
@@ -496,8 +530,13 @@ nnoremap <s-tab> <c-o>
 " More natural split directions
 set splitright splitbelow
 
-" New tab
+" Tab arrangement
+nnoremap <silent> <c-w>Q :tabc<cr>
 nnoremap <silent> <c-w>t :tabnew<cr>
+
+" Save, close files
+nnoremap <silent> <c-w>wq :wq<cr>
+nnoremap <silent> <c-w>w :w<cr>
 
 " Split navigation
 inoremap <silent> <c-j> <esc><c-w>j
@@ -508,13 +547,10 @@ nnoremap <silent> <c-j> <c-w>j
 nnoremap <silent> <c-k> <c-w>k
 nnoremap <silent> <c-h> <c-w>h
 nnoremap <silent> <c-l> <c-w>l
+
 " Tab navigation
 nnoremap <silent> <c-p> :tabp<cr>
 nnoremap <silent> <c-n> :tabn<cr>
-
-" Tab arrangement
-nnoremap <silent> <c-w>Q :tabc<cr>
-nnoremap <silent> <c-w>wq :wq<cr>
 
 " Split arrangement
 nnoremap <silent> <c-w>h <c-w>H
@@ -574,14 +610,14 @@ let &sessionoptions = "blank,sesdir,buffers,help,tabpages,folds"
 function! RestoreSession()
     let l:sessionfile = getcwd() . "/.vimsession"
     if filereadable(l:sessionfile) && !argc()
-        source .vimsession
+        execute 'source ' . l:sessionfile
     endif
 endfunction
 
-function! MakeSession()
+function! UpdateSession()
     let l:sessionfile = getcwd() . "/.vimsession"
     if !argc()
-        mksession! l:sessionfile
+        execute 'mksession! ' . l:sessionfile
     endif
 endfunction
 
@@ -589,5 +625,5 @@ endfunction
 augroup SessionGrp
     autocmd!
     autocmd VimEnter * nested call RestoreSession()
-    autocmd VimLeave * nested call MakeSession()
+    autocmd VimLeave * nested call UpdateSession()
 augroup END
