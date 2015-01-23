@@ -40,9 +40,11 @@ highlight link Flake8_PyFlake    WarningMsg
 "" FuzzyFinder {{{1
 
 let g:fuf_modesDisable = []
-nnoremap <F1> :FufFile<cr>
-nnoremap <F2> :FufMruFile<cr>
-nnoremap <F12> :FufHelp<cr>
+nnoremap <leader>of :FufFile<cr>
+nnoremap <leader>or :FufMruFile<cr>
+nnoremap <leader>ob :FufBuffer<cr>
+nnoremap <leader>oh :FufHelp<cr>
+nnoremap <leader>od :FufDir<cr>
 nnoremap <leader><tab> :FufJumpList<cr>
 nnoremap <leader>: :FufMruCmd<cr>
 nnoremap <leader>t :FufBufferTagAll<cr>
