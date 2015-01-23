@@ -92,7 +92,7 @@ set switchbuf=useopen
 
 " Viminfo
 if has("viminfo")
-    set viminfo=<100,%10,'10,n~/.viminfo
+    set viminfo=<100,'10,n~/.viminfo
 endif
 
 " Grep
@@ -494,6 +494,7 @@ nnoremap <s-tab> <c-o>
 " More natural split directions
 set splitright splitbelow
 
+" New tab
 nnoremap <silent> <c-w>t :tabnew<cr>
 
 " Split navigation
@@ -508,17 +509,16 @@ nnoremap <silent> <c-l> <c-w>l
 " Tab navigation
 nnoremap <silent> <c-p> :tabp<cr>
 nnoremap <silent> <c-n> :tabn<cr>
+
+" Tab arrangement
 nnoremap <silent> <c-w>Q :tabc<cr>
+nnoremap <silent> <c-w>wq :wq<cr>
 
 " Split arrangement
 nnoremap <silent> <c-w>h <c-w>H
 nnoremap <silent> <c-w>j <c-w>J
 nnoremap <silent> <c-w>k <c-w>K
 nnoremap <silent> <c-w>l <c-w>L
-inoremap <silent> <c-w>h <esc><c-w>Ha
-inoremap <silent> <c-w>j <esc><c-w>Ja
-inoremap <silent> <c-w>k <esc><c-w>Ka
-inoremap <silent> <c-w>l <esc><c-w>La
 
 "" Quickfix and location window toggle {{{1
 
