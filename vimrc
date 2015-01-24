@@ -102,7 +102,7 @@ set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab smartindent ruler
     \ scrolloff=5 backspace=2 nowrap history=1000 wildmenu
     \ completeopt=menuone,longest wildmode=list:longest,full
     \ noswapfile nocompatible hidden gdefault
-    \ number relativenumber
+    \ number relativenumber showcmd
 
 " Folding
 set foldmethod=marker foldclose=all
