@@ -452,6 +452,9 @@ endif
 
 "" Mappings {{{1
 
+" Prevent ex-mode
+nnoremap Q <nop>
+
 " Follow symbols with Enter
 nnoremap <cr> <c-]>
 nnoremap <leader><cr> :sp<cr>:cstag<cr>
