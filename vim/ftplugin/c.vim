@@ -1,3 +1,8 @@
+"" Settings {{{1
+
+" Do not continue comments for o/O
+setlocal formatoptions-=o
+
 "" Cscope stuff {{{1
 
 " Add any cscope databases present in current working directory
@@ -78,3 +83,4 @@ if has("cscope")
 
     nnoremap <buffer> <leader>Fg :pta <C-R>=expand("<cword>")<cr><cr>
 endif
+

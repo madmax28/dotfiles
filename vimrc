@@ -94,7 +94,6 @@ augroup TlistGrp
     autocmd FileType taglist setlocal nonumber norelativenumber
 augroup END
 
-
 "" Settings {{{1
 
 syntax on
@@ -103,6 +102,10 @@ set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab smartindent ruler
     \ completeopt=menuone,longest wildmode=list:longest,full
     \ noswapfile nocompatible hidden gdefault
     \ number relativenumber showcmd
+
+" Default textwidth and autowrap
+set textwidth=80
+set formatoptions+=t
 
 " Folding
 set foldmethod=marker foldclose=all
@@ -359,7 +362,7 @@ function! HighlightBadStyle()
     endif
 
     " Character on 80th column
-    call matchadd('BadStyle', '\%80v.')
+    call matchadd('BadStyle', '\%81v.')
     " Trailing whitespaces
     call matchadd('BadStyle', '\s\+\n')
     " More than one newline in a row
@@ -457,7 +460,7 @@ nnoremap Q <nop>
 
 " Follow symbols with Enter
 nnoremap <cr> <c-]>
-nnoremap <leader><cr> :sp<cr>:cstag<cr>
+nnoremap <leader><cr> :sp<cr><c-]>
 augroup CmdWin
     autocmd!
     autocmd CmdwinEnter * noremap <buffer> <cr> <cr>
