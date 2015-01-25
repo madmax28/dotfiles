@@ -26,3 +26,14 @@ snippet case
 		${2:pattern})
 			${3};;
 	esac
+snippet opt
+	OPTIND=1
+	while getopts "${1:#opts}" opt; do
+	    case "$opt" in
+		${2:#opt})
+		    ${3:#statements}
+		    ;;
+	    esac
+	done
+	shift $((OPTIND-1))
+	$4
