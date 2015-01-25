@@ -3,6 +3,8 @@
 " Do not continue comments for o/O
 setlocal formatoptions-=o
 
+let b:cString = "\/\/"
+
 "" Cscope stuff {{{1
 
 " Add any cscope databases present in current working directory

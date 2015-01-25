@@ -3,6 +3,9 @@
 " Leader key
 let mapleader = ","
 
+" Shell
+set shell=/bin/sh
+
 let g:os_uname = substitute(system('uname'), "\n", "", "")
 
 "" Plugins {{{1
@@ -106,6 +109,7 @@ set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab smartindent ruler
 " Default textwidth and autowrap
 set textwidth=80
 set formatoptions+=t
+set formatoptions-=o
 
 " Folding
 set foldmethod=marker foldclose=all
@@ -280,7 +284,7 @@ function! MyTabLine()
     " After the last tab fill with TabLineFill and reset tab page nr
     let s .= '%#TabLineFill#%T'
     " Print currect working directory
-    let s .= '%=cwd: ' . getcwd() . '%#TabLine#'
+    let s .= '%=cwd: ' . system(g:vimconfig_dir . "/bin/shortpwd -n") . '%#TabLine#'
 
     return s
 endfunction
@@ -304,25 +308,10 @@ set tabline=%!MyTabLine()
 
 "" Un-/Commenting {{{1
 
-" Things to do when a filetype is detected
-function! OnFileType()
-    " Decide which character starts a comment
-    if &filetype ==# "vim"
-        let b:cString = '"'
-    elseif &filetype ==# "c" || &filetype ==# "cpp"
-        let b:cString = '\/\/'
-    elseif &filetype ==# "bash" || &filetype ==# "sh" || &filetype ==# "python" || &filetype ==# "conf"
-        let b:cString = '#'
-    elseif &filetype ==# "xml"
-        let b:cString = '<!--'
-        let b:cEndString = '-->'
-    endif
-endfunction
-
 " (Un)commenting lines
 function! ToggleComment()
     if !exists("b:cString")
-        return
+        let b:cString = "#"
     else
         let v:errmsg = ""
         " Comment
@@ -343,11 +332,6 @@ function! ToggleComment()
         endif
     endif
 endfunction
-
-augroup DetectCommentStr
-    autocmd!
-    autocmd BufWinEnter * call OnFileType()
-augroup END
 
 noremap <silent> <leader>c :call ToggleComment()<cr>
 
@@ -546,6 +530,7 @@ nnoremap <silent> <c-w>t :tabnew<cr>
 
 " Save, close files
 nnoremap <silent> <c-w>wq :wq<cr>
+nnoremap <silent> <c-w>ww :w<cr>
 nnoremap <silent> <c-w>w :w<cr>
 
 " Split navigation
