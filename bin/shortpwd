@@ -1,0 +1,22 @@
+#!/bin/bash
+
+FORMAT="%s\n"
+
+OPTIND=1
+while getopts "n" opt; do
+    case "$opt" in
+        n)
+            FORMAT="%s"
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+SHORTPWD=`pwd`
+SHORTPWD=`echo ${SHORTPWD/$HOME/\~} | grep -o ".*[\~/]"`
+SHORTPWD=`echo $SHORTPWD | sed 's/\(\.\)*\([^/]\)[^/]*/\1\2/g'`
+if [ `echo $SHORTPWD | grep "/"` ]; then
+    SHORTPWD+=`pwd | grep -o "[^/]*$"`
+fi
+
+printf $FORMAT "$SHORTPWD"
