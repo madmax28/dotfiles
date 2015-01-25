@@ -70,9 +70,32 @@ if [ ! -f $HOME/.bashrc ]; then
     touch $HOME/.bashrc
 fi
 
-sourceString="source $PWD/bashrc"
-if [ `grep "$sourceString" $HOME/.bashrc | wc -l` -eq 0 ]; then
-    echo "Appending \"$sourceString\" to $HOME/.bashrc"
+STRING="source $PWD/bashrc"
+if [ `grep "$STRING" $HOME/.bashrc | wc -l` -eq 0 ]; then
+    echo "Appending \"$STRING\" to $HOME/.bashrc"
     printf "\n# This line was added automatically" >> $HOME/.bashrc
-    printf "\n$sourceString" >> $HOME/.bashrc
+    printf "\n$STRING" >> $HOME/.bashrc
+fi
+
+STRING="export PATH=$PWD/bin:\$PATH"
+if [ `grep "$STRING" $HOME/.bashrc | wc -l` -eq 0 ]; then
+    echo "Appending \"$STRING\" to $HOME/.bashrc"
+    printf "\n# This line was added automatically" >> $HOME/.bashrc
+    printf "\n$STRING" >> $HOME/.bashrc
+fi
+
+##
+## zsh Stuff
+##
+
+if [ ! -f $HOME/.zshrc ]; then
+    echo "Touching $HOME/.zshrc"
+    touch $HOME/.zshrc
+fi
+
+STRING="export PATH=$PWD/bin:\$PATH"
+if [ `grep "$STRING" $HOME/.zshrc | wc -l` -eq 0 ]; then
+    echo "Appending \"$STRING\" to $HOME/.zshrc"
+    printf "\n# This line was added automatically" >> $HOME/.zshrc
+    printf "\n$STRING" >> $HOME/.zshrc
 fi
