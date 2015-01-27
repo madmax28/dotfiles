@@ -12,18 +12,15 @@ endif
 function! ExecutePython(readargs)
     if a:readargs
         if !exists("s:args")
-            let s:args = input("Arguments: ", "",     "file")
-        else
-            let s:args = input("Arguments: ", s:args, "file")
+            s:args = ''
         endif
+
+        let s:args = input("Arguments: ", s:args, "file")
         redraw!
     endif
 
     let l:file = @%
-    let l:cmd = s:python . " " . l:file
-    if exists("s:args")
-        let l:cmd = l:cmd . " " . s:args
-    endif
+    let l:cmd = s:python . ' ' . l:file . ' ' . s:args
 
     let l:output = system(l:cmd)
 
