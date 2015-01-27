@@ -33,4 +33,8 @@ nnoremap <buffer> <leader>x :wa<cr>:call ExecutePython("0")<cr>
 nnoremap <buffer> <leader>X :wa<cr>:call ExecutePython("1")<cr>
 
 " Execute flake8 after writing a file
-autocmd! BufWritePost <buffer> * silent! call Flake8()
+
+augroup AutoFlake8
+    autocmd!
+    autocmd BufWritePost *py call Flake8()
+augroup END

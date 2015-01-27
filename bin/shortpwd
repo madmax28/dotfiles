@@ -12,11 +12,21 @@ while getopts "n" opt; do
 done
 shift $((OPTIND-1))
 
-SHORTPWD=`pwd`
-SHORTPWD=`echo ${SHORTPWD/$HOME/\~} | grep -o ".*[\~/]"`
-SHORTPWD=`echo $SHORTPWD | sed 's/\(\.\)*\([^/]\)[^/]*/\1\2/g'`
-if [ `echo $SHORTPWD | grep "/"` ]; then
-    SHORTPWD+=`pwd | grep -o "[^/]*$"`
+# Arg given??
+if [ ! -z $1 ]; then
+    SHORTPWD=$1
+else
+    # Default to cwd
+    SHORTPWD=`pwd`
 fi
+
+SHORTPWD=${SHORTPWD/$HOME/\~}
+
+BODY=`echo $SHORTPWD | grep -o ".*/"`
+BODY=`echo $BODY | sed 's/\(\.\)*\([^/]\)[^/]*/\1\2/g'`
+
+TAIL=`echo $SHORTPWD | grep -o "[^/]*$"`
+
+SHORTPWD="$BODY$TAIL"
 
 printf $FORMAT "$SHORTPWD"
