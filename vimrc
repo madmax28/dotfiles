@@ -248,7 +248,10 @@ function! Prototype()
 endfunction
 
 function! MyStatusLine()
-    let l:statusline = '%n: %f%q %a%=%{Prototype()} (%p%%) %y %1*%{Modified()}'
+    let l:fname = system(g:vimconfig_dir . "/bin/shortpwd -n " . expand('%'))
+
+    let l:statusline = '%n: ' . l:fname . '%q %a%=%{Prototype()} (%p%%) %y %1*%{Modified()}'
+
     return l:statusline
 endfunction
 
