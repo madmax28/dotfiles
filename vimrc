@@ -3,9 +3,6 @@
 " Leader key
 let mapleader = ","
 
-" Shell
-set shell=/bin/sh
-
 let g:os_uname = substitute(system('uname'), "\n", "", "")
 
 "" Plugins {{{1
