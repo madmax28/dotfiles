@@ -3,6 +3,9 @@
 " Leader key
 let mapleader = ","
 
+" Use sh for speed
+set shell=/bin/bash
+
 let g:os_uname = substitute(system('uname'), "\n", "", "")
 
 "" Plugins {{{1
@@ -245,11 +248,11 @@ function! Prototype()
 endfunction
 
 function! Fname()
-    return system(g:vimconfig_dir . "/bin/shortpwd -n " . expand('%'))
+"     return system(g:vimconfig_dir . "/bin/shortpwd -n " . expand('%'))
 endfunction
 
 function! MyStatusLine()
-    let l:statusline = '%n: %{Fname()}%q %a%=%{Prototype()} (%p%%) %y %1*%{Modified()}'
+    let l:statusline = '%n: %f%q %a%=%{Prototype()} (%p%%) %y %1*%{Modified()}'
 
     return l:statusline
 endfunction
