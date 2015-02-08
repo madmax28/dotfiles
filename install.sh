@@ -93,7 +93,15 @@ if [ ! -f $HOME/.zshrc ]; then
     touch $HOME/.zshrc
 fi
 
+# Has to be done _before_ source zshrc
 STRING="export PATH=$PWD/bin:\$PATH"
+if [ `grep "$STRING" $HOME/.zshrc | wc -l` -eq 0 ]; then
+    echo "Appending \"$STRING\" to $HOME/.zshrc"
+    printf "\n# This line was added automatically" >> $HOME/.zshrc
+    printf "\n$STRING" >> $HOME/.zshrc
+fi
+
+STRING="source $PWD/zshrc"
 if [ `grep "$STRING" $HOME/.zshrc | wc -l` -eq 0 ]; then
     echo "Appending \"$STRING\" to $HOME/.zshrc"
     printf "\n# This line was added automatically" >> $HOME/.zshrc

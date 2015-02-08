@@ -73,8 +73,7 @@ let g:jedi#use_tabs_not_buffers     = 0
 
 let g:clang_auto_select = 1
 if g:os_uname ==# 'Darwin'
-    let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer
-                \/Toolchains/XcodeDefault.xctoolchain/usr/lib'
+    let g:clang_library_path = '/Library/Developer/CommandLineTools/usr/lib'
 endif
 let g:clang_use_library = 1
 "" Taglist {{{1
@@ -528,6 +527,9 @@ nnoremap <s-tab> <c-o>
 
 " More natural split directions
 set splitright splitbelow
+
+" This shouldn't close the window
+nnoremap <c-w><c-c> <nop>
 
 " Tab arrangement
 nnoremap <silent> <c-w>Q :tabc<cr>

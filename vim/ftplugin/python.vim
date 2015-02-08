@@ -1,26 +1,23 @@
-" Check for python
-let s:python = "/usr/bin/python"
-if !filereadable(s:python)
-    let s:python = system("which python")
-    if v:shell_error != 0
-        echoerr "Python not found!"
-        finish
-    endif
+let s:python = substitute(system("which python"), "\n", "", "")
+if v:shell_error != 0
+    echoerr "Python not found in your path!"
+    finish
 endif
 
 " Execute python script
 function! ExecutePython(readargs)
-    if a:readargs
-        if !exists("s:args")
-            s:args = ''
-        endif
+    if !exists("s:args")
+        let s:args = ''
+    endif
 
+    if a:readargs
         let s:args = input("Arguments: ", s:args, "file")
         redraw!
     endif
 
     let l:file = @%
     let l:cmd = s:python . ' ' . l:file . ' ' . s:args
+    echom l:cmd
 
     let l:output = system(l:cmd)
 
