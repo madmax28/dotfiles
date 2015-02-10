@@ -316,24 +316,26 @@ set tabline=%!MyTabLine()
 function! ToggleComment()
     if !exists("b:cString")
         let b:cString = "#"
-    else
-        let v:errmsg = ""
-        " Comment
-        silent! execute ':s/\v^(\s*)((\V' . b:cString . '\v)|\s)@!/' . b:cString .
-            \ ' \1\2'
-        if v:errmsg == ""
-            " Add closing comment string at end of line if needed
-            if exists("b:cEndString")
-                silent! execute ':s/$/ ' . b:cEndString . '/'
-            endif
-            return
-        endif
+    endif
 
+    let l:line = getline('.')
+
+    " Ignore indented comments
+    if match(l:line, '\v^\s+\V' . b:cString) >= 0
+        return
+    endif
+    " Ignore empty lines
+    if match(l:line, '\v^\s*$') >= 0
+        return
+    endif
+
+    " Do
+    if match(l:line, '^\V' . b:cString) >= 0
         " Uncomment
-        silent! execute ':s/\v^(\s*)(\V' . b:cString . '\v)\s(\s*)/\1\3/'
-        if exists("b:cEndString")
-            silent! execute ':s/ ' . b:cEndString . '$//'
-        endif
+        silent! execute ':s/^\V' . escape(b:cString, '/') . '\v//'
+    else
+        " Comment
+        silent! execute ':s/^/' . escape(b:cString, '/') . '/'
     endif
 endfunction
 
