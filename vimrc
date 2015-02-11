@@ -368,67 +368,6 @@ augroup END
 
 "" TODO Execute programs/scripts from within vim {{{1
 
-"" Search and Replace {{{1
-
-" TODO make it accept a range
-function! SearchAndReplace(mode, ...)
-    " In normal mode
-    if a:mode ==# "normal"
-        if a:0 > 0
-            if a:1 ==# "iw"
-                " S&R word under cursor
-                silent! execute "normal! viwy"
-            elseif a:1 ==# "iW"
-                " S&R WORD under cursor
-                silent! execute "normal! viWy"
-            endif
-        else
-            " No argument given. Ask for what to replace
-            let l:word = input("What to replace? ")
-        endif
-    endif
-
-    " Escape backslashes
-    let l:word = escape(@", '\')
-
-    " If the string is a whole keyword, only replace if
-    " not preceded/followed by keyword character
-    echo l:word
-    if match(l:word, '^\k\+$') > -1
-        let l:pattern = '\<' . l:word . '\>'
-        let l:isKeyword = 1
-    else
-        let l:isKeyword = 0
-        let l:pattern = l:word
-    endif
-
-    " Highlight all words
-    let l:match = matchadd('Error', l:word)
-    redraw!
-    call matchdelete(l:match)
-
-    " Get string with which to substitute
-    let l:replaceString = input("Replace \"" . l:word . "\" with: ")
-
-    " Perform substitution
-    execute '%s/\V' . l:pattern . "/" . l:replaceString . "/g"
-
-    " Set last search to inserted string
-    if l:isKeyword
-        let @/ = '\<' . l:replaceString . '\>'
-    else
-        let @/ = l:replaceString
-    endif
-    set hlsearch
-endfunction
-
-" Search and Replace stuff TODO: Think about when to use \< and \>
-vnoremap <leader>r y:call SearchAndReplace("visual")<cr>
-nnoremap <leader>rr v:call SearchAndReplace("normal")<cr>
-nnoremap <leader>riw :call SearchAndReplace("normal", "iw")<cr>
-nnoremap <leader>riW :call SearchAndReplace("normal", "iW")<cr>
-
-
 "" Yank and paste to clipboard {{{1
 
 if has("clipboard")
@@ -444,6 +383,9 @@ if has("clipboard")
 endif
 
 "" Mappings {{{1
+
+" Repeat latest [ftFT] in opposite direction
+nnoremap ' ,
 
 " Prevent ex-mode
 nnoremap Q <nop>
