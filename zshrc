@@ -19,6 +19,9 @@ alias ..="cd .."
 
 alias o='open'
 
+# Grep c files
+cgrep () { grep "$@" `find . "(" -name "*c" -o -name "*h" ")" -a -type f | xargs`; }
+
 # Directory info.
 function chpwd {
     export DIR="`shortpwd`"
