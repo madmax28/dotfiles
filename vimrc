@@ -384,6 +384,14 @@ endif
 
 "" Mappings {{{1
 
+"Quickfix nav
+nnoremap <F12> :cn<cr>
+nnoremap <S-F12> :cp<cr>
+
+" Convenience
+inoremap jk <esc>
+inoremap <c-c> <esc>
+
 " Repeat latest [ftFT] in opposite direction
 nnoremap ' ,
 
@@ -431,9 +439,6 @@ nnoremap <leader>m :messages<cr>
 
 " Check highlighting
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
-
-inoremap jk <esc>
-inoremap <c-c> <esc>
 
 " Pasting in command mode
 cnoremap <c-p> <c-r>"
