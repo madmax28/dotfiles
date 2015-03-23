@@ -58,11 +58,7 @@ if has("cscope")
     " Show msg when any other cscope db added
     set cscopeverbose
 
-    " Automatically add Cscope db
-    augroup AddCreateCscopeDb
-        autocmd!
-        autocmd BufCreate <buffer> * silent! call AddCscopeDb()
-    augroup END
+    silent! call AddCscopeDb()
 
     " Mappings
     nnoremap <buffer> <leader>fa :call AddCreateCscopeDb()<CR>
