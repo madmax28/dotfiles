@@ -650,3 +650,30 @@ augroup SessionGrp
     autocmd VimLeave * nested call UpdateSession()
 augroup END
 
+"" Marks using F1-F12 {{1
+
+nnoremap <leader><F1> mO
+nnoremap <leader><F2> mP
+nnoremap <leader><F3> mQ
+nnoremap <leader><F4> mR
+nnoremap <leader><F5> mS
+nnoremap <leader><F6> mT
+nnoremap <leader><F7> mU
+nnoremap <leader><F8> mV
+nnoremap <leader><F9> mW
+nnoremap <leader><F10> mX
+nnoremap <leader><F11> mY
+nnoremap <leader><F12> mZ
+
+nnoremap <F1> `O
+nnoremap <F2> `P
+nnoremap <F3> `Q
+nnoremap <F4> `R
+nnoremap <F5> `S
+nnoremap <F6> `T
+nnoremap <F7> `U
+nnoremap <F8> `V
+nnoremap <F9> `W
+nnoremap <F10> `X
+nnoremap <F11> `Y
+nnoremap <F12> `Z
