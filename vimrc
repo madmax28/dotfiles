@@ -424,7 +424,7 @@ function! PasteRing(mode)
 
     let l:choice = input("Which buffer to paste? ")
     call setreg('a', g:yring[g:yring_idx - l:choice])
-    if mode ==# 'P'
+    if a:mode ==# 'P'
         silent! normal! "aP
     else
         silent! normal! "ap
