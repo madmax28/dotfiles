@@ -367,21 +367,100 @@ augroup END
 
 "" TODO Execute programs/scripts from within vim {{{1
 
-"" Yank and paste to clipboard {{{1
+"" Yanking {{{1
+
+let g:yring_len = 10
+let g:yring_idx = -1
+let s:yring_f = getcwd() . '/.vimyanks'
+if filereadable(s:yring_f)
+    let g:yring = readfile(s:yring_f, "b")
+    let g:yring_idx = (len(g:yring)-1) % g:yring_len
+else
+    let g:yring = []
+endif
+
+function! YankRing(mode)
+    let l:yring_f = getcwd() . '/.vimyanks'
+
+    " Save reg a
+    let l:olda = getreg('a')
+
+    " Yank to a
+    if a:mode ==# 'visual'
+        execute "normal! `<v`>\"ay"
+    else
+        execute "normal! `[v`]\"ay"
+    endif
+
+    " Save in ring
+    if len(g:yring) < g:yring_len
+        let g:yring = g:yring + [getreg('a')]
+    else
+        let g:yring[g:yring_idx] = getreg('a')
+    endif
+
+    " Restore a
+    call setreg('a', l:olda)
+
+    " Save ring to disk
+    call writefile(g:yring, l:yring_f, "b")
+endfunction
+
+function! PasteRing(mode)
+    if len(g:yring) == 0
+        return
+    endif
+
+    " Save a
+    let l:olda = getreg('a')
+
+    let l:cur_len = len(g:yring)
+
+    " Print all regs
+    for i in range(l:cur_len)
+        echom string(i) . ": " . g:yring[g:yring_idx - i]
+    endfor
+
+    let l:choice = input("Which buffer to paste? ")
+    call setreg('a', g:yring[g:yring_idx - l:choice])
+    if a:mode ==# 'P'
+        silent! normal! "aP
+    else
+        silent! normal! "ap
+    endif
+
+    " Restore a
+    call setreg('a', l:olda)
+endfunction
+
+nnoremap <leader>yr :set opfunc=YankRing<cr>g@
+vnoremap <leader>yr <esc>:call YankRing('visual')<cr>
+nnoremap <leader>pr :call PasteRing('p')<cr>
+nnoremap <leader>Pr :call PasteRing('P')<cr>
+vnoremap <leader>pr d:call PasteRing('P')<cr>
 
 if has("clipboard")
     function! YankToClipboard(mode)
         " Mode is either 'char', 'block' or 'line'
         execute "normal! `[v`]\"+y"
     endfunction
-    nnoremap <silent> <leader>y :set opfunc=YankToClipboard<cr>g@
-    vnoremap <leader>y "+y
-    nnoremap <leader>p "+p
-    nnoremap <leader>P "+P
-    vnoremap <leader>p d"+P
+
+    nnoremap <silent> <leader>yc :set opfunc=YankToClipboard<cr>g@
+    vnoremap <leader>y "+yc
+    nnoremap <leader>p "+pc
+    nnoremap <leader>P "+Pc
+    vnoremap <leader>p d"+Pc
 endif
 
 "" Mappings {{{1
+
+"Quickfix nav
+nnoremap <F12> :cn<cr>
+nnoremap <S-F12> :cp<cr>
+
+" Convenience
+inoremap jk <esc>
+inoremap <c-c> <esc>
 
 " Repeat latest [ftFT] in opposite direction
 nnoremap ' ,
@@ -430,9 +509,6 @@ nnoremap <leader>m :messages<cr>
 
 " Check highlighting
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
-
-inoremap jk <esc>
-inoremap <c-c> <esc>
 
 " Pasting in command mode
 cnoremap <c-p> <c-r>"
@@ -571,3 +647,31 @@ augroup SessionGrp
     autocmd VimEnter * nested call RestoreSession()
     autocmd VimLeave * nested call UpdateSession()
 augroup END
+
+"" Marks using F1-F12 {{1
+
+nnoremap <leader><F1> mO
+nnoremap <leader><F2> mP
+nnoremap <leader><F3> mQ
+nnoremap <leader><F4> mR
+nnoremap <leader><F5> mS
+nnoremap <leader><F6> mT
+nnoremap <leader><F7> mU
+nnoremap <leader><F8> mV
+nnoremap <leader><F9> mW
+nnoremap <leader><F10> mX
+nnoremap <leader><F11> mY
+nnoremap <leader><F12> mZ
+
+nnoremap <F1> `O
+nnoremap <F2> `P
+nnoremap <F3> `Q
+nnoremap <F4> `R
+nnoremap <F5> `S
+nnoremap <F6> `T
+nnoremap <F7> `U
+nnoremap <F8> `V
+nnoremap <F9> `W
+nnoremap <F10> `X
+nnoremap <F11> `Y
+nnoremap <F12> `Z

@@ -16,8 +16,7 @@ alias ll="ls -lh"
 alias la="ls -a"
 alias lla="ls -lah"
 alias ..="cd .."
-
-alias o='open'
+alias l1="ls -1"
 
 # Grep c files
 cgrep () { grep "$@" `find . "(" -name "*c" -o -name "*h" ")" -a -type f | xargs`; }
