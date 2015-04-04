@@ -107,8 +107,7 @@ set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab smartindent ruler
 
 " Default textwidth and autowrap
 set textwidth=80
-set formatoptions+=t
-set formatoptions-=o
+set formatoptions=""
 
 " Folding
 set foldmethod=marker foldclose=all
@@ -566,7 +565,6 @@ function! UpdateSession()
         execute 'mksession! ' . l:sessionfile
     endif
 endfunction
-
 
 augroup SessionGrp
     autocmd!
