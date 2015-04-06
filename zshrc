@@ -21,12 +21,26 @@ alias l1="ls -1"
 # Grep c files
 cgrep () { grep "$@" `find . "(" -name "*c" -o -name "*h" ")" -a -type f | xargs`; }
 
+# Prompt format: \n # USER at MACHINE in DIRECTORY on git:BRANCH STATE [TIME] \n $ 
+function set_prompt {
+    PROMPT="\
+%{$terminfo[bold]$fg[blue]%}#%{$reset_color%} \
+%{$fg[cyan]%}%n \
+%{$fg[white]%}at \
+%{$fg[green]%}$HOST \
+%{$fg[white]%}in \
+%{$fg[yellow]%}$dirname \
+$gitinfo\
+%{$fg[white]%}[%*]
+%{$terminfo[bold]$fg[red]%}$ %{$reset_color%}"
+}
+
 # Directory info.
 function chpwd {
     export DIR="`shortpwd`"
+    local dirname="`echo $DIR`"
+    set_prompt
 }
-chpwd
-local dirname='`echo $DIR`'
 
 # Update gitinfo
 Gitinfo() {
@@ -53,23 +67,13 @@ Gitinfo() {
 
     export GIT_INFO
 }
-local gitinfo='`echo $GIT_INFO`'
+local gitinfo="`echo $GIT_INFO`"
 
 function precmd {
     Gitinfo
 }
 
-# Prompt format: \n # USER at MACHINE in DIRECTORY on git:BRANCH STATE [TIME] \n $ 
-PROMPT="
-%{$terminfo[bold]$fg[blue]%}#%{$reset_color%} \
-%{$fg[cyan]%}%n \
-%{$fg[white]%}at \
-%{$fg[green]%}$HOST \
-%{$fg[white]%}in \
-%{$fg[yellow]%}$dirname \
-$gitinfo\
-%{$fg[white]%}[%*]
-%{$terminfo[bold]$fg[red]%}$ %{$reset_color%}"
+chpwd
 
 # Use vim command line editing
 export KEYTIMEOUT=0
@@ -119,5 +123,5 @@ function vi_mode_prompt_info() {
 
 # define right prompt, if it wasn't defined by a theme
 if [[ "$RPS1" == "" && "$RPROMPT" == "" ]]; then
-  RPS1='$(vi_mode_prompt_info)'
+  RPS1="$(vi_mode_prompt_info)"
 fi
