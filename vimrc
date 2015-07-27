@@ -433,11 +433,11 @@ function! PasteRing(mode)
     call setreg('a', l:olda)
 endfunction
 
-nnoremap <leader>yr :set opfunc=YankRing<cr>g@
-vnoremap <leader>yr <esc>:call YankRing('visual')<cr>
-nnoremap <leader>pr :call PasteRing('p')<cr>
-nnoremap <leader>Pr :call PasteRing('P')<cr>
-vnoremap <leader>pr d:call PasteRing('P')<cr>
+nnoremap <leader>ry :set opfunc=YankRing<cr>g@
+vnoremap <leader>ry <esc>:call YankRing('visual')<cr>
+nnoremap <leader>rp :call PasteRing('p')<cr>
+nnoremap <leader>rP :call PasteRing('P')<cr>
+vnoremap <leader>rp d:call PasteRing('P')<cr>
 
 if has("clipboard")
     function! YankToClipboard(mode)
@@ -446,10 +446,10 @@ if has("clipboard")
     endfunction
 
     nnoremap <silent> <leader>yc :set opfunc=YankToClipboard<cr>g@
-    vnoremap <leader>y "+yc
-    nnoremap <leader>p "+pc
-    nnoremap <leader>P "+Pc
-    vnoremap <leader>p d"+Pc
+    vnoremap <leader>y "+y
+    nnoremap <leader>p "+p
+    nnoremap <leader>P "+P
+    vnoremap <leader>p d"+P
 endif
 
 "" Mappings {{{1
