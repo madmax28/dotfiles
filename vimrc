@@ -3,9 +3,6 @@
 " Leader key
 let mapleader = ","
 
-" Use sh for speed
-set shell=/bin/bash
-
 let g:os_uname = substitute(system('uname'), "\n", "", "")
 
 "" Plugins {{{1
@@ -13,7 +10,7 @@ let g:os_uname = substitute(system('uname'), "\n", "", "")
 " Vundle
 filetype off
 set nocompatible
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/plugins/Vundle.vim
 call vundle#begin('~/.vim/plugins')
 
 Plugin 'gmarik/Vundle.vim'
