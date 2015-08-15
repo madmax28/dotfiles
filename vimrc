@@ -453,7 +453,11 @@ endif
 
 "" Mappings {{{1
 
-"Quickfix nav
+" Make j/k navigate visually through wrapped lines
+nnoremap j gj
+nnoremap k gk
+
+" Quickfix nav
 nnoremap <F12> :cn<cr>
 nnoremap <S-F12> :cp<cr>
 
