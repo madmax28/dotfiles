@@ -3,9 +3,6 @@
 " Leader key
 let mapleader = ","
 
-" Use sh for speed
-set shell=/bin/bash
-
 let g:os_uname = substitute(system('uname'), "\n", "", "")
 
 "" Plugins {{{1
@@ -13,7 +10,7 @@ let g:os_uname = substitute(system('uname'), "\n", "", "")
 " Vundle
 filetype off
 set nocompatible
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/plugins/Vundle.vim
 call vundle#begin('~/.vim/plugins')
 
 Plugin 'gmarik/Vundle.vim'
@@ -25,6 +22,7 @@ Plugin 'davidhalter/jedi-vim'
 Plugin 'L9'
 Plugin 'FuzzyFinder'
 Plugin 'nvie/vim-flake8'
+Plugin 'godlygeek/tabular'
 
 " Add Plugins here
 call vundle#end()
@@ -76,6 +74,7 @@ if g:os_uname ==# 'Darwin'
     let g:clang_library_path = '/Library/Developer/CommandLineTools/usr/lib'
 endif
 let g:clang_use_library = 1
+
 "" Taglist {{{1
 
 noremap <silent> <leader>T :TlistToggle<cr>
@@ -445,7 +444,7 @@ if has("clipboard")
         execute "normal! `[v`]\"+y"
     endfunction
 
-    nnoremap <silent> <leader>yc :set opfunc=YankToClipboard<cr>g@
+    nnoremap <silent> <leader>y :set opfunc=YankToClipboard<cr>g@
     vnoremap <leader>y "+y
     nnoremap <leader>p "+p
     nnoremap <leader>P "+P
@@ -454,7 +453,11 @@ endif
 
 "" Mappings {{{1
 
-"Quickfix nav
+" Make j/k navigate visually through wrapped lines
+nnoremap j gj
+nnoremap k gk
+
+" Quickfix nav
 nnoremap <F12> :cn<cr>
 nnoremap <S-F12> :cp<cr>
 
