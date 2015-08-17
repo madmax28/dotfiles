@@ -99,7 +99,7 @@ augroup END
 "" Settings {{{1
 
 syntax on
-set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab smartindent ruler
+set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab ruler
     \ scrolloff=5 backspace=2 nowrap history=1000 wildmenu
     \ completeopt=menuone,longest wildmode=list:longest,full
     \ noswapfile nocompatible hidden gdefault
@@ -648,7 +648,7 @@ augroup SessionGrp
     autocmd VimLeave * nested call UpdateSession()
 augroup END
 
-"" Marks using F1-F12 {{1
+"" Marks using F1-F12 {{{1
 
 nnoremap <leader><F1> mO
 nnoremap <leader><F2> mP
