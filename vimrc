@@ -236,9 +236,9 @@ function! Modified()
 endfunction
 
 " Returns tag prototype for c/cpp files
-function! Prototype()
+function! TagName()
     if match(&filetype, '\v\c[ch](pp)?') != -1
-        return Tlist_Get_Tag_Prototype_By_Line()
+        return Tlist_Get_Tagname_By_Line()
     endif
 
     return ''
@@ -249,7 +249,7 @@ function! Fname()
 endfunction
 
 function! MyStatusLine()
-    let l:statusline = '%n: %f%q %a%=%{Prototype()} (%p%%) %y %1*%{Modified()}'
+    let l:statusline = '%n: %f%q %a%=%{TagName()} (%p%%) %y %1*%{Modified()}'
 
     return l:statusline
 endfunction
