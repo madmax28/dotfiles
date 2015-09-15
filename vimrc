@@ -159,6 +159,12 @@ nnoremap <silent> <leader>G :call Grep()<cr>
 nnoremap <silent> <leader>g :set opfunc=GrepOp<cr>g@
 vnoremap <silent> <leader>g :<c-u>call GrepOp(visualmode())<cr>
 
+" Prevent 'plaintex' ft
+augroup texft
+    autocmd!
+    autocmd BufNewFile,BufRead *tex set ft=tex
+augroup END
+
 "" Use undofiles {{{1
 let s:undodir = $HOME . "/.vim/undos"
 if !isdirectory( s:undodir )
@@ -364,8 +370,6 @@ augroup HighlightBadStyle
     autocmd FileType * call HighlightBadStyle()
 augroup END
 
-"" TODO Execute programs/scripts from within vim {{{1
-
 "" Yanking {{{1
 
 let g:yring_len = 10
@@ -545,7 +549,7 @@ nnoremap <leader>es :call EditSnippets()<cr>
 " Jumplist navigation
 nnoremap <s-tab> <c-o>
 
-"" Tab,  splits and buffers {{{1
+"" Tab, splits and buffers {{{1
 
 " More natural split directions
 set splitright splitbelow
