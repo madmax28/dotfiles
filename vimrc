@@ -104,6 +104,9 @@ set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab ruler
     \ noswapfile nocompatible hidden gdefault
     \ number relativenumber showcmd
 
+" Use wrapping and linebreak
+set wrap linebreak
+
 " Default textwidth and autowrap
 set textwidth=80
 set formatoptions=""
