@@ -99,10 +99,10 @@ augroup END
 
 syntax on
 set hlsearch incsearch shiftwidth=4 softtabstop=4 expandtab ruler
-    \ scrolloff=5 backspace=2 nowrap history=1000 wildmenu
-    \ completeopt=menuone,longest wildmode=list:longest,full
-    \ noswapfile nocompatible hidden gdefault
-    \ number relativenumber showcmd
+set scrolloff=5 backspace=2 history=1000 wildmenu
+set completeopt=menuone,longest wildmode=list:longest,full
+set noswapfile nocompatible hidden gdefault
+set number relativenumber showcmd
 
 " Use wrapping and linebreak
 set wrap linebreak
