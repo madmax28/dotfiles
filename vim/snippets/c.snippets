@@ -6,7 +6,7 @@ snippet main
 	}
 # #include <...>
 snippet inc
-	#include <${1:stdio}.h>${2}
+	#include <${1:stdio.h}>${2}
 # #include "..."
 snippet Inc
 	#include "${1:`Filename("$1.h")`}"${2}
@@ -26,16 +26,13 @@ snippet #if
 		${2}
 	#endif
 # Header Include-Guard
-# (the randomizer code is taken directly from TextMate; it could probably be
-# cleaner, I don't know how to do it in vim script)
 snippet once
-	#ifndef ${1:`toupper(Filename('', 'UNTITLED').'_'.system("/usr/bin/ruby -e 'print (rand * 2821109907455).round.to_s(36)'"))`}
-
+	#ifndef ${1:_`toupper(Filename())`_H_}
 	#define $1
 
 	${2}
 
-	#endif /* end of include guard: $1 */
+	#endif /* $1 */
 # If Condition
 snippet if
 	if( ${1:/* condition */}a ) {
@@ -107,3 +104,5 @@ snippet ifd
 	#endif
 snippet deb
 	debug( ${1:DEBUG_INF}, "${2:%s}\n"${3} );${4}
+snippet perr
+	perror("${1}");${2}

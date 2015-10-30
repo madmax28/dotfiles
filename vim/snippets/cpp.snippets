@@ -28,3 +28,15 @@ snippet cl
 	private:
 		${3:/* data */}
 	};
+# Header Include-Guard
+snippet oncepp
+	#ifndef ${1:_`toupper(Filename())`_HPP_}
+	#define $1
+
+	${2}
+
+	#endif /* $1 */
+snippet cout
+	std::cout << ${1} << std::endl;${2}
+snippet cerr
+	std::cerr << ${1} << std::endl;${2}
