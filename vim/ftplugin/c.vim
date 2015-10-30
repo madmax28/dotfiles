@@ -63,6 +63,7 @@ if has("cscope")
     " Mappings
     nnoremap <buffer> <leader>fa :call AddCreateCscopeDb()<CR>
 
+    " Jump
     nnoremap <buffer> <leader>fs :cs find s <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
     nnoremap <buffer> <leader>fg :cs find g <C-R>=expand("<cword>")<cr><cr>
     nnoremap <buffer> <leader>fc :cs find c <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>
@@ -72,6 +73,7 @@ if has("cscope")
     nnoremap <buffer> <leader>fi :cs find i ^<C-R>=expand("<cfile>")<cr>$<cr>
     nnoremap <buffer> <leader>fd :cs find d <C-R>=expand("<cword>")<cr><cr>
 
+    " Split
     nnoremap <buffer> <leader>FS :vert scs find s <C-R>=expand("<cword>")<cr><cr>
     nnoremap <buffer> <leader>FG :vert scs find g <C-R>=expand("<cword>")<cr><cr>
     nnoremap <buffer> <leader>FC :vert scs find c <C-R>=expand("<cword>")<cr><cr>
@@ -79,6 +81,7 @@ if has("cscope")
     nnoremap <buffer> <leader>FE :vert scs find e <C-R>=expand("<cword>")<cr><cr>
     nnoremap <buffer> <leader>FF :vert scs find f <C-R>=expand("<cfile>")<cr><cr>
 
+    " Preview
     nnoremap <buffer> <leader>Fg :pta <C-R>=expand("<cword>")<cr><cr>
 endif
 
