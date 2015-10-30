@@ -33,11 +33,11 @@ mkdir $PRJ_DIR/.myscope
 cd $PRJ_DIR/.myscope
 
 # Find files to be indexed
-for EXT in "c" "h" "cpp" "hpp" "C" "H"; do
+for EXT in "c" "h" "cpp" "hpp" "cc" "hh" "h++"; do
     if [ ! -z $DEPTH ]; then
-        find $PRJ_DIR -maxdepth $DEPTH -name "*.${EXT}" >> myscope.files
+        find $PRJ_DIR -maxdepth $DEPTH -iname "*.${EXT}" >> myscope.files
     else
-        find $PRJ_DIR -name "*.${EXT}" >> myscope.files
+        find $PRJ_DIR -iname "*.${EXT}" >> myscope.files
     fi
 done
 
