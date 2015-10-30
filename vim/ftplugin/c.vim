@@ -1,7 +1,6 @@
 "" Settings {{{1
 
-" Do not continue comments for o/O
-setlocal formatoptions-=o
+set formatoptions=crajq
 
 let b:cString = "\/\/"
 
