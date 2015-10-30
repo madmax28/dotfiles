@@ -47,7 +47,7 @@ nnoremap <leader>or :FufMruFile<cr>
 nnoremap <leader>ob :FufBuffer<cr>
 nnoremap <leader>oh :FufHelp<cr>
 nnoremap <leader>od :FufDir<cr>
-nnoremap <leader><tab> :FufJumpList<cr>
+nnoremap <leader>oj :FufJumpList<cr>
 nnoremap <leader>: :FufMruCmd<cr>
 nnoremap <leader>t :FufBufferTagAll<cr>
 nnoremap <leader>Q :FufQuickfix<cr>
@@ -72,6 +72,8 @@ let g:jedi#use_tabs_not_buffers     = 0
 let g:clang_auto_select = 1
 if g:os_uname ==# 'Darwin'
     let g:clang_library_path = '/Library/Developer/CommandLineTools/usr/lib'
+else
+    let g:clang_library_path = '/home/max/.vim'
 endif
 let g:clang_use_library = 1
 
@@ -354,12 +356,17 @@ highlight link BadStyle Error
 
 function! HighlightBadStyle()
     " Dont highlight in help files
-    if &filetype ==# "help"
+    if &filetype ==# "help" || &filetype ==# "qf"
         return
     endif
 
+    " Clear previous matches
+    call clearmatches()
+
     " Character on 80th column
-    call matchadd('BadStyle', '\%81v.')
+    if &filetype !=# "tex"
+        call matchadd('BadStyle', '\%81v.')
+    endif
     " Trailing whitespaces
     call matchadd('BadStyle', '\s\+\n')
     " More than one newline in a row
@@ -466,6 +473,8 @@ nnoremap k gk
 
 " Quickfix nav
 nnoremap <F12> :cn<cr>
+nnoremap <leader><tab> :cn<cr>
+nnoremap <leader><s-tab> :cp<cr>
 nnoremap <S-F12> :cp<cr>
 
 " Convenience
