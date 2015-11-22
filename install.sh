@@ -1,6 +1,16 @@
 #!/bin/bash
 
 ##
+## Functions
+##
+
+# Build spwd
+function build_spwd {
+    [ -d bin ] || mkdir bin
+    (make -C spwd && mv spwd/spwd bin) || (echo "Error building spwd"; exit 1)
+}
+
+##
 ## Initialize git submodules
 ##
 

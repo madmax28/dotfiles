@@ -38,7 +38,7 @@ export KEYTIMEOUT=0
 
 MODE_INDICATOR="%{$fg_bold[red]%}<<<%{$reset_color%}"
 
-local dirname='$(pwd)'
+local dirname='$(spwd)'
 local vimode='${${KEYMAP/vicmd/N}/(main|viins)/$}'
 
 PROMPT="
