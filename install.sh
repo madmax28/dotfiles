@@ -113,6 +113,11 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "========== Installing zsh configuration ========="
 
+    if [ ! -f $PWD/bin/spwd ]; then
+        echo "Building spwd"
+        build_spwd
+    fi
+
     if [ ! -f $HOME/.zshrc ]; then
         echo "Touching $HOME/.zshrc"
         touch $HOME/.zshrc
