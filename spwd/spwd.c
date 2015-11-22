@@ -11,18 +11,28 @@
 int main(int argc, char **argv) {
 
     char const *home = getpwuid(getuid())->pw_dir;
-    char const *cwd  = getwd(NULL);
     char scwd[LINE_MAX];
-
+    char const *cwd;
     char const *slash, *nslash;
+
+    if(argc > 1) {
+        cwd = argv[1];
+    } else {
+        cwd  = getwd(NULL);
+    }
 
     /* Replace home path */
     if(!strncmp(cwd, home, strlen(home))) {
         strcpy(scwd, HOME_REPL);
+        slash = strstr(cwd+strlen(home), "/");
+    } else {
+        slash = strstr(cwd, "/");
     }
 
+    if(slash == NULL)
+        goto done;
+
     /* Abbreviate intermediate dirs */
-    slash = strstr(cwd+strlen(home), "/");
     while((nslash = strstr(slash+1, "/"))) {
         strncat(scwd, slash, DIR_LEN+1);
         slash = nslash;
@@ -31,6 +41,7 @@ int main(int argc, char **argv) {
     /* Add current base dir */
     strcat(scwd, slash);
 
+done:
     printf("%s", scwd);
     return 0;
 }
