@@ -11,7 +11,7 @@
 int main(int argc, char **argv) {
 
     char const *home = getpwuid(getuid())->pw_dir;
-    char scwd[LINE_MAX];
+    char scwd[LINE_MAX] = "";
     char const *cwd;
     char const *slash, *nslash;
 
