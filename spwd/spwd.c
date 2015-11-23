@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
     if(argc > 1) {
         cwd = argv[1];
     } else {
-        cwd  = getwd(NULL);
+        cwd  = getcwd(NULL, 0);
     }
 
     /* Replace home path */
