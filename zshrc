@@ -42,6 +42,7 @@ local dirname='$(spwd)'
 local vimode='${${KEYMAP/vicmd/N}/(main|viins)/$}'
 
 PROMPT="
+%{$fg_bold[blue]%}#%{$reset_color%} \
 %{$fg[cyan]%}%n%{$reset_color%} \
 at \
 %{$fg[green]%}%M%{$reset_color%} \
