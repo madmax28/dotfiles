@@ -16,10 +16,6 @@ alias f2='fg %2'
 alias f3='fg %3'
 alias f4='fg %4'
 alias f5='fg %5'
-alias f6='fg %6'
-alias f7='fg %7'
-alias f8='fg %8'
-alias f9='fg %9'
 
 alias b='bg'
 alias b1='bg %1'
@@ -27,10 +23,12 @@ alias b2='bg %2'
 alias b3='bg %3'
 alias b4='bg %4'
 alias b5='bg %5'
-alias b6='bg %6'
-alias b7='bg %7'
-alias b8='bg %8'
-alias b9='bg %9'
+
+alias k1='kill %1'
+alias k2='kill %2'
+alias k3='kill %3'
+alias k4='kill %4'
+alias k5='kill %5'
 
 # Key bindings
 
