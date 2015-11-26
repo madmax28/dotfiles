@@ -36,8 +36,18 @@ export KEYTIMEOUT=0
 
 MODE_INDICATOR="%{$fg_bold[red]%}<<<%{$reset_color%}"
 
+function vimode {
+    mode="${${KEYMAP/vicmd/N}/(main|viins)/$}"
+    if [ -z $mode ]; then
+        echo "$"
+    else
+        echo $mode
+    fi
+}
+
 local dirname='$(spwd)'
-local vimode='${${KEYMAP/vicmd/N}/(main|viins)/$}'
+local vi_indic='$(vimode)'
+#local vimode='${${KEYMAP/vicmd/N}/(main|viins)/$}'
 
 PROMPT="
 %{$fg_bold[blue]%}#%{$reset_color%} \
@@ -47,7 +57,7 @@ at \
 in \
 %{$fg_bold[yellow]%}${dirname}%{$reset_color%} \
 [%*%(1j., %j job.)%(2j.s.)]
-%{$fg_bold[red]%}${vimode}%{$reset_color%} "
+%{$fg_bold[red]%}${vi_indic}%{$reset_color%} "
 
 function zle-keymap-select zle-line-init zle-line-finish {
     zle reset-prompt
