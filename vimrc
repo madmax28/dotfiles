@@ -17,7 +17,6 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'snipMate'
 Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
-Plugin 'clang-complete'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'L9'
 Plugin 'FuzzyFinder'
@@ -66,16 +65,6 @@ let g:jedi#rename_command           = "<leader>f1"
 let g:jedi#auto_vim_configuration   = 0
 let g:jedi#pop_select_first         = 0
 let g:jedi#use_tabs_not_buffers     = 0
-
-"" clang complete {{{1
-
-let g:clang_auto_select = 1
-if g:os_uname ==# 'Darwin'
-    let g:clang_library_path = '/Library/Developer/CommandLineTools/usr/lib'
-else
-    let g:clang_library_path = '/home/max/.vim'
-endif
-let g:clang_use_library = 1
 
 "" Taglist {{{1
 
@@ -170,6 +159,11 @@ augroup texft
     autocmd BufNewFile,BufRead *tex set ft=tex
 augroup END
 
+" Prevent vimdiff from starting in read-only mode
+if &diff
+    set noreadonly
+endif
+
 "" Use undofiles {{{1
 let s:undodir = $HOME . "/.vim/undos"
 if !isdirectory( s:undodir )
@@ -232,6 +226,14 @@ highlight! link StatusLine Highlighted
 " StatusLine
 call matchadd('Todo', '\ctodo')
 
+highlight clear DiffAdd
+highlight clear DiffText
+highlight clear DiffChange
+
+highlight DiffAdd ctermbg=22
+highlight DiffText cterm=standout ctermbg=4
+highlight DiffChange ctermbg=4
+
 "" Status-/Tabline {{{1
 
 function! Modified()
@@ -256,7 +258,7 @@ function! TagName()
 endfunction
 
 function! Fname()
-"     return system(g:vimconfig_dir . "/bin/shortpwd -n " . expand('%'))
+"     return system(g:vimconfig_dir . "/bin/spwd " . expand('%'))
 endfunction
 
 function! MyStatusLine()
@@ -297,7 +299,7 @@ function! MyTabLine()
     " After the last tab fill with TabLineFill and reset tab page nr
     let s .= '%#TabLineFill#%T'
     " Print currect working directory
-    let s .= '%=cwd: ' . system(g:vimconfig_dir . "/bin/shortpwd -n") . '%#TabLine#'
+    let s .= '%=cwd: ' . system(g:vimconfig_dir . "/bin/spwd") . '%#TabLine#'
 
     return s
 endfunction
