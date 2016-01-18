@@ -19,7 +19,7 @@ hi CursorLineNr               ctermfg=none ctermbg=24   cterm=none
 " Number column
 "
 hi CursorColumn               ctermfg=none ctermbg=88   cterm=none
-hi FoldColumn                 ctermfg=none ctermbg=88   cterm=none
+hi FoldColumn                 ctermfg=none ctermbg=236   cterm=none
 hi SignColumn                 ctermfg=none ctermbg=236  cterm=none
 hi Folded                     ctermfg=102  ctermbg=236  cterm=none
 
@@ -116,10 +116,10 @@ hi Typedef                    ctermfg=25   ctermbg=none cterm=none
 "
 " Diff
 "
-hi DiffAdd                    ctermfg=none ctermbg=2    cterm=none
-hi DiffChange                 ctermfg=none ctermbg=6    cterm=none
-hi DiffDelete                 ctermfg=none ctermbg=1    cterm=none
-hi DiffText                   ctermfg=none ctermbg=3    cterm=standout
+hi DiffAdd                    ctermfg=22   ctermbg=none cterm=none
+hi DiffChange                 ctermfg=none ctermbg=17   cterm=none
+hi DiffDelete                 ctermfg=102  ctermbg=52   cterm=none
+hi DiffText                   ctermfg=none ctermbg=none cterm=standout
 
 "
 " Completion menu

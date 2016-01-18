@@ -204,14 +204,6 @@ augroup END
 
 call matchadd('Todo', '\ctodo')
 
-highlight clear DiffAdd
-highlight clear DiffText
-highlight clear DiffChange
-
-highlight DiffAdd ctermbg=22
-highlight DiffText cterm=standout ctermbg=4
-highlight DiffChange ctermbg=4
-
 "" Status-/Tabline {{{1
 
 function! Modified()
