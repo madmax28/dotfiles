@@ -30,6 +30,8 @@ alias k3='kill %3'
 alias k4='kill %4'
 alias k5='kill %5'
 
+alias gd='git difftool'
+
 # Key bindings
 
 export KEYTIMEOUT=0
