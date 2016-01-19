@@ -109,14 +109,14 @@ hi Macro                      ctermfg=179  ctermbg=none cterm=none
 hi PreCondit                  ctermfg=179  ctermbg=none cterm=none
 
 hi Type                       ctermfg=172  ctermbg=none cterm=none
-hi StorageClass               ctermfg=25   ctermbg=none cterm=none
-hi Structure                  ctermfg=25   ctermbg=none cterm=none
-hi Typedef                    ctermfg=25   ctermbg=none cterm=none
+hi StorageClass               ctermfg=62   ctermbg=none cterm=none
+hi Structure                  ctermfg=62   ctermbg=none cterm=none
+hi Typedef                    ctermfg=62   ctermbg=none cterm=none
 
 "
 " Diff
 "
-hi DiffAdd                    ctermfg=22   ctermbg=none cterm=none
+hi DiffAdd                    ctermfg=none ctermbg=22   cterm=none
 hi DiffChange                 ctermfg=none ctermbg=24   cterm=none
 hi DiffDelete                 ctermfg=102  ctermbg=52   cterm=none
 hi DiffText                   ctermfg=none ctermbg=none cterm=standout
