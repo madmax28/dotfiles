@@ -168,7 +168,7 @@ syn keyword cAnsiFunction cacosf cacos assert
 syn match cOperator "\(<<\|>>\|[-+*/%&^|<>!=]\)="
 syn match cOperator "<<\|>>\|++\|--"
 syn match cOperator "[!~&%^|=+-]"
-syn match cOperator "/\([^*]\)\@="
+syn match cOperator "/\([^*/]\)\@="
 syn match cOperator "*\([^/]\)\@="
 "syn match cOperator "*\@=[^/]"
 
