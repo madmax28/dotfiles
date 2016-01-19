@@ -46,8 +46,11 @@ cscope -b -k -q -imyscope.files
 
 # Build ctags.vim highlighting file
 KINDS=cdfgnstu
-ctags -f - -L myscope.files --sort=no --c-kinds=${KINDS} | cut -f 1,4 > ctags.vim
+ctags -f ctags.vim -L myscope.files --sort=no --c-kinds=${KINDS}
 
+# Remove comment lines
+sed -e '/^!/d' ctags.vim --in-place
+sed -e 's/^\(\S\+\)\t\S\+\t\/^.*\/;"\t\(\S\).*$/\1\t\2/' ctags.vim --in-place
 sed -e 's/^\(\S\+\)\tf$/syntax keyword cUserFunction \1/' ctags.vim --in-place
 sed -e 's/^\(\S\+\)\t[cgnstu]$/syntax keyword cUserType \1/' ctags.vim --in-place
 sed -e 's/^\(\S\+\)\t[d]$/syntax keyword cUserDefine \1/' ctags.vim --in-place
