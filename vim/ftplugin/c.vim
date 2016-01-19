@@ -4,15 +4,16 @@ set formatoptions=crajq
 
 let b:cString = "\/\/"
 
-"" Cscope stuff {{{1
+"" Cscope and ctags stuff {{{1
 
-" Add any cscope databases present in current working directory
+" Add cscope db ./.myscope/cscope.out
 function! AddCscopeDb()
     let l:myscope_dir = getcwd() . '/.myscope'
     let l:cscope_db   = l:myscope_dir . '/cscope.out'
 
     if filereadable( l:cscope_db )
         echom "Added cscope db"
+        " Add cscope db
         execute "silent! cs add " . l:cscope_db
         " Avoid duplicate databases
         silent! cscope reset
@@ -21,9 +22,22 @@ function! AddCscopeDb()
     endif
 endfunction
 
-" Add any cscope databases present in current working directory
-" If none are present, call AirTies' newscript.sh to generate one and add it
-function! AddCreateCscopeDb()
+" Source ./.myscope/ctags.vim
+function! AddCtagsVim()
+    let l:myscope_dir = getcwd() . '/.myscope'
+    let l:ctags_vim   = l:myscope_dir . '/ctags.vim'
+
+    if filereadable( l:ctags_vim )
+        " Source ctags.vim highlighting file
+        execute "silent! source " . l:ctags_vim
+    else
+        echoe "Couldn't find ctags.vim"
+    endif
+endfunction
+
+" Use myscope.sh to generate a cscope db for the cwd
+" Also creates a ctags.vim with syntax highlighting for tags
+function! CreateScopeDbCtags()
     let l:myscope_dir = getcwd() . '/.myscope'
 
     let l:cscope_db   = l:myscope_dir . '/cscope.out'
@@ -34,11 +48,8 @@ function! AddCreateCscopeDb()
 
     execute "silent! !~/.vim/bin/myscope.sh " . getcwd()
 
-    if filereadable( l:cscope_db )
-        call AddCscopeDb()
-    else
-        echoe "Couldn't create Cscope db"
-    endif
+    silent! call AddCscopeDb()
+    silent! call AddCtagsVim()
 
     redraw!
 endfunction
@@ -57,10 +68,11 @@ if has("cscope")
     " Show msg when any other cscope db added
     set cscopeverbose
 
+    " Add existing cscope db
     silent! call AddCscopeDb()
 
     " Mappings
-    nnoremap <buffer> <leader>fa :call AddCreateCscopeDb()<CR>
+    nnoremap <buffer> <leader>fa :call CreateScopeDbCtags()<CR>
 
     " Jump
     nnoremap <buffer> <leader>fs :cs find s <C-R>=expand("<cword>")<cr><cr><c-o>:cw<cr>

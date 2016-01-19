@@ -170,7 +170,6 @@ syn match cOperator "<<\|>>\|++\|--"
 syn match cOperator "[!~&%^|=+-]"
 syn match cOperator "/\([^*/]\)\@="
 syn match cOperator "*\([^/]\)\@="
-"syn match cOperator "*\@=[^/]"
 
 " Conditionals
 syn match cConditional "&&\|||\|=="
@@ -188,3 +187,6 @@ hi link cFunction Function
 hi link cOperator Delimiter
 hi link cDelimiter Delimiter
 hi link cBoolean Boolean
+
+" Add any ctags.vim
+silent! call AddCtagsVim()

@@ -43,3 +43,15 @@ done
 
 # Build cscope references
 cscope -b -k -q -imyscope.files
+
+# Build ctags.vim highlighting file
+KINDS=cdfgnstu
+ctags -f - -L myscope.files --sort=no --c-kinds=${KINDS} | cut -f 1,4 > ctags.vim
+
+sed -e 's/^\(\S\+\)\tf$/syntax keyword cUserFunction \1/' ctags.vim --in-place
+sed -e 's/^\(\S\+\)\t[cgnstu]$/syntax keyword cUserType \1/' ctags.vim --in-place
+sed -e 's/^\(\S\+\)\t[d]$/syntax keyword cUserDefine \1/' ctags.vim --in-place
+
+echo "hi link cUserFunction Function" >> ctags.vim
+echo "hi link cUserType Type" >> ctags.vim
+echo "hi link cUserDefine Define" >> ctags.vim
