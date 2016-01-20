@@ -41,9 +41,11 @@ function! CreateScopeDbCtags()
     let l:myscope_dir = getcwd() . '/.myscope'
 
     let l:cscope_db   = l:myscope_dir . '/cscope.out'
+    let l:ctags_vim   = l:myscope_dir . '/ctags.vim'
     if filereadable( l:cscope_db )
         echom "Rebuilding cscope db"
         call delete( l:cscope_db )
+        call delete( l:ctags_vim )
     endif
 
     execute "silent! !~/.vim/bin/myscope.sh " . getcwd()
