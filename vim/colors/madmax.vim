@@ -69,27 +69,27 @@ hi SpecialKey                 ctermfg=none ctermbg=none cterm=underline
 "
 " Variable types
 "
-hi Constant                   ctermfg=107  ctermbg=none cterm=none
+hi Constant                   ctermfg=68   ctermbg=none cterm=none
 hi String                     ctermfg=107  ctermbg=none cterm=none
 hi StringDelimiter            ctermfg=none ctermbg=none cterm=underline
-hi Character                  ctermfg=107  ctermbg=none cterm=none
-hi Number                     ctermfg=107  ctermbg=none cterm=none
-hi Boolean                    ctermfg=107  ctermbg=none cterm=none
-hi Float                      ctermfg=107  ctermbg=none cterm=none
+hi Character                  ctermfg=68   ctermbg=none cterm=none
+hi Number                     ctermfg=68   ctermbg=none cterm=none
+hi Boolean                    ctermfg=68   ctermbg=none cterm=none
+hi Float                      ctermfg=68   ctermbg=none cterm=none
 
-hi Function                   ctermfg=174  ctermbg=none cterm=none
+hi Function                   ctermfg=153  ctermbg=none cterm=none
 hi Identifier                 ctermfg=68   ctermbg=none cterm=none
 
 "
 " Language constructs
 "
-hi Statement                  ctermfg=153  ctermbg=none cterm=none
-hi Conditional                ctermfg=153  ctermbg=none cterm=none
-hi Repeat                     ctermfg=153  ctermbg=none cterm=none
-hi Label                      ctermfg=153  ctermbg=none cterm=none
+hi Statement                  ctermfg=174  ctermbg=none cterm=none
+hi Conditional                ctermfg=174  ctermbg=none cterm=none
+hi Repeat                     ctermfg=174  ctermbg=none cterm=none
+hi Label                      ctermfg=174  ctermbg=none cterm=none
 hi Operator                   ctermfg=223  ctermbg=none cterm=none
-hi Keyword                    ctermfg=153  ctermbg=none cterm=none
-hi Exception                  ctermfg=153  ctermbg=none cterm=none
+hi Keyword                    ctermfg=174  ctermbg=none cterm=none
+hi Exception                  ctermfg=174  ctermbg=none cterm=none
 hi Comment                    ctermfg=102  ctermbg=none cterm=none
 
 hi Special                    ctermfg=219  ctermbg=none cterm=none
@@ -102,16 +102,16 @@ hi Debug                      ctermfg=none ctermbg=88   cterm=none
 "
 " C like
 "
-hi PreProc                    ctermfg=179  ctermbg=none cterm=none
-hi Include                    ctermfg=179  ctermbg=none cterm=none
-hi Define                     ctermfg=179  ctermbg=none cterm=none
-hi Macro                      ctermfg=179  ctermbg=none cterm=none
-hi PreCondit                  ctermfg=179  ctermbg=none cterm=none
+hi PreProc                    ctermfg=180  ctermbg=none cterm=none
+hi Include                    ctermfg=180  ctermbg=none cterm=none
+hi Define                     ctermfg=180  ctermbg=none cterm=none
+hi Macro                      ctermfg=180  ctermbg=none cterm=none
+hi PreCondit                  ctermfg=180  ctermbg=none cterm=none
 
-hi Type                       ctermfg=172  ctermbg=none cterm=none
-hi StorageClass               ctermfg=62   ctermbg=none cterm=none
-hi Structure                  ctermfg=62   ctermbg=none cterm=none
-hi Typedef                    ctermfg=62   ctermbg=none cterm=none
+hi Type                       ctermfg=205  ctermbg=none cterm=none
+hi StorageClass               ctermfg=2    ctermbg=none cterm=none
+hi Structure                  ctermfg=2    ctermbg=none cterm=none
+hi Typedef                    ctermfg=2    ctermbg=none cterm=none
 
 "
 " Diff
