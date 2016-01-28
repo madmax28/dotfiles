@@ -5,13 +5,14 @@ let mapleader = ","
 
 let g:os_uname = substitute(system('uname'), "\n", "", "")
 
-"" Plugins {{{1
+let &rtp .= "," . g:vimconfig_dir . "/vim"
 
-" Vundle
+"" Vundle {{{1
+
 filetype off
 set nocompatible
-set rtp+=~/.vim/plugins/Vundle.vim
-call vundle#begin('~/.vim/plugins')
+let &rtp .= "," . g:vimconfig_dir . "/vim/plugins/Vundle.vim"
+call vundle#begin(g:vimconfig_dir . "/vim/plugins")
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'snipMate'
@@ -21,8 +22,8 @@ Plugin 'L9'
 Plugin 'FuzzyFinder'
 Plugin 'nvie/vim-flake8'
 Plugin 'godlygeek/tabular'
-
 " Add Plugins here
+
 call vundle#end()
 filetype plugin indent on
 

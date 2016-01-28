@@ -25,54 +25,42 @@ read -p "Setup vim? [y/N] " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "========== Installing vim configuration ========="
-    for FILE in vimrc; do
-        if [ ! -f $HOME/.$FILE ]; then
-            echo "Touching $HOME/.$FILE"
-            touch $HOME/.$FILE
-        fi
 
-        appendString="\" This stuff was added automatically"
-        if [ `grep "$appendString" $HOME/.$FILE | wc -l` -eq 0 ]; then
-            echo "Appending \"$appendString\" to $HOME/.$FILE"
-            printf "\n$appendString" >> $HOME/.$FILE
-        fi
+    # Create vimrc
+    if [ ! -f $HOME/.vimrc ]; then
+        echo "Touching $HOME/.vimrc"
+        touch $HOME/.vimrc
+    fi
 
-        appendstring="let g:vimconfig_dir = \"$PWD\""
-        if [ `grep "$appendstring" $HOME/.$FILE | wc -l` -eq 0 ]; then
-            echo "appending \"$appendstring\" to $HOME/.$FILE"
-            printf "\n$appendstring" >> $HOME/.$FILE
-        fi
-
-        sourceString="so $PWD/$FILE"
-        if [ `grep "$sourceString" $HOME/.$FILE | wc -l` -eq 0 ]; then
-            echo "Appending \"$sourceString\" to $HOME/.$FILE"
-            printf "\n$sourceString" >> $HOME/.$FILE
-        fi
-    done
-
-    # Install plugins
-    if [ ! -d $HOME/.vim ]; then
-        echo "Copying $PWD/vim to $HOME/.vim"
-        cp -R $PWD/vim $HOME/.vim
-    else
-        read -p "Directory $HOME/.vim exists. Replace? [y/N] " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            read -p "Backup $HOME/.vim? [Y/n] " -n 1 -r
-            echo
-            if [[ ! $REPLY =~ ^[nN]$ ]]; then
-                echo "Backing up $HOME/.vim to $HOME/.vim.bak"
-                [ -d $HOME/.vim.bak ] && rm -rf $HOME/.vim.bak
-                cp $HOME/.vim $HOME/.vim.bak
-            fi
-            rm -rf $HOME/.vim
-            cp -R $PWD/vim $HOME/.vim
-        fi
+    # Add this to vimrc:
+    #   " This stuff was added automatically
+    #   let g:vimconfig_dir = "/Users/max/Workspace/vimconfig-git"
+    #   execute "source " . g:vimconfig_dir . "/vimrc"
+    appendString="\" This stuff was added automatically"
+    if [ `grep "$appendString" $HOME/.vimrc | wc -l` -eq 0 ]; then
+        echo "Appending \"$appendString\" to $HOME/.vimrc"
+        printf "\n$appendString" >> $HOME/.vimrc
+    fi
+    appendstring="let g:vimconfig_dir = \"$PWD\""
+    if [ `grep "$appendstring" $HOME/.vimrc | wc -l` -eq 0 ]; then
+        echo "appending \"$appendstring\" to $HOME/.vimrc"
+        printf "\n$appendstring" >> $HOME/.vimrc
+    fi
+    sourceString="execute \"source \" . g:vimconfig_dir . \"/vimrc\""
+    if [ `grep "$sourceString" $HOME/.vimrc | wc -l` -eq 0 ]; then
+        echo "Appending \"$sourceString\" to $HOME/.vimrc"
+        printf "\n$sourceString" >> $HOME/.vimrc
     fi
 
     # Let vundle install plugins
     echo "========== Installing plugins via Vundle ========"
     vim +PluginInstall +qall -c "q"
+fi
+
+read -p "Update previous plugins? [Y/n]" -n 1 -r -s
+echo
+if [[ ! $REPLY =~ ^[nN]$ ]]; then
+    vim +PluginUpdate +qall -c "q"
 fi
 
 ##
