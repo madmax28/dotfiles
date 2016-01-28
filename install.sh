@@ -6,9 +6,18 @@
 
 # Build spwd
 function build_spwd {
-    [ -d bin ] || mkdir bin
-    (make -C spwd && mv spwd/spwd bin) || { echo "Error building spwd"; exit 1 }
+[ -d bin ] || mkdir bin
+make -C spwd && mv spwd/spwd bin
+if [ $? -ne 0 ]; then
+    echo "Error building spwd"
+    exit 1
+fi
 }
+
+if [ ! -f $PWD/bin/spwd ]; then
+    echo "Building spwd"
+    build_spwd
+fi
 
 ##
 ## Vim stuff
@@ -97,11 +106,6 @@ fi
 read -p "Setup zsh? [y/N] " -n 1 -r; echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Installing zsh configuration"
-
-    if [ ! -f $PWD/bin/spwd ]; then
-        echo "Building spwd"
-        build_spwd
-    fi
 
     if [ ! -f $HOME/.zshrc ]; then
         echo "Touching $HOME/.zshrc"
