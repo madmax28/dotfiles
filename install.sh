@@ -11,20 +11,12 @@ function build_spwd {
 }
 
 ##
-## Initialize git submodules
-##
-
-echo "========== Initializing git submodules =========="
-git submodule update --init
-
-##
 ## Vim stuff
 ##
 
-read -p "Setup vim? [y/N] " -n 1 -r
-echo
+read -p "Setup vim? [y/N] " -n 1 -r; echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "========== Installing vim configuration ========="
+    echo "Installing vim configuration"
 
     # Create vimrc
     if [ ! -f $HOME/.vimrc ]; then
@@ -52,13 +44,20 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         printf "\n$sourceString" >> $HOME/.vimrc
     fi
 
-    # Let vundle install plugins
-    echo "========== Installing plugins via Vundle ========"
-    vim +PluginInstall +qall -c "q"
+    # Clone Vundle if not present
+    VUNDLE_URL=https://github.com/VundleVim/Vundle.vim.git
+    VUNDLE_DIR=$PWD/vim/plugins/Vundle.vim
+    if [ ! -d $VUNDLE_DIR ]; then
+        echo "Cloning Vundle"
+        git clone $VUNDLE_URL $VUNDLE_DIR
+
+        # Let vundle install plugins
+        echo "Installing plugins via Vundle"
+        vim +PluginInstall +qall -c "q"
+    fi
 fi
 
-read -p "Update previous plugins? [Y/n]" -n 1 -r -s
-echo
+read -p "Update previous plugins? [Y/n]" -n 1 -r -s; echo
 if [[ ! $REPLY =~ ^[nN]$ ]]; then
     vim +PluginUpdate +qall -c "q"
 fi
@@ -67,10 +66,9 @@ fi
 ## Bash stuff
 ##
 
-read -p "Setup bash? [y/N] " -n 1 -r
-echo
+read -p "Setup bash? [y/N] " -n 1 -r; echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "========== Installing bash configuration ========="
+    echo "Installing bash configuration"
 
     if [ ! -f $HOME/.bashrc ]; then
         echo "Touching $HOME/.bashrc"
@@ -96,10 +94,9 @@ fi
 ## zsh Stuff
 ##
 
-read -p "Setup zsh? [y/N] " -n 1 -r
-echo
+read -p "Setup zsh? [y/N] " -n 1 -r; echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "========== Installing zsh configuration ========="
+    echo "Installing zsh configuration"
 
     if [ ! -f $PWD/bin/spwd ]; then
         echo "Building spwd"
@@ -133,9 +130,8 @@ fi
 ##
 
 read -p "Setup tmux? [y/N] " -n 1 -r
-echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "========== Installing tmux configuration ========="
+    echo "Installing tmux configuration"
 
     if [ ! -f $HOME/.tmux.conf ]; then
         echo "Touching $HOME/.tmux.conf"
