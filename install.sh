@@ -50,11 +50,11 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     if [ ! -d $VUNDLE_DIR ]; then
         echo "Cloning Vundle"
         git clone $VUNDLE_URL $VUNDLE_DIR
-
-        # Let vundle install plugins
-        echo "Installing plugins via Vundle"
-        vim +PluginInstall +qall -c "q"
     fi
+
+    # Let vundle install plugins
+    echo "Installing plugins via Vundle"
+    vim +PluginInstall +qall -c "q"
 fi
 
 read -p "Update previous plugins? [Y/n]" -n 1 -r -s; echo
