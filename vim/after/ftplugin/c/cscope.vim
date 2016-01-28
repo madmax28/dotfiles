@@ -1,15 +1,16 @@
 if has("cscope")
+    let s:myscope_dir = getcwd() . '/.myscope'
+    let s:cscope_db   = s:myscope_dir . '/cscope.out'
+    let s:ctags_vim   = s:myscope_dir . '/ctags.vim'
+
     " Functions {{{1
 
     " Add cscope db ./.myscope/cscope.out
     function! AddCscopeDb()
-        let l:myscope_dir = getcwd() . '/.myscope'
-        let l:cscope_db   = l:myscope_dir . '/cscope.out'
-
-        if filereadable( l:cscope_db )
+        if filereadable( s:cscope_db )
             echom "Added cscope db"
             " Add cscope db
-            execute "silent! cs add " . l:cscope_db
+            execute "silent! cs add " . s:cscope_db
             " Avoid duplicate databases
             silent! cscope reset
         else
@@ -19,31 +20,24 @@ if has("cscope")
 
     " Source ./.myscope/ctags.vim
     function! AddCtagsVim()
-        let l:myscope_dir = getcwd() . '/.myscope'
-        let l:ctags_vim   = l:myscope_dir . '/ctags.vim'
-
-        if filereadable( l:ctags_vim )
+        if filereadable( s:ctags_vim )
             " Source ctags.vim highlighting file
-            execute "silent! source " . l:ctags_vim
+            execute "silent! source " . s:ctags_vim
         else
             echoe "Couldn't find ctags.vim"
         endif
     endfunction
 
-    " Use myscope.sh to generate a cscope db for the cwd
+    " Use myscope to generate a cscope db for the cwd
     " Also creates a ctags.vim with syntax highlighting for tags
     function! CreateScopeDbCtags()
-        let l:myscope_dir = getcwd() . '/.myscope'
-
-        let l:cscope_db   = l:myscope_dir . '/cscope.out'
-        let l:ctags_vim   = l:myscope_dir . '/ctags.vim'
-        if filereadable( l:cscope_db )
+        if filereadable( s:cscope_db )
             echom "Rebuilding cscope db"
-            call delete( l:cscope_db )
-            call delete( l:ctags_vim )
+            call delete( s:cscope_db )
+            call delete( s:ctags_vim )
         endif
 
-        execute "silent! !~/.vim/bin/myscope.sh " . getcwd()
+        execute "silent! !" . g:vimconfig_dir . "/bin/myscope " . getcwd()
 
         silent! call AddCscopeDb()
         silent! call AddCtagsVim()
