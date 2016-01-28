@@ -14,7 +14,7 @@ set nocompatible
 let &rtp .= "," . g:vimconfig_dir . "/vim/plugins/Vundle.vim"
 call vundle#begin(g:vimconfig_dir . "/vim/plugins")
 
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'snipMate'
 Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
