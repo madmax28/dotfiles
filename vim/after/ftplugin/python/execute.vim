@@ -1,8 +1,12 @@
+" Settings {{{1
+
 let s:python = substitute(system("which python"), "\n", "", "")
 if v:shell_error != 0
     echoerr "Python not found in your path!"
     finish
 endif
+
+" Functions {{{1
 
 " Execute python script
 function! ExecutePython(readargs)
@@ -26,8 +30,8 @@ function! ExecutePython(readargs)
     echo "=== Return value: " . v:shell_error
 endfunction
 
+" Mappings {{{1
+
+" Execute python
 nnoremap <buffer> <leader>x :wa<cr>:call ExecutePython("0")<cr>
 nnoremap <buffer> <leader>X :wa<cr>:call ExecutePython("1")<cr>
-
-" Execute flake8
-nnoremap <leader>fl :call Flake8()<cr>

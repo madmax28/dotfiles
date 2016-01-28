@@ -1,6 +1,8 @@
-let s:zsh = '/bin/zsh'
+" Settings {{{1
 
-let b:cString = "#"
+let s:sh = '/bin/sh'
+
+" Functions {{{1
 
 " Execute script
 function! Execute(readargs)
@@ -14,7 +16,7 @@ function! Execute(readargs)
     endif
 
     let l:file = @%
-    let l:cmd = s:zsh . " " . l:file
+    let l:cmd = s:sh . " " . l:file
     if exists("s:args")
         let l:cmd = l:cmd . " " . s:args
     endif
@@ -26,5 +28,8 @@ function! Execute(readargs)
     echo "=== Return value: " . v:shell_error
 endfunction
 
+" Mappings {{{1
+
+" Execute script
 nnoremap <buffer> <leader>x :wa<cr>:call Execute("0")<cr>
 nnoremap <buffer> <leader>X :wa<cr>:call Execute("1")<cr>
