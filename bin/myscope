@@ -1,7 +1,7 @@
 #!/bin/bash
 
 print_usage () {
-    echo "Usage: myscope.sh <project path> [depth]"
+    echo "Usage: myscope <project path> [depth]"
 }
 
 # Parse arguments
