@@ -43,7 +43,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     fi
     appendstring="let g:vimconfig_dir = \"$PWD\""
     if [ `grep "$appendstring" $HOME/.vimrc | wc -l` -eq 0 ]; then
-        echo "appending \"$appendstring\" to $HOME/.vimrc"
+        echo "Appending \"$appendstring\" to $HOME/.vimrc"
         printf "\n$appendstring" >> $HOME/.vimrc
     fi
     sourceString="execute \"source \" . g:vimconfig_dir . \"/vimrc\""
