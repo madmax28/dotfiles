@@ -2,6 +2,15 @@
 
 print_usage() {
     echo "Usage: myscope [-hvcr] [-p <project path>] [-o <output directory>] [-d <depth>]"
+    echo "    -p <project path>"
+    echo "        Path to the root directory to be indexed"
+    echo "        The default is the current directory"
+    echo "    -o <output directory>"
+    echo "        Directory in which to manage the .myscope folder"
+    echo "        The default is the current directory"
+    echo "    -d <depth>"
+    echo "        Defines how many directories shall be indexed recursively."
+    echo "        All subdirectories will be index by default"
     echo "    -v  do *not* build vim highlighting file"
     echo "    -c  do *not* build cscope cross references"
     echo "    -r  replace existing myscope directory"
