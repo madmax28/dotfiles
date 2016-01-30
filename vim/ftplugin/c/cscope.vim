@@ -1,47 +1,48 @@
 if has("cscope")
-    let s:myscope_dir = getcwd() . '/.myscope'
-    let s:cscope_db   = s:myscope_dir . '/cscope.out'
-    let s:ctags_vim   = s:myscope_dir . '/ctags.vim'
+    let s:myscope_cmd  = g:vimconfig_dir . "/bin/myscope"
+    let s:myscope_cmd .= " -p " . getcwd()
+    let s:myscope_cmd .= " -o " . getcwd()
+    let s:myscope_cmd .= " -r"
 
     " Functions {{{1
 
     " Add cscope db ./.myscope/cscope.out
-    function! AddCscopeDb()
-        if filereadable( s:cscope_db )
-            echom "Added cscope db"
-            " Add cscope db
-            execute "silent! cs add " . s:cscope_db
-            " Avoid duplicate databases
-            silent! cscope reset
-        else
-            echoe "Couldn't find cscope db"
-        endif
+    function! AddCscopeDb(myscope_dir)
+        let l:tmp = system("find " . a:myscope_dir . " -name cscope.out 2>/dev/null")
+        let l:cscope_dbs = split(l:tmp, '\n')
+        for l:db in l:cscope_dbs
+            echom l:db
+            if filereadable(l:db)
+                " Add cscope db
+                execute "silent! cs add " . l:db
+            else
+                echoe "Couldn't find cscope db"
+            endif
+        endfor
+        " Avoid duplicate connections
+        silent! cscope reset
     endfunction
 
     " Source ./.myscope/ctags.vim
-    function! AddCtagsVim()
-        if filereadable( s:ctags_vim )
-            " Source ctags.vim highlighting file
-            execute "silent! source " . s:ctags_vim
-        else
-            echoe "Couldn't find ctags.vim"
-        endif
+    function! AddCtagsVim(myscope_dir)
+        let l:tmp = system("find " . a:myscope_dir . " -name ctags.vim 2>/dev/null")
+        let l:hl_files = split(l:tmp, '\n')
+        for l:hlf in l:hl_files
+            if filereadable(l:hlf)
+                " Source ctags.vim highlighting file
+                execute "silent! source " . l:hlf
+            else
+                echoe "Couldn't find ctags.vim"
+            endif
+        endfor
     endfunction
 
     " Use myscope to generate a cscope db for the cwd
     " Also creates a ctags.vim with syntax highlighting for tags
     function! CreateScopeDbCtags()
-        if filereadable( s:cscope_db )
-            echom "Rebuilding cscope db"
-            call delete( s:cscope_db )
-            call delete( s:ctags_vim )
-        endif
-
-        execute "silent! !" . g:vimconfig_dir . "/bin/myscope " . getcwd()
-
-        silent! call AddCscopeDb()
-        silent! call AddCtagsVim()
-
+        execute "silent! !" . s:myscope_cmd
+        silent! call AddCscopeDb(getcwd() . "/.myscope")
+        silent! call AddCtagsVim(getcwd() . "/.myscope")
         redraw!
     endfunction
 
@@ -60,8 +61,13 @@ if has("cscope")
     " Show msg when any other cscope db added
     set cscopeverbose
 
-    " Add existing cscope db
-    silent! call AddCscopeDb()
+    " Add existing cscope dbs
+    silent! call AddCscopeDb(getcwd() . "/.myscope")
+    silent! call AddCtagsVim(getcwd() . "/.myscope")
+    if exists("g:myscope_dir")
+        silent! call AddCscopeDb(g:myscope_dir)
+        silent! call AddCtagsVim(g:myscope_dir)
+    endif
 
     " Mappings {{{1
 
