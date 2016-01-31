@@ -29,17 +29,10 @@ Plugin 'L9'
 Plugin 'FuzzyFinder'
 Plugin 'nvie/vim-flake8'
 Plugin 'godlygeek/tabular'
-Plugin 'Valloric/YouCompleteMe'
 " Add Plugins here
 
 call vundle#end()
 filetype plugin indent on
-
-" YouCompleteMe {{{2
-
-let g:ycm_enable_diagnostic_highlighting = 0
-
-" }}}2
 
 " Flake8 {{{2
 
