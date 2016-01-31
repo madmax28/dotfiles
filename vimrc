@@ -135,7 +135,6 @@ endif
 
 " Viminfo {{{2
 
-" The .viminfo file is kept in the dotfiles directory.
 " The following information is stored:
 "   <100  Max. 100 lines per register
 "   '100  Remember marks for the last 100 files
