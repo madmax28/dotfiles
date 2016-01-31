@@ -6,7 +6,7 @@ function! madmax#togglelist#GetBufferList()
 endfunction
 
 function! madmax#togglelist#Toggle(bufname, pfx)
-  let buflist = GetBufferList()
+  let buflist = madmax#togglelist#GetBufferList()
   for bufnum in map(filter(split(buflist, '\n'), 'v:val =~ "'.a:bufname.'"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
     if bufwinnr(bufnum) != -1
       exec(a:pfx.'close')
