@@ -52,20 +52,6 @@ nnoremap <leader>t :FufBufferTagAll<cr>
 nnoremap <leader>Q :FufQuickfix<cr>
 nnoremap <leader>/ :FufLine<cr>
 
-"" Jedi-Vim {{{1
-
-" Mappings
-let g:jedi#completions_command      = "<c-n>"
-let g:jedi#goto_assignments_command = "<leader>fs"
-let g:jedi#goto_definitions_command = "<leader>fg"
-let g:jedi#documentation_command    = "<leader>fd"
-let g:jedi#usages_command           = "<leader>fn"
-
-let g:jedi#rename_command           = "<leader>f1"
-let g:jedi#auto_vim_configuration   = 0
-let g:jedi#pop_select_first         = 0
-let g:jedi#use_tabs_not_buffers     = 0
-
 "" Taglist {{{1
 
 noremap <silent> <leader>T :TlistToggle<cr>
