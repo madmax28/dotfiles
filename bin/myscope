@@ -22,6 +22,11 @@ check_deps() {
     # TODO
 }
 
+expand_dir() {
+    cd $1
+    pwd -P
+}
+
 # Check dependencies
 check_deps
 
@@ -96,10 +101,9 @@ if [ -d $myscope_dir ]; then
 else
     mkdir $myscope_dir
 fi
-cd $myscope_dir
 
 # Create path for this project
-db_path="$myscope_dir/$project_dir"
+db_path="`expand_dir $myscope_dir``expand_dir $project_dir`"
 if [ -d $db_path ]; then
     echo "previously indexed, reindexing"
     rm -rf $db_path
