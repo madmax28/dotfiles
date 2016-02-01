@@ -96,6 +96,7 @@ set scrolloff=5 backspace=2 history=1000 wildmenu
 set completeopt=menuone,longest wildmode=list:longest,full
 set noswapfile nocompatible hidden gdefault
 set number relativenumber showcmd
+set listchars=tab:t- list
 
 " Use wrapping and linebreak
 set wrap linebreak
@@ -662,3 +663,13 @@ nnoremap <F9> `W
 nnoremap <F10> `X
 nnoremap <F11> `Y
 nnoremap <F12> `Z
+
+"" Append mode line {{{1
+
+function! AppendModeline()
+    let l:modeline = printf(" vim: ts=%d:sw=%d:tw=%d:%set",
+                \ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
+    let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
+    call append(line("$"), l:modeline)
+endfunction
+nnoremap <silent> <Leader>M :call AppendModeline()<CR>
