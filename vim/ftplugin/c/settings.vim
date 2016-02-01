@@ -1,2 +1,2 @@
-set formatoptions=crajq
+set formatoptions=crj
 let b:cString = "\/\/"
