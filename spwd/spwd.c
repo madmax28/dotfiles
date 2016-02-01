@@ -23,14 +23,27 @@ int main(int argc, char **argv) {
 
     /* Replace home path */
     if(!strncmp(cwd, home, strlen(home))) {
-        strcpy(scwd, HOME_REPL);
+        strncpy(scwd, HOME_REPL, LINE_MAX);
         slash = strstr(cwd+strlen(home), "/");
     } else {
         slash = strstr(cwd, "/");
+
+        /* If there is no '/', print the whole thing and finish */
+        if (!slash) {
+            strncpy(scwd, cwd, LINE_MAX);
+            goto done;
+        }
+
+        /* If cwd does not start with '/', we abbreviate a relative directory */
+        if (cwd[0] != '/') {
+            strncat(scwd, cwd, DIR_LEN);
+        }
     }
 
-    if(slash == NULL)
+    /* If there is no '/' left, print cwd and finish */
+    if (!slash) {
         goto done;
+    }
 
     /* Abbreviate intermediate dirs */
     while((nslash = strstr(slash+1, "/"))) {

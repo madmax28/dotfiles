@@ -1,60 +1,142 @@
 #!/bin/bash
 
-print_usage () {
-    echo "Usage: myscope <project path> [depth]"
+print_usage() {
+    echo "Usage: myscope [-hvcr] [-p <project path>] [-o <output directory>] [-d <depth>]"
+    echo "    -p <project path>"
+    echo "        Path to the root directory to be indexed"
+    echo "        The default is the current directory"
+    echo "    -o <output directory>"
+    echo "        Directory in which to manage the .myscope folder"
+    echo "        The default is the current directory"
+    echo "    -d <depth>"
+    echo "        Defines how many directories shall be indexed recursively."
+    echo "        All subdirectories will be index by default"
+    echo "    -v  do *not* build vim highlighting file"
+    echo "    -c  do *not* build cscope cross references"
+    echo "    -r  replace existing myscope directory"
+    echo "    -h  print this help message"
 }
 
+check_deps() {
+    echo ""
+    # TODO
+}
+
+expand_dir() {
+    cd $1
+    pwd -P
+}
+
+# Check dependencies
+check_deps
+
+# Defaults
+output_dir=$PWD
+project_dir=$PWD
+depth=""
+nocscpe=0
+novim=0
+replace=0
+
 # Parse arguments
-if [ ! -d $1 ]; then
+OPTIND=1
+while getopts "hvcrp:o:d:" opt; do
+    case "$opt" in
+        h)
+            print_usage
+            exit 0
+            ;;
+        p)
+            project_dir=$OPTARG
+            ;;
+        o)
+            output_dir=$OPTARG
+            ;;
+        d)
+            depth=$OPTARG
+            ;;
+        c)
+            nocscpe=1
+            ;;
+        v)
+            novim=1
+            ;;
+        r)
+            replace=1
+            ;;
+        ?)
+            print_usage
+            exit 1
+    esac
+done
+shift $((OPTIND-1))
+[ "$1" = "--" ] && shift
+myscope_dir="$output_dir/.myscope"
+
+# Validate args
+if [ $# -ne 0 ]; then
     print_usage
     exit 1
 fi
-
-# Check for depth
-if [ ! -z $2 ]; then
-    if [[ ! $2 =~ ^[0-9]+$ ]]; then
-        print_usage
-        exit 1
-    else
-        DEPTH=$2
-    fi
+if [ ! -z $depth ] && [[ ! $depth =~ ^[1-9][0-9]*$ ]]; then
+    echo "Invalid depth" 1>&2
+    exit 1
 fi
-
-# Get project location
-cd $1
-PRJ_DIR=$PWD
+for dir in $project_dir $output_dir; do
+    if [ ! -d $dir ]; then
+        echo "No such directory: $dir" 1>&2
+        exit 1
+    fi
+done
 
 # Create a working directory
-if [ -d $PRJ_DIR/.myscope ]; then
-    echo "Directory $PRJ_DIR/.myscope exists. Rebuilding."
-    rm -rf $PRJ_DIR/.myscope
+if [ -d $myscope_dir ]; then
+    if [ $replace -ne 0 ]; then
+        echo "$myscope_dir exists, rebuilding"
+        rm -rf $myscope_dir
+        mkdir $myscope_dir
+    else
+        echo "$myscope_dir exists, updating"
+    fi
+else
+    mkdir $myscope_dir
 fi
-mkdir $PRJ_DIR/.myscope
-cd $PRJ_DIR/.myscope
+
+# Create path for this project
+db_path="`expand_dir $myscope_dir``expand_dir $project_dir`"
+if [ -d $db_path ]; then
+    echo "previously indexed, reindexing"
+    rm -rf $db_path
+fi
+mkdir -p $db_path
+cd $db_path
 
 # Find files to be indexed
-for EXT in "c" "h" "cpp" "hpp" "cc" "hh" "h++"; do
-    if [ ! -z $DEPTH ]; then
-        find $PRJ_DIR -maxdepth $DEPTH -iname "*.${EXT}" >> myscope.files
+for extension in "c" "h" "cpp" "hpp" "cc" "hh" "h++"; do
+    if [ ! -z $depth ]; then
+        find $project_dir -maxdepth $depth \
+            -iname "*.${extension}" >> myscope.files 2>/dev/null
     else
-        find $PRJ_DIR -iname "*.${EXT}" >> myscope.files
+        find $project_dir -iname "*.${extension}" >> myscope.files 2>/dev/null
     fi
 done
 
 # Build cscope references
-cscope -b -k -q -imyscope.files
+if [ $nocscpe -eq 0 ]; then
+    cscope -b -k -q -imyscope.files 2>/dev/null
+fi
 
 # Build ctags.vim highlighting file
-KINDS=cdfgnstu
-ctags -f ctags.vim -L myscope.files --sort=no --c-kinds=${KINDS}
-
-# Remove comment lines
-sed -e '/^!/d' ctags.vim --in-place
-sed -e 's/^\(\S\+\)\t\S\+\t.*;"\t\(\S\).*$/\1\t\2/' ctags.vim --in-place
-sed -e 's/^\(\S\+\)\tf$/syntax keyword cTagFunction \1/' ctags.vim --in-place
-sed -e 's/^\(\S\+\)\t[cgnstu]$/syntax keyword cTagType \1/' ctags.vim --in-place
-sed -e 's/^\(\S\+\)\t[d]$/syntax keyword cTagDefine \1/' ctags.vim --in-place
-
-echo "hi default link cTagFunction cFunction" >> ctags.vim
-echo "hi default link cTagType cType" >> ctags.vim
-echo "hi default link cTagDefine cDefine" >> ctags.vim
+if [ $novim -eq 0 ]; then
+    KINDS=cdfgnstu
+    ctags -f ctags.tags -L myscope.files --sort=no --c-kinds=${KINDS} 2>/dev/null
+    cp ctags.tags ctags.vim
+    sed -e '/^!/d' ctags.vim --in-place
+    sed -e 's/^\(\S\+\)\t\S\+\t.*;"\t\(\S\).*$/\1\t\2/' ctags.vim --in-place
+    sed -e 's/^\(\S\+\)\tf$/syntax keyword cTagFunction \1/' ctags.vim --in-place
+    sed -e 's/^\(\S\+\)\t[cgnstu]$/syntax keyword cTagType \1/' ctags.vim --in-place
+    sed -e 's/^\(\S\+\)\t[d]$/syntax keyword cTagDefine \1/' ctags.vim --in-place
+    echo "hi default link cTagFunction cFunction" >> ctags.vim
+    echo "hi default link cTagType cType" >> ctags.vim
+    echo "hi default link cTagDefine cDefine" >> ctags.vim
+fi
