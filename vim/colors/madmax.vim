@@ -64,7 +64,7 @@ hi Error                      ctermfg=none ctermbg=88   cterm=none
 hi ErrorMsg                   ctermfg=none ctermbg=88   cterm=none
 hi WarningMsg                 ctermfg=none ctermbg=88   cterm=none
 hi Ignore                     ctermfg=none ctermbg=88   cterm=none
-hi SpecialKey                 ctermfg=none ctermbg=none cterm=underline
+hi SpecialKey                 ctermfg=237 ctermbg=none cterm=none
 
 "
 " Variable types
