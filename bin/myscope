@@ -1,20 +1,49 @@
 #!/bin/bash
 
-print_usage() {
+print_short_usage() {
     echo "Usage: myscope [-hvcr] [-p <project path>] [-o <output directory>] [-d <depth>]"
-    echo "    -p <project path>"
-    echo "        Path to the root directory to be indexed"
-    echo "        The default is the current directory"
-    echo "    -o <output directory>"
-    echo "        Directory in which to manage the .myscope folder"
-    echo "        The default is the current directory"
-    echo "    -d <depth>"
-    echo "        Defines how many directories shall be indexed recursively."
-    echo "        All subdirectories will be index by default"
-    echo "    -v  do *not* build vim highlighting file"
-    echo "    -c  do *not* build cscope cross references"
-    echo "    -r  replace existing myscope directory"
-    echo "    -h  print this help message"
+}
+
+print_usage() {
+    cat << EOF
+myscope - A cscope wrapper to organize cscope databases and create vim syntax
+          files based on ctags.
+
+Usage: myscope [-hvcr] [-p <project path>] [-o <output directory>] [-d <depth>]
+
+    -p <project path>
+        Path to the root directory to be indexed
+        The default is the current directory
+    -o <output directory>
+        Directory in which to manage the .myscope folder
+        The default is the current directory
+    -d <depth>
+        Defines how many levels of subdirectories shall be indexed
+        recursively.
+        All subdirectories will be index by default
+    -v  do *not* build vim highlighting file
+    -c  do *not* build cscope cross references
+    -r  replace existing myscope directory
+    -h  print this help message
+
+myscope recursively scans a directory for C/C++ source files and indexes them
+using cscope and ctags.  The cscope database is kept as is, while the ctags file
+is converted to a ctags.vim file, containing syntax hilighting definitions for
+the found tags.  The created files are stored and managed in the .myscope folder
+in the output directory. Inside the .myscope folder, myscope will replicate the
+full path to the project directory, and store the project-related files in that
+directory.  If the project path is already present, it will be replaced, but
+other previously indexed project paths will not be removed.
+
+If invoked without arguments, myscope will recursively index files and manage
+the .myscope folder in the current directory.  If -p is given, the <project
+path> will be scanned instead.  If -o is given, the .myscope folder in <output
+directory> is managed instead.  If -d is given, myscope will only recurse the
+project path to <depth> children directories If -r is given the .myscope
+directory in the output directory is recreated, removing all previously created
+files.  If -v is given, the vim highlighting file will not be generated.  If -c
+is given, th cscope database will not be generated.
+EOF
 }
 
 check_deps() {
