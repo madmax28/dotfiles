@@ -189,4 +189,7 @@ hi link cDelimiter Delimiter
 hi link cBoolean Boolean
 
 " Add any ctags.vim
-silent! call AddCtagsVim()
+silent! call AddCtagsVim(getcwd() . "/.myscope")
+if exists("g:myscope_dir")
+    silent! call AddCtagsVim(g:myscope_dir)
+endif
