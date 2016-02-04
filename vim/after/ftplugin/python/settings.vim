@@ -1,3 +1,4 @@
+setlocal keywordprg=pydoc
 set fo=crj
 
 " If YouCompleteMe is available, define some mappings for it
@@ -8,4 +9,3 @@ if madmax#ycm#YcmAvailable()
     nnoremap <buffer> <leader>fs :silent! YcmCompleter GoToReferences<cr>
     nnoremap <buffer> <leader>fK :silent! YcmCompleter GetDoc<cr>
 endif
-

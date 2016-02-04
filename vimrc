@@ -169,7 +169,7 @@ inoremap jk <esc>
 inoremap <c-c> <esc>
 " ~/.vimrc editing
 function! EditVimrc()
-    execute "split " . g:vimconfig_dir . "/vimrc"
+    execute "edit " . g:vimconfig_dir . "/vimrc"
 endfunction
 nnoremap <leader>ev :call EditVimrc()<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
@@ -195,6 +195,8 @@ nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
 if g:os_uname ==# "Darwin"
     noremap! <a-space> <space>
 endif
+" Open keywordprg
+noremap <leader>k K
 
 " }}}3
 
@@ -457,7 +459,7 @@ augroup END
 " Append mode line {{{1
 
 function! AppendModeline()
-    let l:modeline = printf(" vim: ts=%d:sw=%d:tw=%d:%set",
+    let l:modeline = printf(" vim: set ts=%d sw=%d tw=%d %set: ",
                 \ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
     let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
     call append(line("$"), l:modeline)

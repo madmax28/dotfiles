@@ -62,10 +62,8 @@ if has("cscope")
 
     " Add existing cscope dbs
     silent! call AddCscopeDb(getcwd() . "/.myscope")
-    silent! call AddCtagsVim(getcwd() . "/.myscope")
     if exists("g:myscope_dir")
         silent! call AddCscopeDb(g:myscope_dir)
-        silent! call AddCtagsVim(g:myscope_dir)
     endif
 
     " Mappings {{{1
