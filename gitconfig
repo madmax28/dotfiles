@@ -1,0 +1,16 @@
+[diff]
+        tool = vimdiff
+[difftool "vimdiff"]
+	cmd = vim -f -d -c 'wincmd l' -c 'cd $GIT_PREFIX' $REMOTE $LOCAL
+[difftool "fugitive"]
+	cmd = vim -f -d -c 'cd $GIT_PREFIX' $REMOTE +Gdiff -c 'wincmd H'
+[alias]
+	a = difftool -t fugitive
+	co = checkout
+	st = status
+	d = difftool
+	b = branch
+	ci = commit
+[push]
+	default = simple
+#  vim: set ts=8 sw=8 tw=80 noet:

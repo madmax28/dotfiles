@@ -31,6 +31,7 @@ Plugin 'L9'
 Plugin 'FuzzyFinder'
 Plugin 'nvie/vim-flake8'
 Plugin 'godlygeek/tabular'
+Plugin 'tpope/vim-fugitive'
 " Add Plugins here
 
 call vundle#end()
