@@ -17,6 +17,11 @@ fi
 if [ ! -f $PWD/bin/spwd ]; then
     echo "Building spwd"
     build_spwd
+else
+    if [ $(date -r $PWD/bin/spwd +%s) -lt $(date -r $PWD/spwd/spwd.c +%s) ]; then
+        echo "Updating spwd"
+        build_spwd
+    fi
 fi
 
 ##
