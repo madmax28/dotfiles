@@ -26,7 +26,7 @@ Plugin 'snipMate'
 Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
 Plugin 'L9'
-Plugin 'FuzzyFinder'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'nvie/vim-flake8'
 Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-fugitive'
@@ -34,6 +34,64 @@ Plugin 'tpope/vim-fugitive'
 
 call vundle#end()
 filetype plugin indent on
+
+" Ctrl-P {{{2
+
+" Want to change mappings to split/tab open bufs
+let g:ctrlp_extensions = ['buffertag', 'line', 'changes', 'mixed']
+let g:ctrlp_switch_buffer = '0'
+let g:ctrlp_working_path_mode = '0'
+let g:ctrlp_use_caching = 1
+let g:ctrlp_match_window = 'bottom,order:btt,min:10,max:10,results:25'
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_cache_dir = $HOME . '/.vim/.ctrlp'
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_prompt_mappings = {
+            \ 'PrtBS()':              ['<bs>', '<c-]>'],
+            \ 'PrtDelete()':          ['<del>'],
+            \ 'PrtDeleteWord()':      ['<c-w>'],
+            \ 'PrtClear()':           ['<c-u>'],
+            \ 'PrtSelectMove("j")':   ['<c-n>'],
+            \ 'PrtSelectMove("k")':   ['<c-p>'],
+            \ 'PrtSelectMove("u")':   ['<c-u>'],
+            \ 'PrtSelectMove("d")':   ['<c-d>'],
+            \ 'PrtHistory(-1)':       ['<c-r>'],
+            \ 'PrtHistory(1)':        ['<c-f>'],
+            \ 'AcceptSelection("e")': ['<cr>'],
+            \ 'AcceptSelection("h")': ['<c-j>'],
+            \ 'AcceptSelection("t")': ['<c-l>'],
+            \ 'AcceptSelection("v")': ['<c-k>'],
+            \ 'ToggleFocus()':        ['<s-tab>'],
+            \ 'ToggleRegex()':        ['<c-t>'],
+            \ 'ToggleByFname()':      ['<c-g>'],
+            \ 'ToggleType(1)':        ['<c-m>'],
+            \ 'ToggleType(-1)':       ['<c-b>'],
+            \ 'PrtCurStart()':        ['<c-a>'],
+            \ 'PrtCurEnd()':          ['<c-e>'],
+            \ 'PrtClearCache()':      ['<F5>'],
+            \ }
+let g:ctrlp_map = '<leader>of'
+let g:ctrlp_cmd = 'CtrlPMixed'
+nnoremap <leader>or :CtrlPMRU<cr>
+nnoremap <leader>ob :CtrlPBuffer<cr>
+nnoremap <leader>oc :CtrlPChangeAll<cr>
+nnoremap <leader>t :CtrlPBufTagAll<cr>
+nnoremap <leader>/ :CtrlPLine<cr>
+
+" }}}2
+
+" YouCompleteMe {{{2
+
+let g:ycm_global_ycm_extra_conf = "/home/max/.vim/ycm_extra_conf.py"
+let g:ycm_enable_diagnostic_highlighting = 0
+
+" }}}2
+
+" UltiSnips {{{2
+
+let g:UltiSnipsExpandTrigger = "<c-e>"
+
+" }}}2
 
 " Flake8 {{{2
 
@@ -44,22 +102,6 @@ highlight link Flake8_Warning    WarningMsg
 highlight link Flake8_Complexity WarningMsg
 highlight link Flake8_Naming     WarningMsg
 highlight link Flake8_PyFlake    WarningMsg
-
-" }}}2
-
-" FuzzyFinder {{{2
-
-let g:fuf_modesDisable = []
-nnoremap <leader>of :FufFile<cr>
-nnoremap <leader>or :FufMruFile<cr>
-nnoremap <leader>ob :FufBuffer<cr>
-nnoremap <leader>oh :FufHelp<cr>
-nnoremap <leader>od :FufDir<cr>
-nnoremap <leader>oj :FufJumpList<cr>
-nnoremap <leader>: :FufMruCmd<cr>
-nnoremap <leader>t :FufBufferTagAll<cr>
-nnoremap <leader>Q :FufQuickfix<cr>
-nnoremap <leader>/ :FufLine<cr>
 
 " }}}2
 
@@ -224,6 +266,9 @@ nnoremap j gj
 nnoremap k gk
 " Repeat latest [ftFT] in opposite direction
 nnoremap ' ,
+" Do not pollute jumplist with [{}]
+nnoremap } :keepjumps normal! }<cr>
+nnoremap { :keepjumps normal! {<cr>
 " Quickfix navigation
 nnoremap <leader><tab> :cn<cr>
 nnoremap <leader><s-tab> :cp<cr>
@@ -345,7 +390,7 @@ augroup END
 " Statusline {{{2
 
 function! MyStatusLine()
-    let l:statusline  = '%n: %f%q %a%=%{TagName()} (%p%%) %y %1*'
+    let l:statusline  = '%n: %f%q %a%=%{TagName()} (%p%% c%c) %y %1*'
     let l:statusline .= '%{madmax#statusline#Modified()}'
     return l:statusline
 endfunction
