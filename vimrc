@@ -16,13 +16,15 @@ let mapleader = ","
 
 " Plugins {{{1
 
+" Vundle {{{2
+
 filetype off
 set nocompatible
 let &rtp .= "," . g:vimconfig_dir . "/vim/plugins/Vundle.vim"
 call vundle#begin(g:vimconfig_dir . "/vim/plugins")
 
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'snipMate'
+Plugin 'SirVer/ultisnips'
 Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
 Plugin 'L9'
@@ -129,6 +131,13 @@ function! TagName()
     endif
     return ''
 endfunction
+
+" }}}2
+
+" UltiSnips {{{2
+
+let g:UltiSnipsExpandTrigger = '<c-e>'
+let g:UltiSnipsJumpForwardTrigger = '<c-e>'
 
 " }}}2
 
@@ -261,6 +270,8 @@ noremap H ^
 noremap J G$
 noremap K gg
 noremap L $
+" Go to previous file
+nnoremap <leader>b :b#<cr>
 " Make j/k navigate visually through wrapped lines
 nnoremap j gj
 nnoremap k gk
@@ -505,7 +516,7 @@ augroup END
 " Append mode line {{{1
 
 function! AppendModeline()
-    let l:modeline = printf(" vim: set ts=%d sw=%d tw=%d %set: ",
+    let l:modeline = printf("vim: set ts=%d sw=%d tw=%d %set :",
                 \ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
     let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
     call append(line("$"), l:modeline)
