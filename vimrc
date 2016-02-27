@@ -82,13 +82,6 @@ nnoremap <leader>/ :CtrlPLine<cr>
 
 " }}}2
 
-" YouCompleteMe {{{2
-
-let g:ycm_global_ycm_extra_conf = "/home/max/.vim/ycm_extra_conf.py"
-let g:ycm_enable_diagnostic_highlighting = 0
-
-" }}}2
-
 " UltiSnips {{{2
 
 let g:UltiSnipsExpandTrigger = "<c-e>"
