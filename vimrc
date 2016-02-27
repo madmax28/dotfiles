@@ -254,6 +254,20 @@ nnoremap <leader>J xi<cr><esc>
 nnoremap + ddp
 nnoremap - ddkP
 
+" Indents {range} following lines to current cursor column
+" Example: With the cursor on the 'l' of 'first line', 2<leader>= leads to:
+" Before       |After
+" first line   |first line
+" second       |      second
+" 3rd          |      3rd
+function! IndentToCursor(count)
+    let l:indent = getcurpos()[2]-1
+    let l:n_lines = max([1, a:count])
+    silent! execute "+1,+" . l:n_lines . "s/\\v^\\s*(\\S)/"
+                \ . repeat(" ", l:indent) . "\\1"
+endfunction
+nnoremap <leader>= :<c-u>call IndentToCursor(v:count)<cr>
+
 " }}}3
 
 " Navigation {{{3
