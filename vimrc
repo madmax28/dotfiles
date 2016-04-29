@@ -241,7 +241,10 @@ if g:os_uname ==# "Darwin"
     noremap! <a-space> <space>
 endif
 " Open keywordprg
-noremap <leader>k K
+nnoremap <leader>k K
+" Activate diff, update diff
+nnoremap <leader>do :windo set diff!<cr>
+nnoremap <leader>du :windo diffupdate<cr>
 
 " }}}3
 
@@ -504,10 +507,10 @@ vnoremap <silent> <leader>g :<c-u>call madmax#grep#GrepOp(visualmode())<cr>
 
 " Highlight bad style {{{1
 
-augroup agHlBadStyle
-    autocmd!
-    autocmd FileType * call madmax#badstyle#HighlightBadStyle()
-augroup END
+"augroup agHlBadStyle
+"    autocmd!
+"    autocmd FileType * call madmax#badstyle#HighlightBadStyle()
+"augroup END
 
 " }}}1
 
