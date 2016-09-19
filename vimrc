@@ -1,5 +1,7 @@
 " Init {{{1
 
+set nocompatible
+
 " madmax library
 if !exists("g:vimconfig_dir")
     echoe "g:vimconfig_dir not set!"
@@ -36,6 +38,8 @@ Plugin 'tpope/vim-fugitive'
 
 call vundle#end()
 filetype plugin indent on
+
+" }}}2
 
 " Ctrl-P {{{2
 
@@ -167,6 +171,7 @@ set foldopen=hor,insert,jump,mark        " When to open folds
 set foldopen+=quickfix,search,tag,undo
 set mouse=a                              " Allow using the mouse
 set listchars=tab:t- list                " Explicity list tabs
+set ignorecase smartcase                 " Search case sensitivity
 
 " }}}2
 
@@ -232,8 +237,6 @@ noremap <leader>n :nohlsearch<cr>
 nnoremap <leader>hc :helpclose<cr>
 " Pasting in command mode
 cnoremap <c-p> <c-r>"
-" Message log
-nnoremap <leader>m :messages<cr>
 " Check highlighting
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
 " On macs, prevent non-breaking spaces
@@ -243,7 +246,7 @@ endif
 " Open keywordprg
 nnoremap <leader>k K
 " Activate diff, update diff
-nnoremap <leader>do :windo set diff!<cr>
+nnoremap <leader>do :windo set diff!<cr>:windo set scrollbind!<cr>
 nnoremap <leader>du :windo diffupdate<cr>
 
 " }}}3
@@ -251,7 +254,7 @@ nnoremap <leader>du :windo diffupdate<cr>
 " Editing {{{3
 
 " Joing and splitting lines
-nnoremap <leader>j J
+noremap <leader>j J
 nnoremap <leader>J xi<cr><esc>
 " Moving lines down/up
 nnoremap + ddp
