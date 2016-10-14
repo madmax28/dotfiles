@@ -37,6 +37,8 @@ Plugin 'tpope/vim-fugitive'
 call vundle#end()
 filetype plugin indent on
 
+" }}}2
+
 " Ctrl-P {{{2
 
 " Want to change mappings to split/tab open bufs
@@ -232,8 +234,6 @@ noremap <leader>n :nohlsearch<cr>
 nnoremap <leader>hc :helpclose<cr>
 " Pasting in command mode
 cnoremap <c-p> <c-r>"
-" Message log
-nnoremap <leader>m :messages<cr>
 " Check highlighting
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
 " On macs, prevent non-breaking spaces
