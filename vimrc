@@ -1,5 +1,7 @@
 " Init {{{1
 
+set nocompatible
+
 " madmax library
 if !exists("g:vimconfig_dir")
     echoe "g:vimconfig_dir not set!"
@@ -169,6 +171,7 @@ set foldopen=hor,insert,jump,mark        " When to open folds
 set foldopen+=quickfix,search,tag,undo
 set mouse=a                              " Allow using the mouse
 set listchars=tab:t- list                " Explicity list tabs
+set ignorecase smartcase                 " Search case sensitivity
 
 " }}}2
 
@@ -241,14 +244,17 @@ if g:os_uname ==# "Darwin"
     noremap! <a-space> <space>
 endif
 " Open keywordprg
-noremap <leader>k K
+nnoremap <leader>k K
+" Activate diff, update diff
+nnoremap <leader>do :windo set diff!<cr>:windo set scrollbind!<cr>
+nnoremap <leader>du :windo diffupdate<cr>
 
 " }}}3
 
 " Editing {{{3
 
 " Joing and splitting lines
-nnoremap <leader>j J
+noremap <leader>j J
 nnoremap <leader>J xi<cr><esc>
 " Moving lines down/up
 nnoremap + ddp
@@ -504,10 +510,10 @@ vnoremap <silent> <leader>g :<c-u>call madmax#grep#GrepOp(visualmode())<cr>
 
 " Highlight bad style {{{1
 
-augroup agHlBadStyle
-    autocmd!
-    autocmd FileType * call madmax#badstyle#HighlightBadStyle()
-augroup END
+"augroup agHlBadStyle
+"    autocmd!
+"    autocmd FileType * call madmax#badstyle#HighlightBadStyle()
+"augroup END
 
 " }}}1
 
