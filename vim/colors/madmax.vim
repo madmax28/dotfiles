@@ -19,7 +19,7 @@ hi CursorLineNr               ctermfg=none ctermbg=24   cterm=none
 " Number column
 "
 hi CursorColumn               ctermfg=none ctermbg=88   cterm=none
-hi FoldColumn                 ctermfg=none ctermbg=236   cterm=none
+hi FoldColumn                 ctermfg=none ctermbg=236  cterm=none
 hi SignColumn                 ctermfg=none ctermbg=236  cterm=none
 hi Folded                     ctermfg=102  ctermbg=236  cterm=none
 
@@ -36,8 +36,8 @@ hi TabLineSel                 ctermfg=none ctermbg=24   cterm=none
 " File Navigation / Searching
 "
 hi Directory                  ctermfg=68   ctermbg=none cterm=none
-hi Search                     ctermfg=16   ctermbg=107  cterm=none
-hi IncSearch                  ctermfg=16   ctermbg=107  cterm=none
+hi Search                     ctermfg=255  ctermbg=24   cterm=none
+hi IncSearch                  ctermfg=255  ctermbg=24   cterm=none
 
 "
 " Prompt/Status
@@ -53,8 +53,8 @@ hi MoreMsg                    ctermfg=none ctermbg=24   cterm=none
 "
 " Visual aid
 "
-hi MatchParen                 ctermfg=none ctermbg=none cterm=standout
-hi Visual                     ctermfg=none ctermbg=none cterm=standout
+hi MatchParen                 ctermfg=255  ctermbg=24   cterm=none
+hi Visual                     ctermfg=none ctermbg=236  cterm=none
 hi VisualNOS                  ctermfg=none ctermbg=88   cterm=none
 hi NonText                    ctermfg=102  ctermbg=none cterm=none
 
