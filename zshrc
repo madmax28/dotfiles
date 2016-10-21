@@ -32,6 +32,10 @@ alias k5='kill %5'
 
 alias gd='git difftool'
 
+# No blue directories for ls
+
+export LS_COLORS=$LS_COLORS:'di=0;35:'
+
 # Key bindings
 
 export KEYTIMEOUT=0
