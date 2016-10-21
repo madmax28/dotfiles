@@ -53,8 +53,8 @@ hi MoreMsg                    ctermfg=none ctermbg=24   cterm=none
 "
 " Visual aid
 "
-hi MatchParen                 ctermfg=none ctermbg=240  cterm=none
-hi Visual                     ctermfg=none ctermbg=240  cterm=none
+hi MatchParen                 ctermfg=255  ctermbg=24   cterm=none
+hi Visual                     ctermfg=none ctermbg=236  cterm=none
 hi VisualNOS                  ctermfg=none ctermbg=88   cterm=none
 hi NonText                    ctermfg=102  ctermbg=none cterm=none
 
