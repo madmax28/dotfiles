@@ -44,7 +44,7 @@ hi IncSearch                  ctermfg=16   ctermbg=250  cterm=none
 "
 hi StatusLine                 ctermfg=none ctermbg=24   cterm=none
 hi StatusLineNC               ctermfg=none ctermbg=236  cterm=none
-hi WildMenu                   ctermfg=none ctermbg=none cterm=none
+hi WildMenu                   ctermfg=16   ctermbg=250  cterm=none
 hi Question                   ctermfg=none ctermbg=24   cterm=none
 hi Title                      ctermfg=none ctermbg=24   cterm=none
 hi ModeMsg                    ctermfg=none ctermbg=24   cterm=none
@@ -64,7 +64,7 @@ hi Error                      ctermfg=none ctermbg=88   cterm=none
 hi ErrorMsg                   ctermfg=none ctermbg=88   cterm=none
 hi WarningMsg                 ctermfg=none ctermbg=88   cterm=none
 hi Ignore                     ctermfg=none ctermbg=88   cterm=none
-hi SpecialKey                 ctermfg=237 ctermbg=none cterm=none
+hi SpecialKey                 ctermfg=237  ctermbg=none cterm=none
 
 "
 " Variable types
