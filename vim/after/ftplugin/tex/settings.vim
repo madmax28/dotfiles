@@ -1,2 +1,2 @@
-setlocal formatoptions=tcraqj
+setlocal formatoptions=tcrqj
 let b:cString = '%'
