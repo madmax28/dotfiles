@@ -3,7 +3,7 @@ extends c
 ##
 ## Preprocessor
 # #include <...>
-snippet inc
+snippet incc
 	#include <${1:iostream}>
 snippet binc
 	#include <boost/${1:shared_ptr}.hpp>
@@ -77,22 +77,24 @@ snippet mu
 ##
 ## Class
 # class
-snippet class
-	class ${1} {
-		public:
-			$1();
-			~$1();
+snippet cl
+	class ${1:`vim_snippets#Filename('$1', 'name')`}
+	{
+	public:
+		$1(${2});
+		~$1();
 
-		private:${0}
+	private:
+		${0:/* data */}
 	};
 # member function implementation
 snippet mfun
-	${4:void} ${1}::${2:memberFunction}(${3}) {
+	${4:void} ${1:`vim_snippets#Filename('$1', 'ClassName')`}::${2:memberFunction}(${3}) {
 		${0}
 	}
 # namespace
 snippet ns
-	namespace ${1} {
+	namespace ${1:`vim_snippets#Filename('', 'my')`} {
 		${0}
 	} /* namespace $1 */
 ##
@@ -104,6 +106,19 @@ snippet cout
 snippet cin
 	std::cin >> ${1};
 ##
+## Casts
+# static
+snippet sca
+	static_cast<${1:unsigned}>(${2:expr})${3}
+# dynamic
+snippet dca
+	dynamic_cast<${1:unsigned}>(${2:expr})${3}
+# reinterpret
+snippet rca
+	reinterpret_cast<${1:unsigned}>(${2:expr})${3}
+# const
+snippet cca
+	const_cast<${1:unsigned}>(${2:expr})${3}
 ## Iteration
 # for i
 snippet fori
@@ -131,9 +146,9 @@ snippet itera
 ## Lambdas
 # lamda (one line)
 snippet ld
-	[${1}](${2}){${3}}
+	[${1}](${2}){${3}};
 # lambda (multi-line)
 snippet lld
 	[${1}](${2}){
 		${3}
-	}
+	};
