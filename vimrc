@@ -1,6 +1,6 @@
 " Init {{{1
 
-set nocompatible
+set nocompatible                         " No vi compatability
 
 " madmax library
 if !exists("g:vimconfig_dir")
@@ -21,7 +21,6 @@ let mapleader = ","
 " Vundle {{{2
 
 filetype off
-set nocompatible
 let &rtp .= "," . g:vimconfig_dir . "/vim/plugins/Vundle.vim"
 call vundle#begin(g:vimconfig_dir . "/vim/plugins")
 
@@ -87,12 +86,6 @@ nnoremap <leader>/ :CtrlPLine<cr>
 
 " }}}2
 
-" UltiSnips {{{2
-
-let g:UltiSnipsExpandTrigger = "<c-e>"
-
-" }}}2
-
 " Flake8 {{{2
 
 let g:flake8_show_quickfix = 0
@@ -135,7 +128,6 @@ endfunction
 " UltiSnips {{{2
 
 let g:UltiSnipsExpandTrigger = '<c-e>'
-let g:UltiSnipsJumpForwardTrigger = '<c-e>'
 
 " }}}2
 
