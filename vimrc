@@ -33,12 +33,30 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'nvie/vim-flake8'
 Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-fugitive'
+if has("nvim")
+    Plugin 'Shougo/deoplete.nvim'
+elseif has("lua")
+    Plugin 'Shougo/neocomplete'
+endif
+"Plugin 'Valloric/YouCompleteMe'
 " Add Plugins here
 
 call vundle#end()
 filetype plugin indent on
 
 " }}}2
+
+" Neocomplete/Deoplete {{{2
+
+if has("nvim")
+    let g:deoplete#enable_at_startup = 1
+    let g:deoplete#enable_smart_case = 1
+    let g:deoplete#auto_complete_delay = 0
+elseif has("lua")
+    let g:neocomplete#enable_at_startup = 1
+    let g:neocomplete#enable_smart_case = 1
+    let g:neocomplete#auto_complete_delay = 0
+endif
 
 " Ctrl-P {{{2
 
@@ -153,7 +171,6 @@ set history=1000                         " Keep a longer history of things
 set wildmenu wildmode=list:longest,full  " Wildmenu behavior
 set completeopt=menuone,longest          " Use a popup for completion
 set noswapfile                           " Don't use swapfiles
-set nocompatible                         " No vi compatability
 set hidden                               " Allow hidden buffers
 set gdefault                             " Use g flags for :s by default
 set number relativenumber                " Show line numbers
@@ -163,11 +180,10 @@ set foldmethod=marker                    " No automatic folding
 set foldopen=hor,insert,jump,mark        " When to open folds
 set foldopen+=quickfix,search,tag,undo
 set mouse=a                              " Allow using the mouse
-set listchars=tab:t- list                " Explicity list tabs
+set listchars=tab:>- list                " Explicity list tabs
 set ignorecase smartcase                 " Search case sensitivity
 set cinoptions=l1,h0,N-s,i1s,+2s,c0,C1,u0,U1,ks
 set nowrapscan
-set formatoptions=crql
 
 let g:tex_flavor = "latex"               " Prevent 'plaintex' ft
 
@@ -207,6 +223,24 @@ set undofile
 
 " }}}1
 
+" Neovim-specific {{{1
+
+if has("nvim")
+
+    " Mappings {{{2
+
+    tnoremap jk <c-\><c-n>
+    tnoremap <c-h> <c-\><c-n><c-w>h
+    tnoremap <c-j> <c-\><c-n><c-w>j
+    tnoremap <c-k> <c-\><c-n><c-w>k
+    tnoremap <c-l> <c-\><c-n><c-w>l
+
+    " }}}2
+
+endif
+
+" }}}1
+
 " Mappings and Commands {{{1
 
 " Mappings {{{2
@@ -216,8 +250,9 @@ set undofile
 " Convenience
 inoremap jk <esc>
 inoremap <c-c> <esc>
-" ~/.vimrc editing
+" ~/.vimrc and dotfile editing
 command! Evimrc execute "edit " . g:vimconfig_dir . "/vimrc"
+command! Edotfiles execute "Explore " . g:vimconfig_dir
 " Snippet editing
 command! Esnippets execute "Explore " . g:vimconfig_dir . "/vim/snippets"
 " Prevent ex-mode, who uses that anyway?
