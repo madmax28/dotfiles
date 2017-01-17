@@ -44,6 +44,7 @@ filetype plugin indent on
 " Ctrl-P {{{2
 
 " Want to change mappings to split/tab open bufs
+let g:ctrlp_by_filename = 1
 let g:ctrlp_extensions = ['buffertag', 'line', 'changes', 'mixed']
 let g:ctrlp_switch_buffer = '0'
 let g:ctrlp_working_path_mode = '0'
@@ -77,7 +78,7 @@ let g:ctrlp_prompt_mappings = {
             \ 'PrtClearCache()':      ['<F5>'],
             \ }
 let g:ctrlp_map = '<leader>of'
-let g:ctrlp_cmd = 'CtrlPMixed'
+let g:ctrlp_cmd = 'CtrlP'
 nnoremap <leader>or :CtrlPMRU<cr>
 nnoremap <leader>ob :CtrlPBuffer<cr>
 nnoremap <leader>oc :CtrlPChangeAll<cr>
@@ -107,7 +108,7 @@ highlight link Flake8_PyFlake    WarningMsg
 " Taglist {{{2
 
 noremap <silent> <leader>T :TlistToggle<cr>
-let Tlist_Close_On_Select = 1
+let Tlist_Close_On_Select = 0
 let Tlist_Exit_OnlyWindow = 1
 let Tlist_Use_Right_Window = 1
 let Tlist_GainFocus_On_ToggleOpen = 1
@@ -172,6 +173,12 @@ set foldopen+=quickfix,search,tag,undo
 set mouse=a                              " Allow using the mouse
 set listchars=tab:t- list                " Explicity list tabs
 set ignorecase smartcase                 " Search case sensitivity
+set cinoptions=l1,h0,N-s,i1s,+2s,c0,C1,u0,U1,ks
+set nowrapscan
+set formatoptions=crql
+
+let g:tex_flavor = "latex"               " Prevent 'plaintex' ft
+
 
 " }}}2
 
@@ -218,17 +225,9 @@ set undofile
 inoremap jk <esc>
 inoremap <c-c> <esc>
 " ~/.vimrc editing
-function! EditVimrc()
-    execute "edit " . g:vimconfig_dir . "/vimrc"
-endfunction
-nnoremap <leader>ev :call EditVimrc()<cr>
-nnoremap <leader>sv :source $MYVIMRC<cr>
+command! Evimrc execute "edit " . g:vimconfig_dir . "/vimrc"
 " Snippet editing
-let g:snippets_dir = g:vimconfig_dir . "/vim/snippets"
-function! EditSnippets()
-    execute "Explore " . g:snippets_dir
-endfunction
-nnoremap <leader>es :call EditSnippets()<cr>
+command! Esnippets execute "Explore " . g:vimconfig_dir . "/vim/snippets"
 " Prevent ex-mode, who uses that anyway?
 nnoremap Q <nop>
 " Clear hlsearch
@@ -394,6 +393,9 @@ command! WQ wq
 " Change to directory of current file
 command! Cd cd %:p:h
 
+" Open current file for edit in perforce
+command! P4edit execute "!p4 edit " . expand("%")
+
 " }}}2
 
 " }}}1
@@ -514,15 +516,6 @@ vnoremap <silent> <leader>g :<c-u>call madmax#grep#GrepOp(visualmode())<cr>
 "    autocmd!
 "    autocmd FileType * call madmax#badstyle#HighlightBadStyle()
 "augroup END
-
-" }}}1
-
-" Prevent 'plaintex' ft {{{1
-
-augroup agTexFt
-    autocmd!
-    autocmd FileType *.tex set ft=tex
-augroup END
 
 " }}}1
 
