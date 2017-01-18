@@ -183,7 +183,8 @@ set mouse=a                              " Allow using the mouse
 set listchars=tab:>- list                " Explicity list tabs
 set ignorecase smartcase                 " Search case sensitivity
 set cinoptions=l1,h0,N-s,i1s,+2s,c0,C1,u0,U1,ks
-set nowrapscan
+set nowrapscan                           " Don't wrap searches
+set nojoinspaces                         " Don't insert double spaces
 
 let g:tex_flavor = "latex"               " Prevent 'plaintex' ft
 
@@ -250,11 +251,6 @@ endif
 " Convenience
 inoremap jk <esc>
 inoremap <c-c> <esc>
-" ~/.vimrc and dotfile editing
-command! Evimrc execute "edit " . g:vimconfig_dir . "/vimrc"
-command! Edotfiles execute "Explore " . g:vimconfig_dir
-" Snippet editing
-command! Esnippets execute "Explore " . g:vimconfig_dir . "/vim/snippets"
 " Prevent ex-mode, who uses that anyway?
 nnoremap Q <nop>
 " Clear hlsearch
@@ -422,6 +418,14 @@ command! Cd cd %:p:h
 
 " Open current file for edit in perforce
 command! P4edit execute "!p4 edit " . expand("%")
+
+" ~/.vimrc, dotfile and snippet editing
+command! Evimrc execute "edit " . g:vimconfig_dir . "/vimrc"
+command! Edotfiles execute "Explore " . g:vimconfig_dir
+command! Esnippets execute "Explore " . g:vimconfig_dir . "/vim/UltiSnips"
+
+" Silence :make
+command! Make silent! make | redraw!
 
 " }}}2
 
