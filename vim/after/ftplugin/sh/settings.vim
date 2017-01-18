@@ -1,2 +1,2 @@
 let b:cString = "#"
-set formatoptions-=o
+set formatoptions=crql
