@@ -440,6 +440,14 @@ command! Make silent! make | redraw!
 " Sum integers in range
 command! -range=% Sum <line1>,<line2>!awk '{s+=$1} END {printf "\%.0f", s}'
 
+" ~/.vimrc, dotfile and snippet editing
+command! Evimrc execute "edit " . g:vimconfig_dir . "/vimrc"
+command! Edotfiles execute "Explore " . g:vimconfig_dir
+command! Esnippets execute "Explore " . g:vimconfig_dir . "/vim/UltiSnips"
+
+" Silence :make
+command! Make silent! make | redraw!
+
 " }}}2
 
 " }}}1
