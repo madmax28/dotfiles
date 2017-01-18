@@ -78,6 +78,13 @@ snippet sec "Section" b
 $0
 endsnippet
 
+snippet chapter "Chapter definition" b
+\chapter{${1:section name}}
+\label{ch:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:_:\L$1$2$3\E)/ga}}}
+
+$0
+endsnippet
+
 snippet sub "Subsection" b
 \subsection{${1:subsection name}}
 \label{sub:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:_:\L$1$2$3\E)/ga}}}
@@ -118,4 +125,29 @@ endsnippet
 snippet lp "Long parenthesis"
 \left(${1:${VISUAL:contents}}\right)$0
 endsnippet
+
+snippet href "Hyperlink"
+\href{${1:http://${2:example.com}}}{${3:$1}}$0
+endsnippet
+
+snippet textit "Italic text"
+\textit{${1:text}}$0
+endsnippet
+
+snippet textbf "Bold text"
+\textbf{${1:text}}$0
+endsnippet
+
+snippet underline "Underlined text"
+\underline{${1:text}}$0
+endsnippet
+
+snippet emph "Emphasize text"
+\emph{${1:text}}$0
+endsnippet
+
+snippet command "Generic command"
+\\${1:command}{${2:argument}}$0
+endsnippet
+
 # vim:ft=snippets:
