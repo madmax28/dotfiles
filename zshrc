@@ -32,6 +32,8 @@ alias k5='kill %5'
 
 alias gd='git difftool'
 
+alias hi='cat ~/.zsh_history'
+
 # No blue directories for ls
 
 export LS_COLORS=$LS_COLORS:'di=0;35:'
