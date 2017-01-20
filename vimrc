@@ -58,6 +58,8 @@ elseif has("lua")
     let g:neocomplete#auto_complete_delay = 0
 endif
 
+" }}}2
+
 " Ctrl-P {{{2
 
 " Want to change mappings to split/tab open bufs
@@ -270,6 +272,9 @@ nnoremap <leader>k K
 " Activate diff, update diff
 nnoremap <leader>do :windo set diff!<cr>:windo set scrollbind!<cr>
 nnoremap <leader>du :windo diffupdate<cr>
+" Cycle through insert mode completion using tab and shift-tab
+inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<tab>"
 
 " }}}3
 
