@@ -188,7 +188,6 @@ set nojoinspaces                         " Don't insert double spaces
 
 let g:tex_flavor = "latex"               " Prevent 'plaintex' ft
 
-
 " }}}2
 
 " Vimdiff {{{2
