@@ -33,6 +33,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'nvie/vim-flake8'
 Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-fugitive'
+Plugin 'majutsushi/tagbar'
 if has("nvim")
     Plugin 'Shougo/deoplete.nvim'
 elseif has("lua")
@@ -163,7 +164,8 @@ syntax on
 " Generic settings {{{2
 
 set hlsearch incsearch                   " Search highlighting
-set shiftwidth=4 softtabstop=4 expandtab " Default tab behaviour
+set shiftwidth=4 softtabstop=4           " Default tab behaviour
+set tabstop=4 expandtab
 set textwidth=80                         " Use 80 columns
 set scrolloff=5                          " Keep some lines around the cursor
 set backspace=2
