@@ -432,6 +432,10 @@ command! Esnippets execute "Explore " . g:vimconfig_dir . "/vim/UltiSnips"
 " Silence :make
 command! Make silent! make | redraw!
 
+" Filter commands
+" Sum integers in range
+command! -range=% Sum <line1>,<line2>!awk '{s+=$1} END {printf "\%.0f", s}'
+
 " }}}2
 
 " }}}1
