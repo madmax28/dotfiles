@@ -421,9 +421,6 @@ command! WQ wq
 " Change to directory of current file
 command! Cd cd %:p:h
 
-" Open current file for edit in perforce
-command! P4edit execute "!p4 edit " . expand("%")
-
 " ~/.vimrc, dotfile and snippet editing
 command! Evimrc execute "edit " . g:vimconfig_dir . "/vimrc"
 command! Edotfiles execute "Explore " . g:vimconfig_dir
@@ -568,5 +565,27 @@ function! AppendModeline()
     call append(line("$"), l:modeline)
 endfunction
 nnoremap <silent> <Leader>M :call AppendModeline()<CR>
+
+" }}}1
+
+" Perforce {{{1
+
+command! P4diff call P4diff()
+function! P4diff()
+    " Retrieve file from depot
+    let l:tmp = system('mktemp --suffix=".' . expand('%:t') . '"')
+    let l:cwd = getcwd()
+    cd %:p:h
+    call system('p4 print -q ' . expand("%:p") . ' > ' . l:tmp)
+    exec 'cd ' . l:cwd
+
+    " Diff it
+    let l:file = expand("%")
+    exec 'tabnew ' . l:tmp
+    exec 'vert diffs ' . l:file
+endfunction
+
+" Open current file for edit in perforce
+command! P4edit execute "!p4 edit " . expand("%")
 
 " }}}1
