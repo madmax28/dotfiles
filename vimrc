@@ -33,6 +33,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'nvie/vim-flake8'
 Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-fugitive'
+Plugin 'majutsushi/tagbar'
 if has("nvim")
     Plugin 'Shougo/deoplete.nvim'
 elseif has("lua")
@@ -120,7 +121,6 @@ highlight link Flake8_PyFlake    WarningMsg
 
 " Taglist {{{2
 
-noremap <silent> <leader>T :TlistToggle<cr>
 let Tlist_Close_On_Select = 0
 let Tlist_Exit_OnlyWindow = 1
 let Tlist_Use_Right_Window = 1
@@ -148,6 +148,14 @@ endfunction
 " UltiSnips {{{2
 
 let g:UltiSnipsExpandTrigger = '<c-e>'
+
+" }}}2
+
+" Tagbar {{{2
+
+noremap <silent> <leader>T :TagbarToggle<cr>
+let g:tagbar_ctags_bin = "~/.local/bin/ctags"
+let g:tagbar_autclose = 0
 
 " }}}2
 
