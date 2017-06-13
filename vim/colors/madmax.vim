@@ -117,9 +117,9 @@ hi Typedef                    ctermfg=2    ctermbg=none cterm=none
 " Diff
 "
 hi DiffAdd                    ctermfg=none ctermbg=22   cterm=none
-hi DiffChange                 ctermfg=none ctermbg=24   cterm=none
-hi DiffDelete                 ctermfg=102  ctermbg=52   cterm=none
-hi DiffText                   ctermfg=16   ctermbg=250  cterm=none
+hi DiffChange                 ctermfg=none ctermbg=17   cterm=none
+hi DiffDelete                 ctermfg=52   ctermbg=none cterm=none
+hi DiffText                   ctermfg=none ctermbg=24   cterm=none
 
 "
 " Completion menu
