@@ -173,7 +173,8 @@ syntax on
 " Generic settings {{{2
 
 set hlsearch incsearch                   " Search highlighting
-set shiftwidth=4 softtabstop=4 expandtab " Default tab behaviour
+set shiftwidth=4 softtabstop=4           " Default tab behaviour
+set tabstop=4 expandtab
 set textwidth=80                         " Use 80 columns
 set scrolloff=5                          " Keep some lines around the cursor
 set backspace=2
@@ -197,7 +198,6 @@ set nowrapscan                           " Don't wrap searches
 set nojoinspaces                         " Don't insert double spaces
 
 let g:tex_flavor = "latex"               " Prevent 'plaintex' ft
-
 
 " }}}2
 
