@@ -154,7 +154,6 @@ let g:UltiSnipsExpandTrigger = '<c-e>'
 " Tagbar {{{2
 
 noremap <silent> <leader>T :TagbarToggle<cr>
-let g:tagbar_ctags_bin = "~/.local/bin/ctags"
 let g:tagbar_autclose = 0
 
 " }}}2
