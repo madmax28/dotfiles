@@ -6,6 +6,8 @@ alias l='ls'
 alias ll='ls -l'
 alias la='ls -a'
 alias lla='ls -la'
+alias llt='ls -lt'
+alias llat='ls -lat'
 
 # Job control
 alias j='jobs'
