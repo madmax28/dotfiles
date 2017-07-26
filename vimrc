@@ -34,6 +34,8 @@ Plugin 'nvie/vim-flake8'
 Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-fugitive'
 Plugin 'majutsushi/tagbar'
+"Plugin 'scrooloose/nerdtree'
+Plugin 'jremmen/vim-ripgrep'
 if has("nvim")
     Plugin 'Shougo/deoplete.nvim'
 elseif has("lua")
