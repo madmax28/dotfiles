@@ -36,6 +36,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'majutsushi/tagbar'
 "Plugin 'scrooloose/nerdtree'
 Plugin 'jremmen/vim-ripgrep'
+Plugin 'chrisbra/vim-diff-enhanced'
 if has("nvim")
     Plugin 'Shougo/deoplete.nvim'
 elseif has("lua")
