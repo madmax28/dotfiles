@@ -432,11 +432,6 @@ command! WQ wq
 " Change to directory of current file
 command! Cd cd %:p:h
 
-" ~/.vimrc, dotfile and snippet editing
-command! Evimrc execute "edit " . g:vimconfig_dir . "/vimrc"
-command! Edotfiles execute "Explore " . g:vimconfig_dir
-command! Esnippets execute "Explore " . g:vimconfig_dir . "/vim/UltiSnips"
-
 " Silence :make
 command! Make silent! make | redraw!
 
