@@ -60,11 +60,8 @@ local vi_indic='$(vimode)'
 #local vimode='${${KEYMAP/vicmd/N}/(main|viins)/$}'
 
 PROMPT="
-%{$fg_bold[blue]%}#%{$reset_color%} \
-%{$fg[cyan]%}%n%{$reset_color%} \
-at \
-%{$fg[green]%}%M%{$reset_color%} \
-in \
+%{$fg_bold[blue]%}@%{$reset_color%}\
+%{$fg[green]%}%M%{$reset_color%}: \
 %{$fg_bold[yellow]%}${dirname}%{$reset_color%} \
 [%*%(1j., %j job.)%(2j.s.)]
 %{$fg_bold[red]%}${vi_indic}%{$reset_color%} "
