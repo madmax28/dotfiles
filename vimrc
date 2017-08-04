@@ -165,8 +165,11 @@ let g:tagbar_autclose = 0
 
 " Settings {{{1
 
-" Syntax highlighting {{{2
+" Colors {{{2
 
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set tgc
 colorscheme madmax
 syntax on
 
@@ -193,7 +196,7 @@ set foldmethod=marker                    " No automatic folding
 set foldopen=hor,insert,jump,mark        " When to open folds
 set foldopen+=quickfix,search,tag,undo
 set mouse=a                              " Allow using the mouse
-set listchars=tab:>- list                " Explicity list tabs
+set listchars=tab:>-,trail:- list        " Explicity list tabs, trailing spaces
 set ignorecase smartcase                 " Search case sensitivity
 set cinoptions=l1,h0,N-s,i1s,+2s,c0,C1,u0,U1,ks
 set nowrapscan                           " Don't wrap searches
@@ -420,6 +423,16 @@ noremap <silent> <leader>q :call madmax#togglelist#Toggle("Quickfix List",
 
 " }}}3
 
+" {{{3 Command line editing
+
+" Pasting in command mode
+cnoremap <c-p> <c-r>"
+cnoremap <c-a> <home>
+cnoremap <c-f> <right>
+cnoremap <c-b> <left>
+
+" }}}3
+
 " }}}2
 
 " Commands {{{2
@@ -603,3 +616,4 @@ endfunction
 command! P4edit execute "!p4 edit " . expand("%")
 
 " }}}1
+" vim: foldmethod=marker et sw=4
