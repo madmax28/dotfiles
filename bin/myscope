@@ -141,7 +141,7 @@ mkdir -p $db_path
 cd $db_path
 
 # Find files to be indexed
-for extension in "c" "h" "cpp" "hpp" "cc" "hh" "h++"; do
+for extension in "c" "h" "cpp" "hpp" "cc" "hh" "h++" "cxx" "hxx"; do
     if [ ! -z $depth ]; then
         find $project_dir -maxdepth $depth \
             -iname "*.${extension}" >> myscope.files 2>/dev/null
