@@ -51,6 +51,16 @@ hi ModeMsg                    ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NO
 hi MoreMsg                    ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
 
 "
+" Terminal
+"
+
+if has('terminal')
+    hi StatusLineTerm             ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
+    hi StatusLineTermNC           ctermfg=NONE ctermbg=236  cterm=NONE      guifg=NONE    guibg=#303030 guisp=NONE
+    hi debugPC                    ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
+endif
+
+"
 " Visual aid
 "
 hi MatchParen                 ctermfg=255  ctermbg=24   cterm=NONE      guifg=#eeeeee guibg=#005f87 guisp=NONE
