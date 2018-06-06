@@ -128,8 +128,7 @@ hi Typedef                    ctermfg=2    ctermbg=NONE cterm=NONE      guifg=#0
 "
 hi DiffAdd                    ctermfg=NONE ctermbg=22   cterm=NONE      guifg=NONE    guibg=#1c441c guisp=NONE
 hi DiffChange                 ctermfg=NONE ctermbg=17   cterm=NONE      guifg=NONE    guibg=#1c1c44 guisp=NONE
-"hi DiffDelete                 ctermfg=52   ctermbg=NONE cterm=NONE      guifg=#441c1c guibg=#441c1c guisp=NONE
-hi DiffDelete                 ctermfg=234  ctermbg=NONE cterm=NONE      guifg=#1c1c1c guibg=NONE    guisp=NONE
+hi DiffDelete                 ctermfg=234  ctermbg=NONE cterm=NONE      guifg=#441c1c guibg=NONE    guisp=NONE
 hi DiffText                   ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#1c4f77 guisp=NONE
 
 "
