@@ -34,7 +34,7 @@ Plugin 'nvie/vim-flake8'
 Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-fugitive'
 Plugin 'majutsushi/tagbar'
-"Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdtree'
 Plugin 'jremmen/vim-ripgrep'
 Plugin 'chrisbra/vim-diff-enhanced'
 if has("nvim")
@@ -61,6 +61,12 @@ elseif has("lua")
     let g:neocomplete#enable_smart_case = 1
     let g:neocomplete#auto_complete_delay = 0
 endif
+
+" }}}2
+
+" Tagbar {{{2
+
+let g:tagbar_sort = 0
 
 " }}}2
 
@@ -178,8 +184,8 @@ syntax on
 " Generic settings {{{2
 
 set hlsearch incsearch                   " Search highlighting
-set shiftwidth=4 softtabstop=4           " Default tab behaviour
-set tabstop=4 expandtab
+set shiftwidth=4 softtabstop=8           " Default tab behaviour
+set tabstop=8 expandtab
 set textwidth=80                         " Use 80 columns
 set scrolloff=5                          " Keep some lines around the cursor
 set backspace=2
@@ -192,7 +198,7 @@ set gdefault                             " Use g flags for :s by default
 set number relativenumber                " Show line numbers
 set showcmd                              " Show cmd in status bar
 set wrap linebreak                       " Wrap lines, at reasonable points
-set foldmethod=marker                    " No automatic folding
+set foldmethod=manual                    " Use manual folding
 set foldopen=hor,insert,jump,mark        " When to open folds
 set foldopen+=quickfix,search,tag,undo
 set mouse=a                              " Allow using the mouse
@@ -201,6 +207,7 @@ set ignorecase smartcase                 " Search case sensitivity
 set cinoptions=l1,h0,N-s,i1s,+2s,c0,C1,u0,U1,ks
 set nowrapscan                           " Don't wrap searches
 set nojoinspaces                         " Don't insert double spaces
+set fo-=t
 
 let g:tex_flavor = "latex"               " Prevent 'plaintex' ft
 
@@ -240,17 +247,24 @@ set undofile
 
 " }}}1
 
+" Netrw {{{1
+
+
+let g:netrw_sort_sequence = "[\/]$,\<core\%(\.\d\+\)\=\>,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\~$"
+
+" }}}1
+
 " Neovim-specific {{{1
 
-if has("nvim")
+if has("nvim") || has("terminal")
 
     " Mappings {{{2
 
     tnoremap jk <c-\><c-n>
-    tnoremap <c-h> <c-\><c-n><c-w>h
-    tnoremap <c-j> <c-\><c-n><c-w>j
-    tnoremap <c-k> <c-\><c-n><c-w>k
-    tnoremap <c-l> <c-\><c-n><c-w>l
+    tnoremap <c-h> <c-w>h
+    tnoremap <c-j> <c-w>j
+    tnoremap <c-k> <c-w>k
+    tnoremap <c-l> <c-w>l
 
     " }}}2
 
@@ -289,6 +303,7 @@ nnoremap <leader>du :windo diffupdate<cr>
 " Cycle through insert mode completion using tab and shift-tab
 inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<tab>"
+nnoremap <leader>w :set wrap!<cr>
 
 " }}}3
 
@@ -616,4 +631,5 @@ endfunction
 command! P4edit execute "!p4 edit " . expand("%")
 
 " }}}1
+
 " vim: foldmethod=marker et sw=4
