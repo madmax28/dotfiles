@@ -2,6 +2,7 @@ if has("cscope")
     let s:myscope_cmd  = g:vimconfig_dir . "/bin/myscope"
     let s:myscope_cmd .= " -p " . getcwd()
     let s:myscope_cmd .= " -o " . getcwd()
+    let s:myscope_cmd .= " -v "
 
     " Functions {{{1
 
