@@ -39,9 +39,20 @@ Plugin 'jremmen/vim-ripgrep'
 Plugin 'chrisbra/vim-diff-enhanced'
 Plugin 'tpope/vim-commentary'
 Plugin 'madmax28/completor.vim'
+if executable("fzf")
+    Plugin 'junegunn/fzf.vim'
+endif
 
 call vundle#end()
 filetype plugin indent on
+
+" }}}2
+
+" fzf {{{2
+
+if executable("fzf")
+    let &rtp .= "," . g:vimconfig_dir . "/fzf"
+endif
 
 " }}}2
 
