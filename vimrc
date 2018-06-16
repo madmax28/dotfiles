@@ -173,6 +173,8 @@ let g:tagbar_autclose = 0
 
 " Colors {{{2
 
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set tgc
 colorscheme madmax
 syntax on
