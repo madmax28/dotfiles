@@ -38,30 +38,17 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'jremmen/vim-ripgrep'
 Plugin 'chrisbra/vim-diff-enhanced'
 Plugin 'tpope/vim-commentary'
-if has("nvim")
-    Plugin 'Shougo/deoplete.nvim'
-elseif has("lua")
-    Plugin 'Shougo/neocomplete'
-endif
-"Plugin 'Valloric/YouCompleteMe'
-" Add Plugins here
+Plugin 'madmax28/completor.vim'
 
 call vundle#end()
 filetype plugin indent on
 
 " }}}2
 
-" Neocomplete/Deoplete {{{2
+" Completor {{{2
 
-if has("nvim")
-    let g:deoplete#enable_at_startup = 1
-    let g:deoplete#enable_smart_case = 1
-    let g:deoplete#auto_complete_delay = 0
-elseif has("lua")
-    let g:neocomplete#enable_at_startup = 1
-    let g:neocomplete#enable_smart_case = 1
-    let g:neocomplete#auto_complete_delay = 0
-endif
+let g:completor_min_chars = 1
+let g:completor_completion_delay = 0
 
 " }}}2
 
@@ -157,7 +144,7 @@ endfunction
 
 " UltiSnips {{{2
 
-let g:UltiSnipsExpandTrigger = '<c-e>'
+let g:UltiSnipsExpandTrigger = '<c-j>'
 
 " }}}2
 
@@ -301,9 +288,7 @@ nnoremap <leader>k K
 " Activate diff, update diff
 nnoremap <leader>do :windo set diff!<cr>:windo set scrollbind!<cr>
 nnoremap <leader>du :windo diffupdate<cr>
-" Cycle through insert mode completion using tab and shift-tab
-inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
-inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<tab>"
+
 nnoremap <leader>w :set wrap!<cr>
 
 " }}}3
