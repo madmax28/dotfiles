@@ -1,17 +1,25 @@
-#!/bin/bash
+#!/bin/bash -e
 
 ##
 ## Functions
 ##
 
+function append {
+    echo "Appending to $1: $2"
+    [ ! -f $1 ] && touch $1
+    if [ `grep "$2" $1 | wc -l` -eq 0 ]; then
+        printf "$2\n" >> $1
+    fi
+}
+
 # Build spwd
 function build_spwd {
-[ -d bin ] || mkdir bin
-make -C spwd && mv spwd/spwd bin
-if [ $? -ne 0 ]; then
-    echo "Error building spwd"
-    exit 1
-fi
+    [ -d bin ] || mkdir bin
+    make -C spwd && mv spwd/spwd bin
+    if [ $? -ne 0 ]; then
+        echo "Error building spwd"
+        exit 1
+    fi
 }
 
 if [ ! -f $PWD/bin/spwd ]; then
@@ -25,6 +33,22 @@ else
 fi
 
 ##
+## fzf
+##
+
+read -p "Install fzf? [y/N] " -n 1 -r; echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    FZF=$PWD/fzf
+
+    [ -d $FZF ] && rm -rf $FZF
+    git clone --depth 1 https://github.com/junegunn/fzf.git $FZF
+    $FZF/install --bin
+
+    ln -sf $FZF/bin/fzf $PWD/bin
+    ln -sf $FZF/bin/fzf-tmux $PWD/bin
+fi
+
+##
 ## Vim stuff
 ##
 
@@ -32,33 +56,9 @@ read -p "Setup vim? [y/N] " -n 1 -r; echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Installing vim configuration"
 
-    # Create vimrc
-    if [ ! -f $HOME/.vimrc ]; then
-        echo "Touching $HOME/.vimrc"
-        touch $HOME/.vimrc
-    fi
+    append $HOME/.vimrc "let g:vimconfig_dir = \"$PWD\""
+    append $HOME/.vimrc "execute \"source \" . g:vimconfig_dir . \"/vimrc\""
 
-    # Add this to vimrc:
-    #   " This stuff was added automatically
-    #   let g:vimconfig_dir = "/Users/max/Workspace/vimconfig-git"
-    #   execute "source " . g:vimconfig_dir . "/vimrc"
-    appendString="\" This stuff was added automatically"
-    if [ `grep "$appendString" $HOME/.vimrc | wc -l` -eq 0 ]; then
-        echo "Appending \"$appendString\" to $HOME/.vimrc"
-        printf "\n$appendString" >> $HOME/.vimrc
-    fi
-    appendstring="let g:vimconfig_dir = \"$PWD\""
-    if [ `grep "$appendstring" $HOME/.vimrc | wc -l` -eq 0 ]; then
-        echo "Appending \"$appendstring\" to $HOME/.vimrc"
-        printf "\n$appendstring" >> $HOME/.vimrc
-    fi
-    sourceString="execute \"source \" . g:vimconfig_dir . \"/vimrc\""
-    if [ `grep "$sourceString" $HOME/.vimrc | wc -l` -eq 0 ]; then
-        echo "Appending \"$sourceString\" to $HOME/.vimrc"
-        printf "\n$sourceString" >> $HOME/.vimrc
-    fi
-
-    # Clone Vundle if not present
     VUNDLE_URL=https://github.com/VundleVim/Vundle.vim.git
     VUNDLE_DIR=$PWD/vim/plugins/Vundle.vim
     if [ ! -d $VUNDLE_DIR ]; then
@@ -66,7 +66,6 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         git clone $VUNDLE_URL $VUNDLE_DIR
     fi
 
-    # Let vundle install plugins
     echo "Installing plugins via Vundle"
     vim +PluginInstall +qall -c "q"
 fi
@@ -84,24 +83,8 @@ read -p "Setup bash? [y/N] " -n 1 -r; echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Installing bash configuration"
 
-    if [ ! -f $HOME/.bashrc ]; then
-        echo "Touching $HOME/.bashrc"
-        touch $HOME/.bashrc
-    fi
-
-    STRING="source $PWD/bashrc"
-    if [ `grep "$STRING" $HOME/.bashrc | wc -l` -eq 0 ]; then
-        echo "Appending \"$STRING\" to $HOME/.bashrc"
-        printf "\n# This line was added automatically" >> $HOME/.bashrc
-        printf "\n$STRING" >> $HOME/.bashrc
-    fi
-
-    STRING="export PATH=$PWD/bin:\$PATH"
-    if [ `grep "$STRING" $HOME/.bashrc | wc -l` -eq 0 ]; then
-        echo "Appending \"$STRING\" to $HOME/.bashrc"
-        printf "\n# This line was added automatically" >> $HOME/.bashrc
-        printf "\n$STRING" >> $HOME/.bashrc
-    fi
+    append $HOME/.bashrc "export PATH=$PWD/bin:\$PATH"
+    append $HOME/.bashrc "source $PWD/bashrc"
 fi
 
 ##
@@ -112,27 +95,10 @@ read -p "Setup zsh? [y/N] " -n 1 -r; echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Installing zsh configuration"
 
-    if [ ! -f $HOME/.zshrc ]; then
-        echo "Touching $HOME/.zshrc"
-        touch $HOME/.zshrc
-    fi
-
-    # Has to be done _before_ source zshrc
-    STRING="export PATH=$PWD/bin:\$PATH"
-    if [ `grep "$STRING" $HOME/.zshrc | wc -l` -eq 0 ]; then
-        echo "Appending \"$STRING\" to $HOME/.zshrc"
-        printf "\n# This line was added automatically" >> $HOME/.zshrc
-        printf "\n$STRING" >> $HOME/.zshrc
-    fi
-
-    STRING="source $PWD/zshrc"
-    if [ `grep "$STRING" $HOME/.zshrc | wc -l` -eq 0 ]; then
-        echo "Appending \"$STRING\" to $HOME/.zshrc"
-        printf "\n# This line was added automatically" >> $HOME/.zshrc
-        printf "\n$STRING" >> $HOME/.zshrc
-    fi
+    append $HOME/.zshrc "export DOTFILES_DIR=$PWD"
+    append $HOME/.zshrc "export PATH=\$DOTFILES_DIR/bin:\$PATH"
+    append $HOME/.zshrc "source \$DOTFILES_DIR/zshrc"
 fi
-
 
 ##
 ## tmux stuff
@@ -142,16 +108,5 @@ read -p "Setup tmux? [y/N] " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Installing tmux configuration"
 
-    if [ ! -f $HOME/.tmux.conf ]; then
-        echo "Touching $HOME/.tmux.conf"
-        touch $HOME/.tmux.conf
-    fi
-
-    # Has to be done _before_ source zshrc
-    STRING="source-file $PWD/tmux.conf"
-    if [ `grep "$STRING" $HOME/.tmux.conf | wc -l` -eq 0 ]; then
-        echo "Appending \"$STRING\" to $HOME/.tmux.conf"
-        printf "\n# This line was added automatically" >> $HOME/.tmux.conf
-        printf "\n$STRING" >> $HOME/.tmux.conf
-    fi
+    append $HOME/tmux.conf "source-file $PWD/tmux.conf"
 fi

@@ -2,3 +2,5 @@
 .*
 vim/plugins
 bin/spwd
+fzf
+bin/fzf*
