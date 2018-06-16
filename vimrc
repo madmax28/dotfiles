@@ -37,6 +37,7 @@ Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jremmen/vim-ripgrep'
 Plugin 'chrisbra/vim-diff-enhanced'
+Plugin 'tpope/vim-commentary'
 if has("nvim")
     Plugin 'Shougo/deoplete.nvim'
 elseif has("lua")
@@ -571,12 +572,6 @@ augroup MaxQuickfixWinGrp
     autocmd!
     autocmd BufWinEnter * call MaxQuickfixWin()
 augroup END
-
-" }}}1
-
-" Un-/Commenting {{{1
-
-noremap <silent> <leader>c :call madmax#comment#ToggleComment()<cr>
 
 " }}}1
 
