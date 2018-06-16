@@ -37,7 +37,6 @@ Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jremmen/vim-ripgrep'
 Plugin 'chrisbra/vim-diff-enhanced'
-Plugin 'rust-lang/rust.vim'
 if has("nvim")
     Plugin 'Shougo/deoplete.nvim'
 elseif has("lua")
