@@ -320,11 +320,6 @@ nnoremap <leader>= :<c-u>call IndentToCursor(v:count)<cr>
 
 " Navigation {{{3
 
-" 'Strong' [hjkl]
-noremap H ^
-noremap J G$
-noremap K gg
-noremap L $
 " Go to previous file
 nnoremap <leader>b :b#<cr>
 " Make j/k navigate visually through wrapped lines
@@ -338,8 +333,6 @@ nnoremap { :keepjumps normal! {<cr>
 " Quickfix navigation
 nnoremap <leader><tab> :cn<cr>
 nnoremap <leader><s-tab> :cp<cr>
-" Jumplist navigation
-nnoremap <s-tab> <c-o>
 " Follow symbols with Enter
 nnoremap <cr> <c-]>
 nnoremap <leader><cr> :sp<cr><c-]>
