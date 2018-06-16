@@ -173,8 +173,6 @@ let g:tagbar_autclose = 0
 
 " Colors {{{2
 
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set tgc
 colorscheme madmax
 syntax on
@@ -218,7 +216,7 @@ let g:tex_flavor = "latex"               " Prevent 'plaintex' ft
 " Do not start vimdiff in readonly mode
 if &diff
     set noreadonly
-    let &diffexpr='EnhancedDiff#Diff("/depot/git-2.8.3/bin/git diff", "--diff-algorithm=patience")'
+    let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
 endif
 
 " }}}2
