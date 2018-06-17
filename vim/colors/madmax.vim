@@ -36,8 +36,8 @@ hi TabLineSel                 ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NO
 " File Navigation / Searching
 "
 hi Directory                  ctermfg=68   ctermbg=NONE cterm=NONE      guifg=#5f87df guibg=NONE    guisp=NONE
-hi Search                     ctermfg=16   ctermbg=250  cterm=NONE      guifg=#000000 guibg=#bcbcbc guisp=NONE
-hi IncSearch                  ctermfg=16   ctermbg=250  cterm=NONE      guifg=#000000 guibg=#bcbcbc guisp=NONE
+hi Search                     ctermfg=16   ctermbg=214  cterm=NONE      guifg=#000000 guibg=#ffaf00 guisp=NONE
+hi IncSearch                  ctermfg=16   ctermbg=214  cterm=NONE      guifg=#000000 guibg=#ffaf00 guisp=NONE
 
 "
 " Prompt/Status
@@ -45,19 +45,18 @@ hi IncSearch                  ctermfg=16   ctermbg=250  cterm=NONE      guifg=#0
 hi StatusLine                 ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
 hi StatusLineNC               ctermfg=NONE ctermbg=236  cterm=NONE      guifg=NONE    guibg=#303030 guisp=NONE
 hi WildMenu                   ctermfg=16   ctermbg=250  cterm=NONE      guifg=#000000 guibg=#bcbcbc guisp=NONE
-hi Question                   ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
-hi Title                      ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
-hi ModeMsg                    ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
-hi MoreMsg                    ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
+hi Question                   ctermfg=174  ctermbg=NONE cterm=NONE      guifg=#df8787 guibg=NONE    guisp=NONE
+hi Title                      ctermfg=174  ctermbg=NONE cterm=NONE      guifg=#df8787 guibg=NONE    guisp=NONE
+hi MoreMsg                    ctermfg=174  ctermbg=NONE cterm=NONE      guifg=#df8787 guibg=NONE    guisp=NONE
+hi ModeMsg                    ctermfg=68   ctermbg=NONE cterm=NONE      guifg=#5f87df guibg=NONE    guisp=NONE
 
 "
 " Terminal
 "
-
 if has('terminal')
-    hi StatusLineTerm             ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
-    hi StatusLineTermNC           ctermfg=NONE ctermbg=236  cterm=NONE      guifg=NONE    guibg=#303030 guisp=NONE
-    hi debugPC                    ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
+    hi StatusLineTerm         ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
+    hi StatusLineTermNC       ctermfg=NONE ctermbg=236  cterm=NONE      guifg=NONE    guibg=#303030 guisp=NONE
+    hi debugPC                ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE
 endif
 
 "
@@ -65,15 +64,15 @@ endif
 "
 hi MatchParen                 ctermfg=255  ctermbg=24   cterm=NONE      guifg=#eeeeee guibg=#005f87 guisp=NONE
 hi Visual                     ctermfg=NONE ctermbg=236  cterm=NONE      guifg=NONE    guibg=#303030 guisp=NONE
-hi VisualNOS                  ctermfg=NONE ctermbg=88   cterm=NONE      guifg=NONE    guibg=#870000 guisp=NONE
+hi VisualNOS                  ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#df0000 guibg=NONE    guisp=NONE
 hi NonText                    ctermfg=102  ctermbg=NONE cterm=NONE      guifg=#878787 guibg=NONE    guisp=NONE
 
-hi Todo                       ctermfg=0    ctermbg=3    cterm=NONE      guifg=#000000 guibg=#808000 guisp=NONE
+hi Todo                       ctermfg=223  ctermbg=NONE cterm=NONE      guifg=#ffdfaf guibg=NONE    guisp=NONE
 hi Underlined                 ctermfg=NONE ctermbg=NONE cterm=underline guifg=NONE    guibg=NONE    guisp=NONE
-hi Error                      ctermfg=NONE ctermbg=88   cterm=NONE      guifg=NONE    guibg=#870000 guisp=NONE
-hi ErrorMsg                   ctermfg=NONE ctermbg=88   cterm=NONE      guifg=NONE    guibg=#870000 guisp=NONE
-hi WarningMsg                 ctermfg=NONE ctermbg=88   cterm=NONE      guifg=NONE    guibg=#870000 guisp=NONE
-hi Ignore                     ctermfg=NONE ctermbg=88   cterm=NONE      guifg=NONE    guibg=#870000 guisp=NONE
+hi Error                      ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#df0000 guibg=NONE    guisp=NONE
+hi ErrorMsg                   ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#df0000 guibg=NONE    guisp=NONE
+hi WarningMsg                 ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#df0000 guibg=NONE    guisp=NONE
+hi Ignore                     ctermfg=223  ctermbg=NONE cterm=NONE      guifg=#ffdfaf guibg=NONE    guisp=NONE
 hi SpecialKey                 ctermfg=237  ctermbg=NONE cterm=NONE      guifg=#3a3a3a guibg=NONE    guisp=NONE
 
 "
@@ -106,7 +105,7 @@ hi Special                    ctermfg=219  ctermbg=NONE cterm=NONE      guifg=#f
 hi SpecialChar                ctermfg=219  ctermbg=NONE cterm=NONE      guifg=#ffafff guibg=NONE    guisp=NONE
 hi Tag                        ctermfg=9    ctermbg=NONE cterm=NONE      guifg=#ff0000 guibg=NONE    guisp=NONE
 hi Delimiter                  ctermfg=223  ctermbg=NONE cterm=NONE      guifg=#ffdfaf guibg=NONE    guisp=NONE
-hi SpecialComment             ctermfg=NONE ctermbg=88   cterm=NONE      guifg=NONE    guibg=#870000 guisp=NONE
+hi SpecialComment             ctermfg=102  ctermbg=NONE cterm=NONE      guifg=#878787 guibg=NONE    guisp=NONE
 hi Debug                      ctermfg=NONE ctermbg=88   cterm=NONE      guifg=NONE    guibg=#870000 guisp=NONE
 
 "
