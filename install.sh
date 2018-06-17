@@ -108,5 +108,5 @@ read -p "Setup tmux? [y/N] " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Installing tmux configuration"
 
-    append $HOME/tmux.conf "source-file $PWD/tmux.conf"
+    append $HOME/.tmux.conf "source-file $PWD/tmux.conf"
 fi
