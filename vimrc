@@ -29,7 +29,6 @@ Plugin 'SirVer/ultisnips'
 Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
 Plugin 'L9'
-Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'nvie/vim-flake8'
 Plugin 'godlygeek/tabular'
 Plugin 'tpope/vim-fugitive'
@@ -52,6 +51,53 @@ filetype plugin indent on
 
 if executable("fzf")
     let &rtp .= "," . g:vimconfig_dir . "/fzf"
+
+    let g:fzf_command_prefix = 'FZF'
+    nnoremap <leader>t :FZFTags<cr>
+    nnoremap <leader>ob :FZFBuffers<cr>
+    nnoremap <leader>of :FZFFiles<cr>
+    nnoremap <leader>oh :FZFHelptags<cr>
+    nnoremap <leader>ol :FZFLines<cr>
+    nnoremap <leader>os :FZFSnippets<cr>
+    nnoremap <leader>or :FZFHistory<cr>
+    nnoremap <leader>: :FZFHistory:<cr>
+    nnoremap <leader>/ :FZFHistory/<cr>
+
+    let g:fzf_action = {
+                \ 'ctrl-j': 'split',
+                \ 'ctrl-k': 'vsplit',
+                \ 'ctrl-l': 'tab split',
+                \ }
+
+    let g:fzf_colors = { 
+                \'fg':       ['fg', 'Normal'],
+                \ 'bg':      ['bg', 'Normal'],
+                \ 'hl':      ['fg', 'Comment'],
+                \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+                \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+                \ 'hl+':     ['fg', 'Statement'],
+                \ 'info':    ['fg', 'PreProc'],
+                \ 'border':  ['fg', 'Ignore'],
+                \ 'prompt':  ['fg', 'Conditional'],
+                \ 'pointer': ['fg', 'Exception'],
+                \ 'marker':  ['fg', 'Keyword'],
+                \ 'spinner': ['fg', 'Label'],
+                \ 'header':  ['fg', 'Comment']
+                \ }
+
+    if executable('rg')
+        command! -bang -nargs=* FRg call _ripgrep(<bang>0, <f-args>)
+        function! _ripgrep(bang, ...)
+            let s:rg =  'rg --line-number --no-heading --color=always'
+            for s:arg in a:000
+                let s:rg .= ' '.s:arg
+            endfor
+            call fzf#vim#grep(s:rg, 1,
+                        \ a:bang ? fzf#vim#with_preview('up:60%')
+                        \         : fzf#vim#with_preview('right:50%:hidden', '?'),
+                        \ a:bang)
+        endfunction
+    endif
 endif
 
 " }}}2
@@ -66,52 +112,6 @@ let g:completor_completion_delay = 0
 " Tagbar {{{2
 
 let g:tagbar_sort = 0
-
-" }}}2
-
-" Ctrl-P {{{2
-
-" Want to change mappings to split/tab open bufs
-let g:ctrlp_by_filename = 1
-let g:ctrlp_extensions = ['buffertag', 'line', 'changes', 'mixed']
-let g:ctrlp_switch_buffer = '0'
-let g:ctrlp_working_path_mode = '0'
-let g:ctrlp_use_caching = 1
-let g:ctrlp_match_window = 'bottom,order:btt,min:10,max:10,results:25'
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_cache_dir = $HOME . '/.vim/.ctrlp'
-let g:ctrlp_show_hidden = 1
-let g:ctrlp_prompt_mappings = {
-            \ 'PrtBS()':              ['<bs>', '<c-]>'],
-            \ 'PrtDelete()':          ['<del>'],
-            \ 'PrtDeleteWord()':      ['<c-w>'],
-            \ 'PrtClear()':           ['<c-u>'],
-            \ 'PrtSelectMove("j")':   ['<c-n>'],
-            \ 'PrtSelectMove("k")':   ['<c-p>'],
-            \ 'PrtSelectMove("u")':   ['<c-u>'],
-            \ 'PrtSelectMove("d")':   ['<c-d>'],
-            \ 'PrtHistory(-1)':       ['<c-r>'],
-            \ 'PrtHistory(1)':        ['<c-f>'],
-            \ 'AcceptSelection("e")': ['<cr>'],
-            \ 'AcceptSelection("h")': ['<c-j>'],
-            \ 'AcceptSelection("t")': ['<c-l>'],
-            \ 'AcceptSelection("v")': ['<c-k>'],
-            \ 'ToggleFocus()':        ['<s-tab>'],
-            \ 'ToggleRegex()':        ['<c-t>'],
-            \ 'ToggleByFname()':      ['<c-g>'],
-            \ 'ToggleType(1)':        ['<c-m>'],
-            \ 'ToggleType(-1)':       ['<c-b>'],
-            \ 'PrtCurStart()':        ['<c-a>'],
-            \ 'PrtCurEnd()':          ['<c-e>'],
-            \ 'PrtClearCache()':      ['<F5>'],
-            \ }
-let g:ctrlp_map = '<leader>of'
-let g:ctrlp_cmd = 'CtrlP'
-nnoremap <leader>or :CtrlPMRU<cr>
-nnoremap <leader>ob :CtrlPBuffer<cr>
-nnoremap <leader>oc :CtrlPChangeAll<cr>
-nnoremap <leader>t :CtrlPBufTagAll<cr>
-nnoremap <leader>/ :CtrlPLine<cr>
 
 " }}}2
 
