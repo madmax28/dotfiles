@@ -109,6 +109,13 @@ let g:completor_completion_delay = 0
 
 " }}}2
 
+" Fugitive {{{2
+
+command! Gg :silent Git graph | redraw!
+command! Gg2 :silent Git graph2 | redraw!
+
+" }}}2
+
 " Tagbar {{{2
 
 let g:tagbar_sort = 0
