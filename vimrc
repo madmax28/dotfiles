@@ -69,8 +69,8 @@ if executable("fzf")
                 \ 'ctrl-l': 'tab split',
                 \ }
 
-    let g:fzf_colors = { 
-                \'fg':       ['fg', 'Normal'],
+    let g:fzf_colors = {
+                \ 'fg':      ['fg', 'Normal'],
                 \ 'bg':      ['bg', 'Normal'],
                 \ 'hl':      ['fg', 'Comment'],
                 \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
@@ -94,7 +94,7 @@ if executable("fzf")
             endfor
             call fzf#vim#grep(s:rg, 1,
                         \ a:bang ? fzf#vim#with_preview('up:60%')
-                        \         : fzf#vim#with_preview('right:50%:hidden', '?'),
+                        \        : fzf#vim#with_preview('right:50%:hidden', '?'),
                         \ a:bang)
         endfunction
     endif
@@ -162,7 +162,7 @@ endfunction
 
 " UltiSnips {{{2
 
-let g:UltiSnipsExpandTrigger = '<c-j>'
+let g:UltiSnipsExpandTrigger = '<c-e>'
 
 " }}}2
 
