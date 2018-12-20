@@ -25,13 +25,14 @@ alias b3='bg %3'
 alias b4='bg %4'
 alias b5='bg %5'
 
-alias k1='kill %1'
-alias k2='kill %2'
-alias k3='kill %3'
-alias k4='kill %4'
-alias k5='kill %5'
+alias k1='kill -9 %1'
+alias k2='kill -9 %2'
+alias k3='kill -9 %3'
+alias k4='kill -9 %4'
+alias k5='kill -9 %5'
 
 alias gd='git difftool'
+alias gg='git graph'
 
 alias hi='cat ~/.zsh_history'
 
