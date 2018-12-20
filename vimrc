@@ -47,6 +47,12 @@ filetype plugin indent on
 
 " }}}2
 
+" vim-ripgrep {{{2
+
+nnoremap <leader>G yiw:Rg -w <c-r>"<cr>
+
+" }}}2
+
 " fzf {{{2
 
 if executable("fzf")
