@@ -37,6 +37,7 @@ Plugin 'jremmen/vim-ripgrep'
 Plugin 'chrisbra/vim-diff-enhanced'
 Plugin 'tpope/vim-commentary'
 Plugin 'madmax28/completor.vim'
+Plugin 'rust-lang/rust.vim'
 if executable("fzf")
     Plugin 'junegunn/fzf.vim'
 endif
@@ -143,6 +144,27 @@ highlight link Flake8_PyFlake    WarningMsg
 
 let g:UltiSnipsExpandTrigger = '<c-e>'
 
+" }}}2
+
+" Rust-vim {{{2
+
+let g:tagbar_type_rust = {
+            \ 'ctagstype' : 'rust',
+            \ 'kinds' : [
+            \'n:modules',
+            \'s:structs',
+            \'i:interfaces',
+            \'c:implementations',
+            \'f:functions',
+            \'g:enums',
+            \'t:typedefs',
+            \'v:variables',
+            \'M:macros',
+            \'m:fields',
+            \'e:enumerators',
+            \'P:methods',
+            \ ]
+            \ }
 " }}}2
 
 " Tagbar {{{2
