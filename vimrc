@@ -26,7 +26,6 @@ call vundle#begin(g:vimconfig_dir . "/vim/plugins")
 
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'SirVer/ultisnips'
-Plugin 'taglist.vim'
 Plugin 'xterm-color-table.vim'
 Plugin 'L9'
 Plugin 'nvie/vim-flake8'
@@ -137,32 +136,6 @@ highlight link Flake8_Warning    WarningMsg
 highlight link Flake8_Complexity WarningMsg
 highlight link Flake8_Naming     WarningMsg
 highlight link Flake8_PyFlake    WarningMsg
-
-" }}}2
-
-" Taglist {{{2
-
-let Tlist_Close_On_Select = 0
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_Use_Right_Window = 1
-let Tlist_GainFocus_On_ToggleOpen = 1
-let Tlist_WinWidth = 30
-let Tlist_Enable_Fold_Column = 0
-highlight link TagListFileName StatusLineNC
-highlight link TagListTitle    Keyword
-augroup TlistGrp
-    autocmd!
-    autocmd BufWinEnter * silent! TlistUpdate
-    autocmd FileType taglist setlocal nonumber norelativenumber
-augroup END
-
-" Returns tag prototype for c/cpp files
-function! TagName()
-    if match(&filetype, '\v\c[ch](pp)?') != -1
-        return Tlist_Get_Tagname_By_Line()
-    endif
-    return ''
-endfunction
 
 " }}}2
 
@@ -498,7 +471,7 @@ augroup END
 " Statusline {{{2
 
 function! MyStatusLine()
-    let l:statusline  = '%n: %f%q %a%=%{TagName()} (%p%% c%c) %y %1*'
+    let l:statusline  = '%n: %f%q %a%=%{tagbar#currenttag(''%s'', '''')} (%p%% c%c) %y %1*'
     let l:statusline .= '%{madmax#statusline#Modified()}'
     return l:statusline
 endfunction
