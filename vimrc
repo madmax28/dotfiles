@@ -260,24 +260,6 @@ let g:netrw_sort_sequence = "[\/]$,\<core\%(\.\d\+\)\=\>,\~\=\*$,*,\.o$,\.obj$,\
 
 " }}}1
 
-" Neovim-specific {{{1
-
-if has("nvim") || has("terminal")
-
-    " Mappings {{{2
-
-    tnoremap jk <c-\><c-n>
-    tnoremap <c-h> <c-w>h
-    tnoremap <c-j> <c-w>j
-    tnoremap <c-k> <c-w>k
-    tnoremap <c-l> <c-w>l
-
-    " }}}2
-
-endif
-
-" }}}1
-
 " Mappings and Commands {{{1
 
 " Mappings {{{2
@@ -435,13 +417,27 @@ noremap <silent> <leader>q :call madmax#togglelist#Toggle("Quickfix List",
 
 " }}}3
 
-" {{{3 Command line editing
+" Command line editing {{{3
 
 " Pasting in command mode
 cnoremap <c-p> <c-r>"
 cnoremap <c-a> <home>
 cnoremap <c-f> <right>
 cnoremap <c-b> <left>
+
+" }}}3
+
+" Terminal {{{3
+
+if has("terminal")
+    tnoremap jk <c-\><c-n>
+    tnoremap <c-h> <c-w>h
+    tnoremap <c-j> <c-w>j
+    tnoremap <c-k> <c-w>k
+    tnoremap <c-l> <c-w>l
+    tnoremap <c-n> <c-w>:tabn<cr>
+    tnoremap <c-p> <c-w>:tabp<cr>
+endif
 
 " }}}3
 
