@@ -191,7 +191,7 @@ syntax on
 
 set hlsearch incsearch                   " Search highlighting
 set shiftwidth=4 softtabstop=4           " Default tab behaviour
-set tabstop=8 expandtab
+set tabstop=4 expandtab
 set textwidth=80                         " Use 80 columns
 set scrolloff=5                          " Keep some lines around the cursor
 set backspace=2
