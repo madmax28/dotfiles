@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+    echo "$0: usage: $0 <pattern>"
+    exit 1;
+fi
+
+pattern=$1
+
+if [ ! -z "$(which cgdb)" ]; then
+    gdb=cgdb
+elif [ ! -z "$(which gdb)" ]; then
+    gdb=gdb
+fi
+
+if [ -z $gdb ]; then
+    echo "$0: No debugger found..."
+    exit 1
+fi
+
+echo "Waiting for process matching '$pattern'"
+while true; do
+    pid="$(pgrep -u mfricke "$pattern")"
+
+    if [ "$pid" != "" ]; then
+        cgdb -p $pid
+    fi
+
+    sleep 0.1;
+done
+
