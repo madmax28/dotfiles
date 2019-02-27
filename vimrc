@@ -567,15 +567,6 @@ augroup END
 
 " }}}1
 
-" Grep {{{1
-
-let &grepprg = "grep -IHsn --color=auto $* /dev/null"
-nnoremap <silent> <leader>G :call madmax#grep#Grep()<cr>
-nnoremap <silent> <leader>g :set opfunc=madmax#grep#GrepOp<cr>g@
-vnoremap <silent> <leader>g :<c-u>call madmax#grep#GrepOp(visualmode())<cr>
-
-" }}}1
-
 " Highlight bad style {{{1
 
 "augroup agHlBadStyle
