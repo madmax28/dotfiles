@@ -257,6 +257,8 @@ set undofile
 
 
 let g:netrw_sort_sequence = "[\/]$,\<core\%(\.\d\+\)\=\>,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\~$"
+let g:netrw_hide = 0
+nnoremap <leader>e :Explore<cr>
 
 " }}}1
 
