@@ -68,3 +68,6 @@ export LSCOLORS=ExFxCxDxBxegedabagacad
 
 # PS1
 export PS1="${NC}\u${Green}@${NC}\h${Green}:${NC}\W${Green} $ ${NC}"
+
+# pythonrc
+export PYTHONSTARTUP=$HOME/.pythonrc

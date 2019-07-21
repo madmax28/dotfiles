@@ -109,3 +109,6 @@ if [ -d $FZF ]; then
         source $file;
     done
 fi
+
+# pythonrc
+export PYTHONSTARTUP=$HOME/.pythonrc
