@@ -48,7 +48,7 @@ filetype plugin indent on
 
 " vim-ripgrep {{{2
 
-nnoremap <leader>G yiw:Rg -w <c-r>"<cr>
+nnoremap <leader>G :Rg -w <c-r><c-w><cr>
 
 " }}}2
 
