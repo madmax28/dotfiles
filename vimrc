@@ -214,6 +214,7 @@ set cinoptions=l1,h0,N-s,i1s,+2s,c0,C1,u0,U1,ks
 set nowrapscan                           " Don't wrap searches
 set nojoinspaces                         " Don't insert double spaces
 set fo-=t
+set tags=tags,TAGS                       " Don't look for tags next to file
 
 let g:tex_flavor = "latex"               " Prevent 'plaintex' ft
 
