@@ -35,7 +35,7 @@ Plugin 'majutsushi/tagbar'
 Plugin 'jremmen/vim-ripgrep'
 Plugin 'chrisbra/vim-diff-enhanced'
 Plugin 'tpope/vim-commentary'
-Plugin 'madmax28/completor.vim'
+Plugin 'maralla/completor.vim'
 Plugin 'rust-lang/rust.vim'
 if executable("fzf")
     Plugin 'junegunn/fzf.vim'
