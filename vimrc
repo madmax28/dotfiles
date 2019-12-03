@@ -304,6 +304,9 @@ nnoremap <leader>du :windo diffupdate<cr>
 
 nnoremap <leader>w :set wrap!<cr>
 
+" Regenerate ctags
+nnoremap <leader>C :silent !ctags -R<cr>:redr!<cr>
+
 " }}}3
 
 " Editing {{{3
