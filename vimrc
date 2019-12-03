@@ -209,7 +209,7 @@ set gdefault                             " Use g flags for :s by default
 set number relativenumber                " Show line numbers
 set showcmd                              " Show cmd in status bar
 set wrap linebreak                       " Wrap lines, at reasonable points
-set foldmethod=manual                    " Use manual folding
+set foldmethod=marker
 set foldopen=hor,insert,jump,mark        " When to open folds
 set foldopen+=quickfix,search,tag,undo
 set mouse=a                              " Allow using the mouse
@@ -277,22 +277,27 @@ nnoremap <leader>e :Explore<cr>
 " Convenience
 inoremap jk <esc>
 inoremap <c-c> <esc>
+
 " Prevent ex-mode, who uses that anyway?
 nnoremap Q <nop>
+
 " Clear hlsearch
 noremap <leader>n :nohlsearch<cr>
+
 " Close any help pages
 nnoremap <leader>hc :helpclose<cr>
+
 " Pasting in command mode
 cnoremap <c-p> <c-r>"
+
 " Check highlighting
 nnoremap <leader>hi :so $VIMRUNTIME/syntax/hitest.vim<cr>
+
 " On macs, prevent non-breaking spaces
 if g:os_uname ==# "Darwin"
     noremap! <a-space> <space>
 endif
-" Open keywordprg
-nnoremap <leader>k K
+
 " Activate diff, update diff
 nnoremap <leader>do :windo set diff!<cr>:windo set scrollbind!<cr>
 nnoremap <leader>du :windo diffupdate<cr>
