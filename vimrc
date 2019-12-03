@@ -119,6 +119,11 @@ let g:completor_completion_delay = 0
 command! Gg :silent Git graph | redraw!
 command! Gg2 :silent Git graph2 | redraw!
 
+nnoremap <leader>gd :Gdiff<cr>
+nnoremap <leader>gs :Gstatus<cr>
+nnoremap <leader>gg :Gg<cr>
+nnoremap <leader>gw :Gwrite<cr>
+
 " }}}2
 
 " Tagbar {{{2
