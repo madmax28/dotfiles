@@ -169,6 +169,7 @@ let g:tagbar_type_rust = {
             \'P:methods',
             \ ]
             \ }
+
 " }}}2
 
 " Tagbar {{{2
