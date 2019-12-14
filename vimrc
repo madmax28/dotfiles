@@ -37,12 +37,24 @@ Plugin 'chrisbra/vim-diff-enhanced'
 Plugin 'tpope/vim-commentary'
 Plugin 'maralla/completor.vim'
 Plugin 'rust-lang/rust.vim'
+Plugin 'dense-analysis/ale'
 if executable("fzf")
     Plugin 'junegunn/fzf.vim'
 endif
 
 call vundle#end()
 filetype plugin indent on
+
+" }}}2
+
+" ALE {{{2
+
+let g:ale_linters = {
+            \ 'rust': [ 'rls' ],
+            \ }
+let g:ale_rust_rls_toolchain = 'stable'
+let g:ale_set_balloons = 1
+let g:ale_set_quickfix = 1
 
 " }}}2
 
