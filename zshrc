@@ -55,11 +55,20 @@ function vimode {
     fi
 }
 
+function root_prompt {
+    if [ "$(id -u)" = "0" ]; then
+        echo -n "%{$fg_bold[red]%}root%{$reset_color%} "
+    else
+        echo -n ""
+    fi
+}
+
 local dirname='$(spwd)'
 local vi_indic='$(vimode)'
-#local vimode='${${KEYMAP/vicmd/N}/(main|viins)/$}'
+local root_indic='$(root_prompt)'
 
 PROMPT="
+${root_indic}\
 %{$fg_bold[blue]%}@ %{$reset_color%}\
 %{$fg[green]%}%M%{$reset_color%}: \
 %{$fg[yellow]%}${dirname}%{$reset_color%} \
