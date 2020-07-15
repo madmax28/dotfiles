@@ -49,10 +49,7 @@ filetype plugin indent on
 
 " ALE {{{2
 
-let g:ale_linters = {
-            \ 'rust': [ 'rls' ],
-            \ }
-let g:ale_rust_rls_toolchain = 'stable'
+let g:ale_linters_explicit = 1
 let g:ale_set_balloons = 1
 let g:ale_set_quickfix = 1
 
