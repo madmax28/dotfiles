@@ -69,6 +69,8 @@ nnoremap <leader>G :Rg -w <c-r><c-w><cr>
 if executable("fzf")
     let &rtp .= "," . g:vimconfig_dir . "/fzf"
 
+    let g:fzf_preview_window = '' " disabled
+
     let g:fzf_command_prefix = 'FZF'
     nnoremap <leader>t :FZFTags<cr>
     nnoremap <leader>ob :FZFBuffers<cr>
