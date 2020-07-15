@@ -128,8 +128,17 @@ let g:completor_completion_delay = 0
 
 " Fugitive {{{2
 
-command! Gg :silent Git graph | redraw!
-command! Gg2 :silent Git graph2 | redraw!
+function! ExecInBufDir(cmd)
+    let l:bufdir = expand("%:p:h")
+    let l:curdir = getcwd()
+
+    execute "chdir " . l:bufdir
+    execute a:cmd
+    execute "chdir " . l:curdir
+endfunction
+
+command! Gg :call ExecInBufDir("silent! !git graph") | redraw!
+command! Gg2 :call ExecInBufDir("silent! !git graph2") | redraw!
 
 nnoremap <leader>gd :Gdiff<cr>
 nnoremap <leader>gs :Gstatus<cr>
