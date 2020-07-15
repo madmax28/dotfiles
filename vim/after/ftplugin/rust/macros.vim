@@ -24,5 +24,6 @@ endfunction
 nnoremap <leader>mb :make! check<cr>
 nnoremap <leader>mc :make! clean<cr>
 nnoremap <leader>mC :make! clippy<cr>
+nnoremap <leader>mt :make! test<cr>
 nnoremap <leader>mr :call RustRun()<cr>
 nnoremap <leader>mR :call RustRun("--release")<cr>
