@@ -1,0 +1,32 @@
+#!/bin/env perl
+
+use List::Util qw(first);
+use List::MoreUtils qw(firstidx);
+
+my @commands = ('query', 'switch');
+my $command;
+if (not $command = first { $_ eq $ARGV[0] } @commands) {
+    die "Unrecognized command \"$ARGV[0]\"";
+}
+
+my @layouts = ('us', 'de');
+my $layout;
+my $idx = -1;
+for (split /^/, `setxkbmap -query`) {
+    if (($layout) = m/^layout:\s+([a-z]+)\s+$/) {
+        $idx = firstidx { $_ eq $layout } @layouts;
+        die "Layout \"$layout\" not recognized" if $idx == -1;
+        last;
+    }
+}
+die "Could not get current layout" if not $layout;
+
+if ($command eq 'query') {
+    print "$layout";
+} elsif ($command eq 'switch') {
+    my $new_idx = ($idx + 1) % (scalar @layouts);
+    `setxkbmap $layouts[$new_idx]`;
+    die "setxkmap failed with exit code $?" if $? != 0;
+} else {
+    die "unreachable";
+}
