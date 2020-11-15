@@ -13,7 +13,7 @@ my @layouts = ('us', 'de');
 my $layout;
 my $idx = -1;
 for (split /^/, `setxkbmap -query`) {
-    if (($layout) = m/^layout:\s+([a-z]+)\s+$/) {
+    if (($layout) = m/^layout:\s+([a-z]+)(,.*)?\s+$/) {
         $idx = firstidx { $_ eq $layout } @layouts;
         die "Layout \"$layout\" not recognized" if $idx == -1;
         last;
