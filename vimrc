@@ -32,20 +32,40 @@ Plug 'majutsushi/tagbar'
 Plug 'jremmen/vim-ripgrep'
 Plug 'chrisbra/vim-diff-enhanced'
 Plug 'tpope/vim-commentary'
-Plug 'maralla/completor.vim'
 Plug 'rust-lang/rust.vim'
-Plug 'dense-analysis/ale'
+if executable("node")
+    let s:coc = 1
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+else
+    let s:ale = 1
+    let s:completor = 1
+    Plug 'maralla/completor.vim'
+    Plug 'dense-analysis/ale'
+endif
 if executable("fzf")
     Plug 'junegunn/fzf.vim'
 endif
 
 call plug#end()
 
+" }}}2
+
+" Coc {{{2
+
+if s:coc
+    nmap <silent> [g <Plug>(coc-diagnostic-prev)
+    nmap <silent> ]g <Plug>(coc-diagnostic-next)
+endif
+
+" }}}2
+
 " ALE {{{2
 
-let g:ale_linters_explicit = 1
-let g:ale_set_balloons = 1
-let g:ale_set_quickfix = 1
+if s:ale
+    let g:ale_linters_explicit = 1
+    let g:ale_set_balloons = 1
+    let g:ale_set_quickfix = 1
+endif
 
 " }}}2
 
@@ -98,8 +118,10 @@ endif
 
 " Completor {{{2
 
-let g:completor_min_chars = 1
-let g:completor_completion_delay = 0
+if s:completor
+    let g:completor_min_chars = 1
+    let g:completor_completion_delay = 0
+endif
 
 " }}}2
 
