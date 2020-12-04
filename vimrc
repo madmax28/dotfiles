@@ -20,32 +20,26 @@ let mapleader = ","
 
 " Vundle {{{2
 
-filetype off
-let &rtp .= "," . g:vimconfig_dir . "/vim/plugins/Vundle.vim"
-call vundle#begin(g:vimconfig_dir . "/vim/plugins")
+call plug#begin(g:vimconfig_dir . "/vim/plugged")
 
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'xterm-color-table.vim'
-Plugin 'L9'
-Plugin 'nvie/vim-flake8'
-Plugin 'godlygeek/tabular'
-Plugin 'tpope/vim-fugitive'
-Plugin 'majutsushi/tagbar'
-Plugin 'jremmen/vim-ripgrep'
-Plugin 'chrisbra/vim-diff-enhanced'
-Plugin 'tpope/vim-commentary'
-Plugin 'maralla/completor.vim'
-Plugin 'rust-lang/rust.vim'
-Plugin 'dense-analysis/ale'
+Plug 'SirVer/ultisnips'
+Plug 'vim-scripts/xterm-color-table.vim'
+Plug 'vim-scripts/L9'
+Plug 'nvie/vim-flake8'
+Plug 'godlygeek/tabular'
+Plug 'tpope/vim-fugitive'
+Plug 'majutsushi/tagbar'
+Plug 'jremmen/vim-ripgrep'
+Plug 'chrisbra/vim-diff-enhanced'
+Plug 'tpope/vim-commentary'
+Plug 'maralla/completor.vim'
+Plug 'rust-lang/rust.vim'
+Plug 'dense-analysis/ale'
 if executable("fzf")
-    Plugin 'junegunn/fzf.vim'
+    Plug 'junegunn/fzf.vim'
 endif
 
-call vundle#end()
-filetype plugin indent on
-
-" }}}2
+call plug#end()
 
 " ALE {{{2
 
