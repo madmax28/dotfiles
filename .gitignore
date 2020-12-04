@@ -1,6 +1,6 @@
 # Dotfiles
 .*
-vim/plugins
+vim/plugged
 bin/spwd
 fzf
 bin/fzf*
