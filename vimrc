@@ -35,8 +35,11 @@ Plug 'tpope/vim-commentary'
 Plug 'rust-lang/rust.vim'
 if executable("node")
     let s:coc = 1
+    let s:ale = 0
+    let s:completor = 0
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
 else
+    let s:coc = 0
     let s:ale = 1
     let s:completor = 1
     Plug 'maralla/completor.vim'
