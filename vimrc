@@ -60,8 +60,6 @@ nnoremap <leader>G :Rg -w <c-r><c-w><cr>
 if executable("fzf")
     let &rtp .= "," . g:vimconfig_dir . "/fzf"
 
-    let g:fzf_preview_window = '' " disabled
-
     let g:fzf_command_prefix = 'FZF'
     nnoremap <leader>t :FZFTags<cr>
     nnoremap <leader>ob :FZFBuffers<cr>
@@ -94,20 +92,6 @@ if executable("fzf")
                 \ 'spinner': ['fg', 'Label'],
                 \ 'header':  ['fg', 'Comment']
                 \ }
-
-    if executable('rg')
-        command! -bang -nargs=* FRg call _ripgrep(<bang>0, <f-args>)
-        function! _ripgrep(bang, ...)
-            let s:rg =  'rg --line-number --no-heading --color=always'
-            for s:arg in a:000
-                let s:rg .= ' '.s:arg
-            endfor
-            call fzf#vim#grep(s:rg, 1,
-                        \ a:bang ? fzf#vim#with_preview('up:60%')
-                        \        : fzf#vim#with_preview('right:50%:hidden', '?'),
-                        \ a:bang)
-        endfunction
-    endif
 endif
 
 " }}}2
@@ -462,12 +446,6 @@ cnoremap <c-b> <left>
 
 if has("terminal")
     tnoremap jk <c-\><c-n>
-    tnoremap <c-h> <c-w>h
-    tnoremap <c-j> <c-w>j
-    tnoremap <c-k> <c-w>k
-    tnoremap <c-l> <c-w>l
-    tnoremap <c-n> <c-w>:tabn<cr>
-    tnoremap <c-p> <c-w>:tabp<cr>
 endif
 
 " }}}3
