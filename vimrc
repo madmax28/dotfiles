@@ -323,8 +323,11 @@ if g:os_uname ==# "Darwin"
 endif
 
 " Activate diff, update diff
-nnoremap <leader>do :windo set diff!<cr>:windo set scrollbind!<cr>
-nnoremap <leader>du :windo diffupdate<cr>
+nnoremap <leader>dd :diffthis<cr>
+nnoremap <leader>dD :windo diffthis<cr>
+nnoremap <leader>do :diffoff<cr>
+nnoremap <leader>dO :diffoff!<cr>
+nnoremap <leader>du :diffupdate!<cr>
 
 nnoremap <leader>w :set wrap!<cr>
 
