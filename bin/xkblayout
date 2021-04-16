@@ -14,7 +14,12 @@ my $layout;
 my $idx = -1;
 for (split /^/, `setxkbmap -query`) {
     if (m/^layout:\s+([a-z]+)(,.*)?\s+$/) {
-        $layout = $1;
+        if ($2 ne "") {
+            $layout = "us";
+            `setxkbmap $layout`;
+        } else {
+            $layout = $1;
+        }
         $idx = firstidx { $_ eq $layout } @layouts;
         die "Layout \"$layout\" not recognized" if $idx == -1;
         last;
