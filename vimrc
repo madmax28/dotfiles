@@ -650,13 +650,18 @@ nnoremap <silent> <Leader>M :call AppendModeline()<CR>
 
 " Perforce {{{1
 
-command! P4diff call P4diff()
-function! P4diff()
+command! -nargs=? P4diff call P4diff(<args>)
+function! P4diff(...)
     " Retrieve file from depot
     let l:tmp = system('mktemp --suffix=".' . expand('%:t') . '"')
     let l:cwd = getcwd()
     cd %:p:h
-    call system('p4 print -q ' . expand("%:p") . ' > ' . l:tmp)
+    if a:0 > 0
+        echom 'Diffing against rev ' . a:1
+        call system('p4 print -q ' . expand("%:p") . '@=' . a:1 . ' > ' . l:tmp)
+    else
+        call system('p4 print -q ' . expand("%:p") . ' > ' . l:tmp)
+    endif
     exec 'cd ' . l:cwd
 
     " Diff it
