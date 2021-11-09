@@ -161,7 +161,7 @@ nnoremap <leader>gd :Gdiff<cr>
 nnoremap <leader>gs :Git<cr>
 nnoremap <leader>gg :Gg<cr>
 nnoremap <leader>gw :Gwrite<cr>
-nnoremap <leader>gp :Gpush<cr>
+nnoremap <leader>gp :Git push<cr>
 nnoremap <leader>gc :Git commit<cr>
 
 " }}}2
