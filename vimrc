@@ -302,6 +302,19 @@ nnoremap <leader>e :Explore<cr>
 
 " }}}1
 
+" Termdebug {{{1
+
+nnoremap <leader>hr :Run<cr>
+nnoremap <leader>hb :Break<cr>
+nnoremap <leader>hd :Clear<cr>
+nnoremap <leader>hs :Step<cr>
+nnoremap <leader>hn :Over<cr>
+nnoremap <leader>hf :Finish<cr>
+nnoremap <leader>hc :Continue<cr>
+nnoremap <leader>hq :Stop<cr>
+
+" }}}1
+
 " Mappings and Commands {{{1
 
 " Mappings {{{2
@@ -317,9 +330,6 @@ nnoremap Q <nop>
 
 " Clear hlsearch
 noremap <leader>n :nohlsearch<cr>
-
-" Close any help pages
-nnoremap <leader>hc :helpclose<cr>
 
 " Pasting in command mode
 cnoremap <c-p> <c-r>"
