@@ -133,15 +133,6 @@ endif
 
 " }}}2
 
-" Completor {{{2
-
-if s:completor
-    let g:completor_min_chars = 1
-    let g:completor_completion_delay = 0
-endif
-
-" }}}2
-
 " Fugitive {{{2
 
 function! GitGraph()
