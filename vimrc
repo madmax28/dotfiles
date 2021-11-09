@@ -153,7 +153,8 @@ nnoremap <leader>gs :Git<cr>
 nnoremap <leader>gg :Gg<cr>
 nnoremap <leader>gw :Gwrite<cr>
 nnoremap <leader>gp :Git push<cr>
-nnoremap <leader>gc :Git commit<cr>
+nnoremap <leader>gcc :Git commit<cr>
+nnoremap <leader>gca :Git commit -a<cr>
 
 " }}}2
 
