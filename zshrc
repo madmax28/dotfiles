@@ -63,7 +63,7 @@ function root_prompt {
     fi
 }
 
-local dirname='$(spwd)'
+local dirname='$(pwd)'
 local vi_indic='$(vimode)'
 local root_indic='$(root_prompt)'
 
