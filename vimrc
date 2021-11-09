@@ -1,6 +1,7 @@
 " Init {{{1
 
 set nocompatible                         " No vi compatability
+filetype plugin indent on
 
 " madmax library
 if !exists("g:vimconfig_dir")
