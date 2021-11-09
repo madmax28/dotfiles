@@ -283,6 +283,14 @@ set undofile
 
 " }}}2
 
+" Neovim-specific {{{2
+
+if has("nvim")
+    set inccommand=split
+endif
+
+" }}}2
+
 " }}}1
 
 " Netrw {{{1
