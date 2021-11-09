@@ -131,22 +131,23 @@ endif
 
 " Fugitive {{{2
 
-function! ExecInBufDir(cmd)
+function! GitGraph()
     let l:bufdir = expand("%:p:h")
     let l:curdir = getcwd()
 
     execute "chdir " . l:bufdir
-    execute a:cmd
+    tabnew
+    term git graph
+    normal a
     execute "chdir " . l:curdir
 endfunction
 
-command! Gg :call ExecInBufDir("silent! !git graph") | redraw!
-command! Gg2 :call ExecInBufDir("silent! !git graph2") | redraw!
+command! Gg :call GitGraph()
 
-nnoremap <leader>gd :Gdiff<cr>
-nnoremap <leader>gs :Gstatus<cr>
+nnoremap <leader>gd :Git diff<cr>
+nnoremap <leader>gs :Git<cr>
 nnoremap <leader>gg :Gg<cr>
-nnoremap <leader>gw :Gwrite<cr>
+nnoremap <leader>gw :Git write<cr>
 
 " }}}2
 
