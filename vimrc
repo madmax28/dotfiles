@@ -34,18 +34,8 @@ Plug 'jremmen/vim-ripgrep'
 Plug 'chrisbra/vim-diff-enhanced'
 Plug 'tpope/vim-commentary'
 Plug 'rust-lang/rust.vim'
-if executable("node")
-    let s:coc = 1
-    let s:ale = 0
-    let s:completor = 0
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-else
-    let s:coc = 0
-    let s:ale = 1
-    let s:completor = 1
-    Plug 'maralla/completor.vim'
-    Plug 'dense-analysis/ale'
-endif
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/nvim-compe'
 if executable("fzf")
     Plug 'junegunn/fzf.vim'
 endif
@@ -54,21 +44,44 @@ call plug#end()
 
 " }}}2
 
-" Coc {{{2
+" nvim-compe {{{2
 
-if s:coc
-    nmap <silent> [g <Plug>(coc-diagnostic-prev)
-    nmap <silent> ]g <Plug>(coc-diagnostic-next)
-endif
+if has("nvim")
+    lua << EOF
+    require'compe'.setup {
+        enabled = true;
+        autocomplete = true;
+        debug = false;
+        min_length = 1;
+        preselect = 'enable';
+        throttle_time = 80;
+        source_timeout = 200;
+        resolve_timeout = 800;
+        incomplete_delay = 400;
+        max_abbr_width = 100;
+        max_kind_width = 100;
+        max_menu_width = 100;
+        documentation = true;
 
-" }}}2
+        source = {
+            path = true;
+            buffer = true;
+            calc = true;
+            nvim_lsp = true;
+            nvim_lua = true;
+            vsnip = true;
+            ultisnips = true;
+            luasnip = true;
+        };
+    }
+EOF
 
-" ALE {{{2
+" inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+" inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+" inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 
-if s:ale
-    let g:ale_linters_explicit = 1
-    let g:ale_set_balloons = 1
-    let g:ale_set_quickfix = 1
 endif
 
 " }}}2
@@ -206,6 +219,56 @@ let g:tagbar_autclose = 0
 
 " }}}1
 
+" NVIM native LSP {{{1
+
+if has("nvim")
+    lua << EOF
+    local on_attach = function(_client, bufnr)
+        -- Install `omnifunc` completion handler, get completion with <C-x><C-o>.
+        vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+
+        -- Key mappings.
+        local opts = { noremap=true, silent=true }
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "]d", "<Cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "[d", "<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>pr", "<Cmd>lua vim.lsp.buf.references()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>pi", "<Cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+        vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>pf", "<Cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+    end
+
+    -- Setup rust-analyzer.
+    require'lspconfig'.rust_analyzer.setup {
+        on_attach = on_attach,
+    }
+
+    -- Setup clangd.
+    require'lspconfig'.clangd.setup {
+        cmd = { "clangd", "--background-index", "--completion-style=detailed" },
+        on_attach = on_attach,
+    }
+
+    -- Setup pylsp.
+    require'lspconfig'.pylsp.setup {
+        on_attach = on_attach,
+    }
+
+    -- Setup intelephense.
+    require'lspconfig'.intelephense.setup {
+        on_attach = on_attach,
+    }
+
+    -- Setup tsserver.
+    require'lspconfig'.tsserver.setup {
+        on_attach = on_attach,
+    }
+EOF
+endif
+
+
+" }}}1
+
 " Settings {{{1
 
 " Colors {{{2
@@ -215,6 +278,9 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set tgc
 colorscheme madmax
 syntax on
+
+hi link LspDiagnosticsDefaultWarning Warning
+hi link LspDiagnosticsDefaultError Error
 
 " }}}2
 
@@ -228,7 +294,7 @@ set scrolloff=5                          " Keep some lines around the cursor
 set backspace=2
 set history=1000                         " Keep a longer history of things
 set wildmenu wildmode=list:longest,full  " Wildmenu behavior
-set completeopt=menuone,longest          " Use a popup for completion
+set completeopt=menuone,noselect         " Required by nvim-compe
 set noswapfile                           " Don't use swapfiles
 set hidden                               " Allow hidden buffers
 set gdefault                             " Use g flags for :s by default
