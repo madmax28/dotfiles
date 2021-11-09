@@ -324,7 +324,14 @@ let g:tex_flavor = "latex"               " Prevent 'plaintex' ft
 " Do not start vimdiff in readonly mode
 if &diff
     set noreadonly
-    let &diffexpr='EnhancedDiff#Diff("git diff", "--diff-algorithm=patience")'
+    let s:expr = 'EnhancedDiff#Diff("'
+    if exists("g:git_bin")
+        let s:expr .= g:git_bin
+    else
+        let s:expr .= "git"
+    endif
+    let s:expr .= ' diff", "--diff-algorithm=patience")'
+    let &diffexpr = s:expr
 endif
 
 " }}}2
