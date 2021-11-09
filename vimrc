@@ -463,11 +463,6 @@ nnoremap <silent> <c-l> <c-w>l
 " Tab navigation
 nnoremap <silent> <c-p> :tabp<cr>
 nnoremap <silent> <c-n> :tabn<cr>
-" Split arrangement
-nnoremap <silent> <c-w>h <c-w>H
-nnoremap <silent> <c-w>j <c-w>J
-nnoremap <silent> <c-w>k <c-w>K
-nnoremap <silent> <c-w>l <c-w>L
 
 " }}}3
 
@@ -492,8 +487,16 @@ cnoremap <c-b> <left>
 
 " Terminal {{{3
 
-if has("terminal")
-    tnoremap jk <c-\><c-n>
+if has("terminal") || has("nvim")
+    tnoremap <leader>jk <c-\><c-n>
+    tnoremap <leader>h <c-\><c-n><c-w>h
+    tnoremap <leader>j <c-\><c-n><c-w>j
+    tnoremap <leader>k <c-\><c-n><c-w>k
+    tnoremap <leader>l <c-\><c-n><c-w>l
+    tnoremap <leader>H <c-\><c-n><c-w>Ha
+    tnoremap <leader>J <c-\><c-n><c-w>Ja
+    tnoremap <leader>K <c-\><c-n><c-w>Ka
+    tnoremap <leader>L <c-\><c-n><c-w>La
 endif
 
 " }}}3
