@@ -11,14 +11,14 @@ let g:colors_name="madmax"
 "
 hi Normal                     ctermfg=255  ctermbg=234  cterm=NONE      guifg=#eeeeee guibg=#1c1c1c guisp=NONE gui=NONE
 hi Cursor                     ctermfg=NONE ctermbg=NONE cterm=NONE      guifg=NONE    guibg=NONE    guisp=NONE gui=NONE
-hi CursorLine                 ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE gui=NONE
+hi CursorLine                 ctermfg=NONE ctermbg=236  cterm=NONE      guifg=NONE    guibg=#303030 guisp=NONE gui=NONE
 hi LineNr                     ctermfg=102  ctermbg=236  cterm=NONE      guifg=#878787 guibg=#303030 guisp=NONE gui=NONE
 hi CursorLineNr               ctermfg=NONE ctermbg=24   cterm=NONE      guifg=NONE    guibg=#005f87 guisp=NONE gui=NONE
 
 "
 " Number column
 "
-hi CursorColumn               ctermfg=NONE ctermbg=88   cterm=NONE      guifg=NONE    guibg=#870000 guisp=NONE gui=NONE
+hi CursorColumn               ctermfg=NONE ctermbg=236  cterm=NONE      guifg=NONE    guibg=#303030 guisp=NONE gui=NONE
 hi FoldColumn                 ctermfg=NONE ctermbg=236  cterm=NONE      guifg=NONE    guibg=#303030 guisp=NONE gui=NONE
 hi SignColumn                 ctermfg=NONE ctermbg=236  cterm=NONE      guifg=NONE    guibg=#303030 guisp=NONE gui=NONE
 hi Folded                     ctermfg=102  ctermbg=236  cterm=NONE      guifg=#878787 guibg=#303030 guisp=NONE gui=NONE
@@ -63,15 +63,16 @@ endif
 " Visual aid
 "
 hi MatchParen                 ctermfg=255  ctermbg=24   cterm=NONE      guifg=#eeeeee guibg=#005f87 guisp=NONE gui=NONE
-hi Visual                     ctermfg=NONE ctermbg=236  cterm=NONE      guifg=NONE    guibg=#303030 guisp=NONE gui=NONE
+hi Visual                     ctermfg=NONE ctermbg=239  cterm=NONE      guifg=NONE    guibg=#4e4e4e guisp=NONE gui=NONE
 hi VisualNOS                  ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#df0000 guibg=NONE    guisp=NONE gui=NONE
 hi NonText                    ctermfg=102  ctermbg=NONE cterm=NONE      guifg=#878787 guibg=NONE    guisp=NONE gui=NONE
 
 hi Todo                       ctermfg=223  ctermbg=NONE cterm=NONE      guifg=#ffdfaf guibg=NONE    guisp=NONE gui=NONE
 hi Underlined                 ctermfg=NONE ctermbg=NONE cterm=underline guifg=NONE    guibg=NONE    guisp=NONE gui=NONE
-hi Error                      ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#df0000 guibg=NONE    guisp=NONE gui=NONE
-hi ErrorMsg                   ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#df0000 guibg=NONE    guisp=NONE gui=NONE
-hi WarningMsg                 ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#df0000 guibg=NONE    guisp=NONE gui=NONE
+hi Error                      ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#e00000 guibg=NONE    guisp=NONE gui=NONE
+hi ErrorMsg                   ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#e00000 guibg=NONE    guisp=NONE gui=NONE
+hi Warning                    ctermfg=11   ctermbg=NONE cterm=NONE      guifg=#e0e000 guibg=NONE    guisp=NONE gui=NONE
+hi WarningMsg                 ctermfg=160  ctermbg=NONE cterm=NONE      guifg=#e0e000 guibg=NONE    guisp=NONE gui=NONE
 hi Ignore                     ctermfg=223  ctermbg=NONE cterm=NONE      guifg=#ffdfaf guibg=NONE    guisp=NONE gui=NONE
 hi SpecialKey                 ctermfg=237  ctermbg=NONE cterm=NONE      guifg=#3a3a3a guibg=NONE    guisp=NONE gui=NONE
 
