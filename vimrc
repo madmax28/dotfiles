@@ -655,19 +655,6 @@ vnoremap <leader>rp d:call madmax#yankring#Paste('P')<cr>
 
 " Yank to system clipboard {{{2
 
-if has("clipboard")
-    function! YankToClipboard(mode)
-        " Mode is either 'char', 'block' or 'line'
-        execute "normal! `[v`]\"+y"
-    endfunction
-
-    nnoremap <silent> <leader>y :set opfunc=YankToClipboard<cr>g@
-    vnoremap <leader>y "+y
-    nnoremap <leader>p "+p
-    nnoremap <leader>P "+P
-    vnoremap <leader>p d"+P
-endif
-
 " }}}2
 
 " }}}1
