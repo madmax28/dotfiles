@@ -35,54 +35,17 @@ Plug 'chrisbra/vim-diff-enhanced'
 Plug 'tpope/vim-commentary'
 Plug 'rust-lang/rust.vim'
 Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-compe'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'simrat39/rust-tools.nvim'
 if executable("fzf")
     Plug 'junegunn/fzf.vim'
 endif
 
 call plug#end()
-
-" }}}2
-
-" nvim-compe {{{2
-
-if has("nvim")
-    lua << EOF
-    require'compe'.setup {
-        enabled = true;
-        autocomplete = true;
-        debug = false;
-        min_length = 1;
-        preselect = 'enable';
-        throttle_time = 80;
-        source_timeout = 200;
-        resolve_timeout = 800;
-        incomplete_delay = 400;
-        max_abbr_width = 100;
-        max_kind_width = 100;
-        max_menu_width = 100;
-        documentation = true;
-
-        source = {
-            path = true;
-            buffer = true;
-            calc = true;
-            nvim_lsp = true;
-            nvim_lua = true;
-            vsnip = true;
-            ultisnips = true;
-            luasnip = true;
-        };
-    }
-EOF
-
-" inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-" inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-" inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-
-endif
 
 " }}}2
 
@@ -217,6 +180,34 @@ let g:tagbar_autclose = 0
 
 if has("nvim")
     lua << EOF
+
+    -- Setup nvim-cmp.
+    local cmp = require'cmp'
+
+    cmp.setup({
+        snippet = {
+            expand = function(args) end,
+        },
+        mapping = cmp.mapping.preset.insert({
+            ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+            ['<C-f>'] = cmp.mapping.scroll_docs(4),
+            ['<C-Space>'] = cmp.mapping.complete(),
+            ['<C-e>'] = cmp.mapping.abort(),
+            ['<CR>'] = cmp.mapping.confirm({
+                select = true,
+            }),
+        }),
+        sources = cmp.config.sources({
+            { name = 'nvim_lsp' },
+            { name = 'buffer' },
+            { name = 'path' },
+            { name = 'cmdline' },
+        }),
+    })
+
+    -- Setup lspconfig.
+    local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+
     local on_attach = function(_client, bufnr)
         -- Install `omnifunc` completion handler, get completion with <C-x><C-o>.
         vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
@@ -232,29 +223,68 @@ if has("nvim")
         vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>pf", "<Cmd>lua vim.lsp.buf.code_action()<CR>", opts)
     end
 
-    -- Setup rust-analyzer.
-    require'lspconfig'.rust_analyzer.setup {
-        on_attach = on_attach,
+    require'rust-tools'.setup {
+        tools = { -- rust-tools options
+        autoSetHints = true,
+        hover_with_actions = true,
+        inlay_hints = {
+            show_parameter_hints = false,
+            parameter_hints_prefix = "",
+            other_hints_prefix = "",
+            },
+        },
+
+        -- all the opts to send to nvim-lspconfig
+        -- these override the defaults set by rust-tools.nvim
+        -- see https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#rust_analyzer
+        server = {
+            -- on_attach is a callback called when the language server attachs to the buffer
+            -- on_attach = on_attach,
+            on_attach = function(_client, bufnr)
+                local opts = { noremap=true, silent=true }
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "]d", "<Cmd>lua vim.diagnostic.goto_next()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "[d", "<Cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>pr", "<Cmd>lua vim.lsp.buf.references()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>pi", "<Cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+                vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>pf", "<Cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+            end,
+            settings = {
+                -- to enable rust-analyzer settings visit:
+                -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
+                ["rust-analyzer"] = {
+                    -- enable clippy on save
+                    checkOnSave = {
+                        command = "clippy"
+                    },
+                }
+            }
+        },
     }
 
     -- Setup clangd.
     require'lspconfig'.clangd.setup {
+        capabilities = capabilities,
         cmd = { "clangd", "--background-index", "--completion-style=detailed" },
         on_attach = on_attach,
     }
 
     -- Setup pylsp.
     require'lspconfig'.pylsp.setup {
+        capabilities = capabilities,
         on_attach = on_attach,
     }
 
     -- Setup intelephense.
     require'lspconfig'.intelephense.setup {
+        capabilities = capabilities,
         on_attach = on_attach,
     }
 
     -- Setup tsserver.
     require'lspconfig'.tsserver.setup {
+        capabilities = capabilities,
         on_attach = on_attach,
     }
 
@@ -263,6 +293,7 @@ if has("nvim")
     table.insert(runtime_path, "lua/?/init.lua")
 
     require'lspconfig'.sumneko_lua.setup {
+        capabilities = capabilities,
         settings = {
             Lua = {
                 runtime = {
@@ -317,7 +348,7 @@ set scrolloff=5                          " Keep some lines around the cursor
 set backspace=2
 set history=1000                         " Keep a longer history of things
 set wildmenu wildmode=list:longest,full  " Wildmenu behavior
-set completeopt=menuone,noselect         " Required by nvim-compe
+set completeopt=menu,menuone,noselect    " Required by nvim-cmp
 set noswapfile                           " Don't use swapfiles
 set hidden                               " Allow hidden buffers
 set gdefault                             " Use g flags for :s by default
