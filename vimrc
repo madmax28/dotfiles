@@ -21,9 +21,11 @@ let mapleader = ","
 
 " Vundle {{{2
 
+set completeopt=menu,menuone,noselect    " Required by nvim-cmp
+
 call plug#begin(g:vimconfig_dir . "/vim/plugged")
 
-Plug 'SirVer/ultisnips'
+" Plug 'SirVer/ultisnips'
 Plug 'vim-scripts/xterm-color-table.vim'
 Plug 'vim-scripts/L9'
 Plug 'nvie/vim-flake8'
@@ -348,7 +350,6 @@ set scrolloff=5                          " Keep some lines around the cursor
 set backspace=2
 set history=1000                         " Keep a longer history of things
 set wildmenu wildmode=list:longest,full  " Wildmenu behavior
-set completeopt=menu,menuone,noselect    " Required by nvim-cmp
 set noswapfile                           " Don't use swapfiles
 set hidden                               " Allow hidden buffers
 set gdefault                             " Use g flags for :s by default
@@ -693,24 +694,6 @@ set tabline=%!madmax#tabline#MyTabLine()
 
 " }}}1
 
-" Yanking {{{1
-
-" Yank Ring, to save frequent yanks to disk {{{2
-
-nnoremap <leader>ry :set opfunc=madmax#yankring#Yank<cr>g@
-vnoremap <leader>ry <esc>:call madmax#yankring#Yank('visual')<cr>
-nnoremap <leader>rp :call madmax#yankring#Paste('p')<cr>
-nnoremap <leader>rP :call madmax#yankring#Paste('P')<cr>
-vnoremap <leader>rp d:call madmax#yankring#Paste('P')<cr>
-
-" }}}2
-
-" Yank to system clipboard {{{2
-
-" }}}2
-
-" }}}1
-
 " Restore cursor position per buffer {{{1
 
 function! ResCur()
@@ -738,27 +721,6 @@ augroup MaxQuickfixWinGrp
     autocmd!
     autocmd BufWinEnter * call MaxQuickfixWin()
 augroup END
-
-" }}}1
-
-" Highlight bad style {{{1
-
-"augroup agHlBadStyle
-"    autocmd!
-"    autocmd FileType * call madmax#badstyle#HighlightBadStyle()
-"augroup END
-
-" }}}1
-
-" Append mode line {{{1
-
-function! AppendModeline()
-    let l:modeline = printf("vim: set ts=%d sw=%d tw=%d %set :",
-                \ &tabstop, &shiftwidth, &textwidth, &expandtab ? '' : 'no')
-    let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
-    call append(line("$"), l:modeline)
-endfunction
-nnoremap <silent> <Leader>M :call AppendModeline()<CR>
 
 " }}}1
 
