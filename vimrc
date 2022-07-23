@@ -21,11 +21,8 @@ let mapleader = ","
 
 " Vundle {{{2
 
-set completeopt=menu,menuone,noselect    " Required by nvim-cmp
-
 call plug#begin(g:vimconfig_dir . "/vim/plugged")
 
-" Plug 'SirVer/ultisnips'
 Plug 'vim-scripts/xterm-color-table.vim'
 Plug 'vim-scripts/L9'
 Plug 'nvie/vim-flake8'
@@ -37,10 +34,12 @@ Plug 'chrisbra/vim-diff-enhanced'
 Plug 'tpope/vim-commentary'
 Plug 'rust-lang/rust.vim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'simrat39/rust-tools.nvim'
 if executable("fzf")
@@ -188,7 +187,7 @@ if has("nvim")
 
     cmp.setup({
         snippet = {
-            expand = function(args) end,
+            expand = function(args) vim.fn["vsnip#anonymous"](args.body) end,
         },
         mapping = cmp.mapping.preset.insert({
             ['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -216,6 +215,7 @@ if has("nvim")
 
         -- Key mappings.
         local opts = { noremap=true, silent=true }
+
         vim.api.nvim_buf_set_keymap(bufnr, "n", "]d", "<Cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
         vim.api.nvim_buf_set_keymap(bufnr, "n", "[d", "<Cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
         vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>", opts)
@@ -349,7 +349,7 @@ set textwidth=80                         " Use 80 columns
 set scrolloff=5                          " Keep some lines around the cursor
 set backspace=2
 set history=1000                         " Keep a longer history of things
-set wildmenu wildmode=list:longest,full  " Wildmenu behavior
+set wildmenu wildmode=list:longest:full  " Wildmenu behavior
 set noswapfile                           " Don't use swapfiles
 set hidden                               " Allow hidden buffers
 set gdefault                             " Use g flags for :s by default
@@ -367,6 +367,8 @@ set nowrapscan                           " Don't wrap searches
 set nojoinspaces                         " Don't insert double spaces
 set fo-=t
 set tags=tags,TAGS                       " Don't look for tags next to file
+set completeopt=menu,menuone,noselect
+
 
 let g:tex_flavor = "latex"               " Prevent 'plaintex' ft
 
