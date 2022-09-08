@@ -1,8 +1,8 @@
 export EDITOR='nvim'
 
 # Aliases
-alias l='ls -la'
-alias lt='ls -lat'
+alias l='ls -lah'
+alias lt='ls -lath'
 
 # Job control
 alias j='jobs'
