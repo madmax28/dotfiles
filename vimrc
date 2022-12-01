@@ -42,6 +42,7 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'simrat39/rust-tools.nvim'
+Plug 'ziglang/zig.vim'
 if executable("fzf")
     Plug 'junegunn/fzf.vim'
 endif
@@ -207,7 +208,7 @@ if has("nvim")
     })
 
     -- Setup lspconfig.
-    local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
     local on_attach = function(_client, bufnr)
         -- Install `omnifunc` completion handler, get completion with <C-x><C-o>.
@@ -274,6 +275,12 @@ if has("nvim")
 
     -- Setup pylsp.
     require'lspconfig'.pylsp.setup {
+        capabilities = capabilities,
+        on_attach = on_attach,
+    }
+
+    -- Setup zls.
+    require'lspconfig'.zls.setup {
         capabilities = capabilities,
         on_attach = on_attach,
     }
