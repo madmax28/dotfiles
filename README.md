@@ -1,4 +1,0 @@
-Installation
-============
-
-`./install.sh`
