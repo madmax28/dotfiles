@@ -108,12 +108,5 @@ if [[ -n $terminfo[kend] ]]; then
     bindkey -M vicmd "$terminfo[kend]" vi-end-of-line
 fi
 
-FZF=$DOTFILES_DIR/fzf
-if [ -d $FZF ]; then
-    for file in $FZF/shell/*zsh; do
-        source $file;
-    done
-fi
-
 # pythonrc
 export PYTHONSTARTUP=$HOME/.pythonrc
