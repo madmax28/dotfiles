@@ -1,5 +1,6 @@
 -- from :h lspconfig-all
 require 'lspconfig'.lua_ls.setup {
+    capabilities = require('cmp_nvim_lsp').default_capabilities(),
     on_init = function(client)
         if client.workspace_folders then
             local path = client.workspace_folders[1].name

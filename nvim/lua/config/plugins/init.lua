@@ -23,21 +23,27 @@ require('lazy').setup({
             dependencies = {
                 'nvim-lua/plenary.nvim',
                 'nvim-telescope/telescope-fzf-native.nvim',
-            }
+            },
         },
         { 'tpope/vim-fugitive' },
-        -- { 'hrsh7th/cmp-nvim-lsp' },
-        -- { 'hrsh7th/cmp-buffer' },
-        -- { 'hrsh7th/cmp-path' },
-        -- { 'hrsh7th/cmp-cmdline' },
-        -- { 'hrsh7th/nvim-cmp' },
-        -- { 'L3MON4D3/LuaSnip' },
-        -- { 'saadparwaiz1/cmp_luasnip' },
-        -- { 'nvim-lualine/lualine.nvim' },
-        -- { 'jremmen/vim-ripgrep' },
-        -- { 'tpope/vim-sleuth' },
+        { 'tpope/vim-sleuth' },
+        {
+            "L3MON4D3/LuaSnip",
+            build = "make install_jsregexp",
+        },
+        {
+            'hrsh7th/nvim-cmp',
+            dependencies = {
+                { 'hrsh7th/cmp-nvim-lsp' },
+                { 'hrsh7th/cmp-buffer' },
+                { 'hrsh7th/cmp-path' },
+                { 'hrsh7th/cmp-cmdline' },
+                { 'saadparwaiz1/cmp_luasnip' },
+            },
+        },
+        { 'nvim-lualine/lualine.nvim' },
     },
-    install = { colorscheme = { 'onedark' } },
+    install = { colorscheme = { 'habamax' } },
     checker = { enabled = true },
     performance = {
         rtp = {
@@ -50,3 +56,5 @@ require('lazy').setup({
 
 require 'config.plugins.onedark'
 require 'config.plugins.telescope'
+require 'config.plugins.cmp'
+require 'config.plugins.lualine'
