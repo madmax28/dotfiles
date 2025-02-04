@@ -50,3 +50,4 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 require 'config.lsp.lua'
 require 'config.lsp.rust'
+require 'config.lsp.cpp'
