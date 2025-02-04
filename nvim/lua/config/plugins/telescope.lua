@@ -34,3 +34,7 @@ vim.keymap.set('n', '<leader>olr', builtin.lsp_references, { desc = 'Telescope L
 vim.keymap.set('n', '<leader>oli', builtin.lsp_implementations, { desc = 'Telescope LSP implementations' })
 vim.keymap.set('n', '<leader>old', builtin.lsp_definitions, { desc = 'Telescope LSP definitions' })
 vim.keymap.set('n', '<leader>op', builtin.builtin, { desc = 'Telescope builtins' })
+
+vim.keymap.set('n', '<leader>ov', function()
+    require 'telescope.builtin'.find_files { cwd = vim.g.dotfiles_rtp }
+end)
