@@ -4,6 +4,7 @@ require 'config.commands'
 require 'config.quickfix'
 require 'config.cursor'
 require 'config.sessions'
+require 'config.grep'
 
 require 'config.plugins'
 require 'config.lsp'
