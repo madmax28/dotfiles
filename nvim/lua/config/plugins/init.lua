@@ -42,6 +42,7 @@ require('lazy').setup({
                 { 'hrsh7th/cmp-path' },
                 { 'hrsh7th/cmp-cmdline' },
                 { 'saadparwaiz1/cmp_luasnip' },
+                { 'andersevenrud/cmp-tmux' },
             },
         },
         { 'nvim-lualine/lualine.nvim' },
