@@ -15,8 +15,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
             vim.keymap.set('n', '<leader>pf', vim.lsp.buf.code_action, { buffer = bufnr })
         end
 
+        if client.supports_method('textDocument/references') then
+            vim.keymap.set('n', '<leader>pr', vim.lsp.buf.references, { buffer = bufnr })
+        end
+
         if client.supports_method('textDocument/rename') then
-            vim.keymap.set('n', '<leader>pr', vim.lsp.buf.rename, { buffer = bufnr })
+            vim.keymap.set('n', '<leader>pR', vim.lsp.buf.rename, { buffer = bufnr })
         end
 
         if client:supports_method('textDocument/definition') then
