@@ -10,6 +10,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local bufnr = args.buf
         local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client == nil then
+            error('could not get lsp client')
+        end
 
         if client:supports_method('textDocument/codeAction') then
             vim.keymap.set('n', '<leader>pf', vim.lsp.buf.code_action, { buffer = bufnr })
@@ -41,7 +44,18 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end
 
         if client:supports_method('textDocument/formatting') then
-            vim.keymap.set('n', '<leader>F', vim.lsp.buf.format, { buffer = bufnr })
+            local excluded_filetypes = { 'c', 'cpp' }
+            local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+            if not vim.tbl_contains(excluded_filetypes, ft) then
+                vim.api.nvim_create_autocmd('BufWritePre', {
+                    buffer = bufnr,
+                    callback = function()
+                        vim.lsp.buf.format({ bufnr = bufnr, id = client.id })
+                    end,
+                })
+            else
+                vim.keymap.set('n', '<leader>F', vim.lsp.buf.format, { buffer = bufnr })
+            end
         end
 
         -- nvim 0.11
