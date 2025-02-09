@@ -49,6 +49,7 @@ require('lazy').setup({
         {
             'zbirenbaum/copilot.lua',
         },
+        { 'tikhomirov/vim-glsl' },
     },
     install = { colorscheme = { 'habamax' } },
     checker = { enabled = true },
