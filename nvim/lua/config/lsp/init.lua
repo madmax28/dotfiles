@@ -53,9 +53,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
                         vim.lsp.buf.format({ bufnr = bufnr, id = client.id })
                     end,
                 })
-            else
-                vim.keymap.set('n', '<leader>F', vim.lsp.buf.format, { buffer = bufnr })
             end
+            vim.keymap.set('n', '<leader>F', vim.lsp.buf.format, { buffer = bufnr })
         end
 
         -- nvim 0.11
