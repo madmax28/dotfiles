@@ -46,9 +46,7 @@ require('lazy').setup({
             },
         },
         { 'nvim-lualine/lualine.nvim' },
-        {
-            'zbirenbaum/copilot.lua',
-        },
+        -- { 'zbirenbaum/copilot.lua', },
         { 'tikhomirov/vim-glsl' },
     },
     install = { colorscheme = { 'habamax' } },
@@ -67,4 +65,4 @@ require 'config.plugins.telescope'
 require 'config.plugins.cmp'
 require 'config.plugins.lualine'
 require 'config.plugins.fugitive'
-require 'config.plugins.copilot'
+-- require 'config.plugins.copilot'
