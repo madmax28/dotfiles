@@ -48,6 +48,7 @@ require('lazy').setup({
         { 'nvim-lualine/lualine.nvim' },
         -- { 'zbirenbaum/copilot.lua', },
         { 'tikhomirov/vim-glsl' },
+        { 'tpope/vim-dispatch' },
     },
     install = { colorscheme = { 'habamax' } },
     checker = { enabled = true },
