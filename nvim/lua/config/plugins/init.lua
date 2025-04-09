@@ -19,6 +19,7 @@ require('lazy').setup({
         { 'neovim/nvim-lspconfig' },
         { 'navarasu/onedark.nvim' },
         { 'scottmckendry/cyberdream.nvim' },
+        { 'rebelot/kanagawa.nvim' },
         {
             'nvim-telescope/telescope.nvim',
             dependencies = {
@@ -62,7 +63,7 @@ require('lazy').setup({
     },
 })
 
-require 'config.plugins.onedark'
+require 'config.plugins.kanagawa'
 require 'config.plugins.telescope'
 require 'config.plugins.cmp'
 require 'config.plugins.lualine'
