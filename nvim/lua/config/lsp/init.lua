@@ -3,7 +3,11 @@ vim.diagnostic.config({
     severity_sort = true,
     signs = false,
     update_in_insert = true,
-    virtual_text = true,
+    virtual_text = false,
+    virtual_lines = true,
+    jump = {
+        float = false,
+    },
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
