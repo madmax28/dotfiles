@@ -18,6 +18,7 @@ require('lazy').setup({
     spec = {
         { 'neovim/nvim-lspconfig' },
         { 'navarasu/onedark.nvim' },
+        { 'scottmckendry/cyberdream.nvim' },
         {
             'nvim-telescope/telescope.nvim',
             dependencies = {
