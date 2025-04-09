@@ -1,3 +1,3 @@
-require 'lspconfig'.glsl_analyzer.setup {
+return {
     capabilities = require('cmp_nvim_lsp').default_capabilities(),
 }

@@ -1,5 +1,5 @@
 -- from :h lspconfig-all
-require 'lspconfig'.lua_ls.setup {
+return {
     capabilities = require('cmp_nvim_lsp').default_capabilities(),
     on_init = function(client)
         if client.workspace_folders then

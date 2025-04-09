@@ -64,10 +64,4 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
-require 'config.lsp.lua'
-require 'config.lsp.rust'
-require 'config.lsp.cpp'
-require 'config.lsp.cmake'
-require 'config.lsp.ts_ls'
-require 'config.lsp.glsl'
-require 'config.lsp.python'
+vim.lsp.enable({ 'clangd', 'cmake', 'glsl_analyzer', 'lua_ls', 'pylsp', 'rust_analyzer', 'ts_ls' })
