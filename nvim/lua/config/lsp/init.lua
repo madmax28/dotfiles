@@ -18,24 +18,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
             error('could not get lsp client')
         end
 
-        if client:supports_method('textDocument/codeAction') then
-            vim.keymap.set('n', '<leader>pf', vim.lsp.buf.code_action, { buffer = bufnr })
-        end
-
-        if client.supports_method('textDocument/references') then
-            vim.keymap.set('n', '<leader>pr', vim.lsp.buf.references, { buffer = bufnr })
-        end
-
-        if client.supports_method('textDocument/rename') then
-            vim.keymap.set('n', '<leader>pR', vim.lsp.buf.rename, { buffer = bufnr })
-        end
-
         if client:supports_method('textDocument/definition') then
             vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr })
         end
 
-        if client:supports_method('textDocument/declaration') then
-            vim.keymap.set('n', '<leader>pd', vim.lsp.buf.declaration, { buffer = bufnr })
+        if client:supports_method('textDocument/typeDefinition') then
+            vim.keymap.set('n', 'grt', vim.lsp.buf.type_definition, { buffer = bufnr })
         end
 
         if client:supports_method('textDocument/diagnostic') then
