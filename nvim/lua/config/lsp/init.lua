@@ -36,9 +36,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end
 
         if client:supports_method('textDocument/formatting') then
-            local excluded_filetypes = { 'c', 'cpp' }
+            local autoformat_filetypes = { 'rust' }
             local ft = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-            if not vim.tbl_contains(excluded_filetypes, ft) then
+            if vim.tbl_contains(autoformat_filetypes, ft) then
                 vim.api.nvim_create_autocmd('BufWritePre', {
                     buffer = bufnr,
                     callback = function()
