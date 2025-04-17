@@ -26,3 +26,4 @@ vim.o.splitbelow = true
 vim.o.splitright = true
 vim.o.termguicolors = true
 vim.o.completeopt = 'menu,menuone,noselect'
+vim.o.scrollback = 100000
