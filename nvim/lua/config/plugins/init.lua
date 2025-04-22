@@ -51,6 +51,10 @@ require('lazy').setup({
         -- { 'zbirenbaum/copilot.lua', },
         { 'tikhomirov/vim-glsl' },
         { 'tpope/vim-dispatch' },
+        {
+            "nvim-treesitter/nvim-treesitter",
+            build = ":TSUpdate",
+        },
     },
     install = { colorscheme = { 'habamax' } },
     checker = { enabled = true },
@@ -69,3 +73,4 @@ require 'config.plugins.cmp'
 require 'config.plugins.lualine'
 require 'config.plugins.fugitive'
 -- require 'config.plugins.copilot'
+require 'config.plugins.nvim-treesitter'
