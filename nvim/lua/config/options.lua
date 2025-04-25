@@ -10,8 +10,6 @@ vim.o.wildmode = 'longest:full'
 vim.o.scrolloff = 5
 vim.o.swapfile = false
 vim.o.gdefault = true
-vim.o.foldmethod = 'marker'
-vim.o.foldopen = 'hor,mark,percent,quickfix,search,tag,undo'
 vim.o.mouse = 'a'
 vim.o.listchars = 'tab:>-,trail:-,nbsp:+'
 vim.o.list = true
@@ -27,3 +25,14 @@ vim.o.splitright = true
 vim.o.termguicolors = true
 vim.o.completeopt = 'menu,menuone,noselect'
 vim.o.scrollback = 100000
+
+vim.o.foldopen = 'hor,mark,percent,quickfix,search,tag,undo'
+vim.o.foldmethod = 'marker'
+-- Avoid inheriting foldmethod from current window
+vim.api.nvim_create_autocmd(
+    { 'WinNew' },
+    {
+        pattern = { '*' },
+        callback = function() vim.wo.foldmethod = 'marker' end
+    }
+)
