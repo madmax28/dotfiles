@@ -1,0 +1,14 @@
+{
+    "ro5": {
+        "prefix": "ro5",
+        "body": [
+            "${1:classname}() = default;",
+            "~${1:classname}() = default;",
+            "${1:classname}(${1:classname} const &) = default;",
+            "${1:classname}& operator=(${1:classname} const &) = default;",
+            "${1:classname}(${1:classname} &&) = default;",
+            "${1:classname}& operator=(${1:classname} &&) = default;"
+        ],
+        "description": "rule of 5"
+    }
+}
