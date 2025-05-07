@@ -39,5 +39,5 @@ vim.keymap.set('n', '<leader>old', builtin.lsp_definitions, { desc = 'Telescope 
 vim.keymap.set('n', '<leader>op', builtin.builtin, { desc = 'Telescope builtins' })
 
 vim.keymap.set('n', '<leader>ov', function()
-    require 'telescope.builtin'.find_files { cwd = vim.g.dotfiles_rtp }
+    require 'telescope.builtin'.find_files { cwd = vim.g.dotfiles_rtp .. '/..' }
 end)
