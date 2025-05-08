@@ -41,3 +41,14 @@ vim.keymap.set('n', '<leader>op', builtin.builtin, { desc = 'Telescope builtins'
 vim.keymap.set('n', '<leader>ov', function()
     require 'telescope.builtin'.find_files { cwd = vim.g.dotfiles_rtp .. '/..' }
 end)
+
+vim.api.nvim_create_user_command(
+    'FZF',
+    function(opts)
+        require 'telescope.builtin'.find_files { cwd = opts.args }
+    end,
+    {
+        nargs = '?',
+        complete = 'file',
+    }
+)
